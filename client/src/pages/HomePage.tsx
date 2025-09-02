@@ -109,20 +109,35 @@ export default function HomePage() {
   return (
     <Layout>
       {/* Hero Banner */}
-      <section id="home" className="min-h-screen relative">
+      <section id="home" className="min-h-screen relative overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 transform"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')"
+            backgroundImage: "url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')",
+            filter: "brightness(0.7)"
           }}
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
+        
+        {/* Floating elements for visual enhancement */}
+        <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-accent/20 animate-bounce delay-75"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 rounded-full bg-accent/30 animate-bounce delay-150"></div>
+        <div className="absolute bottom-40 left-20 w-12 h-12 rounded-full bg-accent/25 animate-bounce delay-300"></div>
 
-        <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            SmartKumbh
-            <span className="block text-accent">AI Powered Pilgrim Navigation & Safety</span>
-          </h1>
+        <div className="relative z-10 container mx-auto px-4 py-20 flex items-center justify-center min-h-screen">
+          <div className="text-center max-w-4xl">
+            <div className="mb-8 animate-fade-in">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/90 mb-6 shadow-2xl">
+                <span className="text-3xl">🕉️</span>
+              </div>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight animate-slide-up">
+              Smart<span className="text-accent">Kumbh</span>
+              <span className="block text-2xl md:text-4xl font-medium text-white/90 mt-4">
+                AI-Powered Pilgrim Navigation & Safety Platform
+              </span>
+            </h1>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <Button
@@ -142,6 +157,7 @@ export default function HomePage() {
               <div className="mr-2">▶️</div>
               Watch Demo
             </Button>
+          </div>
           </div>
         </div>
       </section>

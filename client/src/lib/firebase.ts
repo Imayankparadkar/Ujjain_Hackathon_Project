@@ -2,13 +2,20 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "demo-api-key",
-  authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID || "smartkumbh-demo"}.firebaseapp.com`,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "smartkumbh-demo",
-  storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID || "smartkumbh-demo"}.firebasestorage.app`,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "demo-app-id",
-};
+// Parse Firebase config from environment variable
+let firebaseConfig;
+try {
+  firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG || '{}');
+} catch (error) {
+  console.warn('Firebase config not found or invalid, using demo config');
+  firebaseConfig = {
+    apiKey: "demo-api-key",
+    authDomain: "smartkumbh-demo.firebaseapp.com",
+    projectId: "smartkumbh-demo",
+    storageBucket: "smartkumbh-demo.firebasestorage.app",
+    appId: "demo-app-id",
+  };
+}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

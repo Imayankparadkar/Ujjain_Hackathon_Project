@@ -1,4 +1,5 @@
 import { ChatBot } from "@/components/ChatBot";
+import { NotificationSystem } from "@/components/NotificationSystem";
 import { useAuth } from "@/contexts/AuthContext";
 import { useElderlyMode } from "@/contexts/ElderlyModeContext";
 import { Button } from "@/components/ui/button";
@@ -170,6 +171,9 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
         </footer>
       )}
 
+      {/* Notification System */}
+      <NotificationSystem />
+      
       {/* ChatBot */}
       <ChatBot />
     </div>
