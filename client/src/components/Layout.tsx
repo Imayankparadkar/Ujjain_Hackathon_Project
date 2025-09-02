@@ -42,24 +42,20 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
 
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-6">
-              {isPublicPage && (
-                <>
-                  <a href="#home" className="text-muted-foreground hover:text-primary transition-colors">Home</a>
-                  <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
-                  <a href="#map" className="text-muted-foreground hover:text-primary transition-colors">Map</a>
-                  <a href="#lost-found" className="text-muted-foreground hover:text-primary transition-colors">Lost & Found</a>
-                  <a href="#spiritual" className="text-muted-foreground hover:text-primary transition-colors">Spiritual Live</a>
-                  <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
-                </>
-              )}
+              <Link href="/" className={location === "/" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-home">Home</Link>
+              <Link href="/features" className={location === "/features" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-features">Features</Link>
+              <Link href="/map" className={location === "/map" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-map">Map</Link>
+              <Link href="/lost-found" className={location === "/lost-found" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-lost-found">Lost & Found</Link>
+              <Link href="/spiritual" className={location === "/spiritual" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-spiritual">Spiritual Live</Link>
+              <Link href="/contact" className={location === "/contact" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-contact">Contact</Link>
               
-              {isUserDashboard && (
+              {user && (
                 <>
-                  <Link href="/dashboard" className={location === "/dashboard" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"}>Dashboard</Link>
-                  <Link href="/map" className={location === "/map" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"}>Map</Link>
-                  <Link href="/lost-found" className={location === "/lost-found" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"}>Lost & Found</Link>
-                  <Link href="/spiritual" className={location === "/spiritual" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"}>Spiritual Live</Link>
-                  <Link href="/contact" className={location === "/contact" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"}>Contact</Link>
+                  <span className="text-muted-foreground">|</span>
+                  <Link href="/dashboard" className={location === "/dashboard" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-dashboard">Dashboard</Link>
+                  {isAdmin && (
+                    <Link href="/admin" className={location === "/admin" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-admin">Admin</Link>
+                  )}
                 </>
               )}
             </div>

@@ -1,0 +1,209 @@
+Part 1: Public-Facing Homepage (Before Login)
+This is the landing page for all visitors.
+
+1.1. Header / Navbar
+Layout: Fixed at the top of the page.
+
+Left Side: "SmartKumbh" Logo.
+
+Center: Menu links: "Home | Features | Map | Lost & Found | Spiritual Live | Contact".
+
+Right Side: A highlighted "Login/Register" button with a strong color contrast.
+
+1.2. Hero Banner
+Background: A thematic image of the Kumbh Mela (e.g., a ghat, crowd, or river).
+
+Center Text (H1): "SmartKumbh - AI Powered Pilgrim Navigation & Safety".
+
+CTA Buttons (below text):
+
+Left Button: "Explore Features" (this should smoothly scroll to the features section on the page).
+
+Right Button: "Watch Demo" (this should open a modal popup containing a video player).
+
+Top-Right Corner: An "Elderly Mode" toggle switch. When enabled, it should increase font sizes and switch to a high-contrast color scheme across the site.
+
+1.3. Quick Stats Section
+A section directly below the Hero Banner.
+
+Display four cards in a single row, each showing:
+
+Live Visitors Count
+
+Safety Alerts
+
+Active Routes
+
+Supported Languages
+
+1.4. Interactive Map Section
+Layout: Two-column layout.
+
+Left Side (70% width): A large, interactive map mockup displaying a crowd heatmap and a route planner interface.
+
+Right Side (30% width): A sidebar card with a prominent button: "Generate My QR ID".
+
+1.5. Lost & Found Section
+This section should feature two large, clearly labeled buttons side-by-side:
+
+Button 1: "Search Found"
+
+Button 2: "Report Missing"
+
+1.6. Community Cleanliness Heatmap
+Display a static image of a heatmap showing cleanliness scores for toilets and ghats.
+
+Below the heatmap, include a "Submit Feedback" button.
+
+1.7. Spiritual Engagement Section
+Layout: Two-column layout.
+
+Left Side: An embedded video player for live streaming.
+
+Right Side: A list of "Upcoming Rituals/Events". Each item in the list should have a "Set Reminder" button next to it.
+
+1.8. Four Pillars Section
+Display four horizontal cards in a row, each with an icon and a title:
+
+Navigation
+
+Safety
+
+Sanitation
+
+Digital Ecosystem
+
+1.9. Offline/SMS Banner
+A full-width banner with an informational message, such as: "Dial *123# or SMS HELP to 12345 for offline assistance".
+
+1.10. About & Government Integration Section
+Layout: Two-column layout.
+
+Left Side: A paragraph of text describing the "About SmartKumbh" initiative.
+
+Right Side: A section to display government and partner logos.
+
+Part 2: Logged-In User Dashboard
+This is the personalized view for users who have logged in.
+
+2.1. Dashboard Navbar
+Layout: Fixed at the top.
+
+Left Side: "SmartKumbh" Logo.
+
+Center: Menu links: "Home | Map | Lost & Found | Spiritual Live | Contact".
+
+Right Side: "My Profile" (dropdown or link) and a "Logout" button.
+
+2.2. Top Quick Panel
+Directly below the navbar, display four cards in a row:
+
+My QR ID: Shows the user's QR code with "Download" and "Print" buttons.
+
+Saved Routes: A list of the user's favorite ghats/temples.
+
+Alerts & Notifications: A feed of live safety alerts relevant to the user's area.
+
+Event Reminders: A list of upcoming events/pujas the user has set reminders for.
+
+2.3. Main Dashboard Section
+Layout: Two-column layout.
+
+Left Column (70% width): A real-time, personalized interactive map showing:
+
+Crowd density heatmap.
+
+An overlay of the user's saved/favorite routes.
+
+Emergency route suggestions.
+
+Right Sidebar (30% width):
+
+My Reports Panel: A list of reports submitted by the user (cleanliness feedback, lost & found reports, help requests).
+
+Spiritual Section Panel: Shows daily aarti timings and personalized ritual reminders.
+
+2.4. Bottom Dashboard Section
+A full-width section with:
+
+Quick access buttons: "Report Missing" and "Search Found".
+
+A link to "Profile Settings" to change language, emergency contacts, etc.
+
+Part 3: Admin Dashboard
+A secure backend interface for administrators.
+
+3.1. Layout
+A fixed vertical sidebar menu on the left.
+
+A dynamic main content panel on the right.
+
+3.2. Left Sidebar Menu
+Create a navigation list with the following items:
+
+User Management
+
+Lost & Found Management
+
+Crowd & Heatmap
+
+Cleanliness & Feedback
+
+Spiritual Engagement
+
+Help Booth Management
+
+Reports & Analytics
+
+3.3. Main Content Panel
+Top Section (Always Visible): Quick stats cards showing: Total Registered Users, Active Pilgrims, Active Lost & Found Cases, and Active Alerts.
+
+Center Section (Dynamic): The content here changes based on the sidebar menu selection.
+
+On "User Management" click: Display a table of users with columns for Name, Phone, Aadhaar, Emergency Contact, Status. Each row must have "Verify," "Block," and "Edit" action buttons.
+
+On "Lost & Found Management" click: Display a list of reported cases. Each case should have "Approve," "Resolve," and "Forward to Police" buttons.
+
+On "Crowd & Heatmap" click: Show a live crowd density map with flashing markers for "red zones." Include a prominent "Activate Evacuation Route" button.
+
+On "Cleanliness & Feedback" click: Show a cleanliness rating heatmap and a table of user feedback. Each feedback item should have an option to "Assign task to sanitation staff" via a dropdown menu.
+
+On "Spiritual Engagement" click: Provide a form to "Schedule new events," a field to "Embed live stream link," and a "Push notification" button.
+
+On "Help Booth Management" click: Display a map of booths with options to "Add/Edit booth location" and "Assign volunteers."
+
+On "Reports & Analytics" click: Display graphs for daily visitors, lost & found trends, and cleanliness ratings. Include an "Export (PDF/Excel)" button.
+
+Bottom Section (Always Visible):
+
+A "Download Reports" button.
+
+Emergency control shortcuts: "Broadcast SMS" and "Broadcast Safety Alert" buttons.
+
+Global Components
+1. AI Bot (KumbhBot)
+A floating widget icon on the bottom-right corner of every page (public and user dashboard).
+
+On click, it opens a chat popup.
+
+The chat interface must have a language selector and a voice Q&A (mic icon) button.
+
+2. Footer
+A standard footer at the bottom of all public-facing pages.
+
+Layout: Three columns.
+
+Left Column: Emergency Helpline numbers (Police, Fire, Health).
+
+Center Column: Links to Government Policies and Privacy Notices.
+
+Right Column: Government and Sponsor Logos.
+
+for auth use firebase email and passward, and also for data to stire use database of firebase, use gemini fee api  key for chatbot and other place where you want its helps and also make the ui more neat and clean using orange theme, and add all working in all functions using more dummy data and show it like it is real and working correctly and also make seperate pages for all features and add this in nav bar and also add fully working in it as it is usefull for users as per your knowlege you also add you idea in it to make good, 
+
+also make Interactive Map Section like this in which use openstreetmap in which you have you make map of only ujjain mahakal lok in which you have to show the 3d visual of path to move to main temple in which add 3 lines one for male, other for female, one for old age people and mkae this path move creative like in which you have show all imp shops nearby which is needy for people for workip and for needy things, and add emergeny exits in it, also add toilets direction and path in it also , means you have to make this type of make if once a people goes through this path they will see all things of ujjain'mahakallok in shortest path without any problem to them and also without have much crowd by people ,
+
+and also AI Bot (KumbhBot) train this chatbot to know our whole webisite means if any one ask any thing to him it will give all answers to users in speaking mode with stop button also, 
+
+
+make this all things working correctly with fully complete 

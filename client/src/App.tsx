@@ -6,6 +6,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ElderlyModeProvider } from "@/contexts/ElderlyModeContext";
 import HomePage from "@/pages/HomePage";
+import FeaturesPage from "@/pages/FeaturesPage";
+import MapPage from "@/pages/MapPage";
+import LostFoundPage from "@/pages/LostFoundPage";
+import SpiritualPage from "@/pages/SpiritualPage";
+import ContactPage from "@/pages/ContactPage";
 import LoginPage from "@/pages/LoginPage";
 import UserDashboard from "@/pages/UserDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
@@ -82,6 +87,11 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/features" component={FeaturesPage} />
+      <Route path="/map" component={MapPage} />
+      <Route path="/lost-found" component={LostFoundPage} />
+      <Route path="/spiritual" component={SpiritualPage} />
+      <Route path="/contact" component={ContactPage} />
       <Route path="/login" component={LoginPage} />
       
       <Route path="/dashboard">
@@ -93,30 +103,6 @@ function Router() {
       <Route path="/admin">
         <ProtectedRoute adminOnly={true}>
           <AdminDashboard />
-        </ProtectedRoute>
-      </Route>
-      
-      <Route path="/map">
-        <ProtectedRoute>
-          <UserDashboard />
-        </ProtectedRoute>
-      </Route>
-      
-      <Route path="/lost-found">
-        <ProtectedRoute>
-          <UserDashboard />
-        </ProtectedRoute>
-      </Route>
-      
-      <Route path="/spiritual">
-        <ProtectedRoute>
-          <UserDashboard />
-        </ProtectedRoute>
-      </Route>
-      
-      <Route path="/contact">
-        <ProtectedRoute>
-          <UserDashboard />
         </ProtectedRoute>
       </Route>
 
