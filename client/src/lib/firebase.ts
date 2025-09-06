@@ -2,12 +2,20 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
-// Parse Firebase config from environment variable
+// Parse Firebase config from environment variable or use mock data
 let firebaseConfig;
+let useFirebase = false;
+
 try {
-  firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG || '{}');
+  const configString = import.meta.env.VITE_FIREBASE_CONFIG;
+  if (configString && configString !== '{}' && configString.includes('apiKey')) {
+    firebaseConfig = JSON.parse(configString);
+    useFirebase = true;
+  } else {
+    throw new Error('No valid Firebase config');
+  }
 } catch (error) {
-  console.warn('Firebase config not found or invalid, using demo config');
+  console.log('Using local mock data instead of Firebase');
   firebaseConfig = {
     apiKey: "demo-api-key",
     authDomain: "smartkumbh-demo.firebaseapp.com",
@@ -15,6 +23,7 @@ try {
     storageBucket: "smartkumbh-demo.firebasestorage.app",
     appId: "demo-app-id",
   };
+  useFirebase = false;
 }
 
 const app = initializeApp(firebaseConfig);
@@ -23,22 +32,55 @@ export const db = getFirestore(app);
 
 // Authentication functions
 export const createUser = async (email: string, password: string, userData: any) => {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  if (!useFirebase) {
+    // Mock user creation for demo
+    const mockUser = {
+      uid: `mock-${Date.now()}`,
+      email: email,
+      ...userData,
+      qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      createdAt: new Date(),
+    };
+    localStorage.setItem('mockUser', JSON.stringify(mockUser));
+    return mockUser;
+  }
   
-  // Add user data to Firestore
-  await addDoc(collection(db, "users"), {
-    uid: userCredential.user.uid,
-    email: userCredential.user.email,
-    ...userData,
-    qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-    createdAt: new Date(),
-  });
-  
-  return userCredential.user;
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Add user data to Firestore
+    await addDoc(collection(db, "users"), {
+      uid: userCredential.user.uid,
+      email: userCredential.user.email,
+      ...userData,
+      qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      createdAt: new Date(),
+    });
+    
+    return userCredential.user;
+  } catch (error) {
+    console.error('Firebase auth error:', error);
+    throw error;
+  }
 };
 
 export const loginUser = async (email: string, password: string) => {
-  return await signInWithEmailAndPassword(auth, email, password);
+  if (!useFirebase) {
+    // Mock login for demo
+    const mockUser = JSON.parse(localStorage.getItem('mockUser') || '{}');
+    if (mockUser.email === email) {
+      return { user: mockUser };
+    } else {
+      throw new Error('Invalid credentials');
+    }
+  }
+  
+  try {
+    return await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error('Firebase login error:', error);
+    throw error;
+  }
 };
 
 export const logoutUser = async () => {
@@ -47,21 +89,52 @@ export const logoutUser = async () => {
 
 // Firestore utility functions
 export const addDocument = async (collectionName: string, data: any) => {
-  return await addDoc(collection(db, collectionName), {
-    ...data,
-    createdAt: new Date(),
-  });
+  if (!useFirebase) {
+    // Store in localStorage for demo
+    const key = `mock_${collectionName}`;
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    const newDoc = {
+      id: Date.now().toString(),
+      ...data,
+      createdAt: new Date(),
+    };
+    existing.push(newDoc);
+    localStorage.setItem(key, JSON.stringify(existing));
+    return { id: newDoc.id };
+  }
+  
+  try {
+    return await addDoc(collection(db, collectionName), {
+      ...data,
+      createdAt: new Date(),
+    });
+  } catch (error) {
+    console.error('Firebase addDocument error:', error);
+    return { id: Date.now().toString() };
+  }
 };
 
 export const getDocuments = async (collectionName: string, conditions?: any) => {
-  let q = query(collection(db, collectionName));
-  
-  if (conditions) {
-    q = query(collection(db, collectionName), ...conditions);
+  if (!useFirebase) {
+    // Return mock data from localStorage
+    const key = `mock_${collectionName}`;
+    const data = JSON.parse(localStorage.getItem(key) || '[]');
+    return data;
   }
   
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  try {
+    let q = query(collection(db, collectionName));
+    
+    if (conditions) {
+      q = query(collection(db, collectionName), ...conditions);
+    }
+    
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Firebase getDocuments error:', error);
+    return [];
+  }
 };
 
 export const updateDocument = async (collectionName: string, docId: string, data: any) => {

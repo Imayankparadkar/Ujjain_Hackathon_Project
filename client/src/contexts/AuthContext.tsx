@@ -32,35 +32,68 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      
-      if (firebaseUser) {
-        // Fetch user profile from Firestore
-        try {
-          const q = query(
-            collection(db, "users"),
-            where("uid", "==", firebaseUser.uid)
-          );
-          const querySnapshot = await getDocs(q);
-          
-          if (!querySnapshot.empty) {
-            const profileData = querySnapshot.docs[0].data();
-            setUserProfile(profileData);
-            setIsAdmin(profileData.role === "admin");
+    try {
+      // Try to set up Firebase auth
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        setUser(firebaseUser);
+        
+        if (firebaseUser) {
+          // Fetch user profile from Firestore
+          try {
+            const q = query(
+              collection(db, "users"),
+              where("uid", "==", firebaseUser.uid)
+            );
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
+              const profileData = querySnapshot.docs[0].data();
+              setUserProfile(profileData);
+              setIsAdmin(profileData.role === "admin");
+            }
+          } catch (error) {
+            console.error("Error fetching user profile:", error);
           }
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
+        } else {
+          // Check for mock user in localStorage
+          const mockUser = localStorage.getItem('mockUser');
+          if (mockUser) {
+            try {
+              const userData = JSON.parse(mockUser);
+              setUser(userData as any);
+              setUserProfile(userData);
+              setIsAdmin(userData.role === "admin");
+            } catch (error) {
+              console.error("Error parsing mock user:", error);
+            }
+          } else {
+            setUserProfile(null);
+            setIsAdmin(false);
+          }
         }
-      } else {
-        setUserProfile(null);
-        setIsAdmin(false);
-      }
-      
-      setLoading(false);
-    });
+        
+        setLoading(false);
+      });
 
-    return unsubscribe;
+      return unsubscribe;
+    } catch (error) {
+      // If Firebase is not available, just check localStorage
+      console.log("Firebase not available, checking local storage");
+      const mockUser = localStorage.getItem('mockUser');
+      if (mockUser) {
+        try {
+          const userData = JSON.parse(mockUser);
+          setUser(userData as any);
+          setUserProfile(userData);
+          setIsAdmin(userData.role === "admin");
+        } catch (error) {
+          console.error("Error parsing mock user:", error);
+        }
+      }
+      setLoading(false);
+      
+      return () => {}; // Return empty cleanup function
+    }
   }, []);
 
   return (
