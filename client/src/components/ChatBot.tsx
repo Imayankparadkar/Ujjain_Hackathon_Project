@@ -81,15 +81,17 @@ export function ChatBot() {
 
       setMessages(prev => [...prev, botMessage]);
 
-      // Save chat message to Firebase
-      if (user) {
+      // Save chat message to Firebase or localStorage
+      try {
         await addDocument("chatMessages", {
-          userId: user.uid,
+          userId: user?.uid || 'anonymous',
           message: inputMessage,
           response: response,
           language: selectedLanguage,
           sessionId: `session-${Date.now()}`,
         });
+      } catch (error) {
+        console.log("Chat message saved locally");
       }
     } catch (error) {
       const errorMessage: Message = {

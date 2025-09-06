@@ -52,51 +52,41 @@ export default function HomePage() {
   }, []);
 
   const loadSpiritualEvents = async () => {
-    try {
-      const events = await getDocuments("spiritualEvents");
-      setSpiritualEvents((events as SpiritualEvent[]).slice(0, 3)); // Show only top 3
-    } catch (error) {
-      console.error("Error loading spiritual events:", error);
-      // Set default events if Firebase fails
-      setSpiritualEvents([
-        {
-          id: "1",
-          name: "Maha Aarti",
-          location: "Har Ki Pauri",
-          dateTime: { toDate: () => new Date(Date.now() + 2 * 60 * 60 * 1000) },
-          isLive: false,
-        },
-        {
-          id: "2",
-          name: "Ganga Puja",
-          location: "Triveni Sangam",
-          dateTime: { toDate: () => new Date(Date.now() + 24 * 60 * 60 * 1000) },
-          isLive: false,
-        },
-        {
-          id: "3",
-          name: "Shahi Snan",
-          location: "Main Bathing Ghat",
-          dateTime: { toDate: () => new Date("2024-01-29T04:00:00") },
-          isLive: false,
-        }
-      ]);
-    }
+    // Always use local dummy data for better user experience
+    setSpiritualEvents([
+      {
+        id: "1",
+        name: "Mahakal Bhasma Aarti",
+        location: "Mahakaleshwar Temple",
+        dateTime: { toDate: () => new Date(Date.now() + 2 * 60 * 60 * 1000) },
+        isLive: Math.random() > 0.5,
+      },
+      {
+        id: "2",
+        name: "Ganga Aarti",
+        location: "Triveni Sangam", 
+        dateTime: { toDate: () => new Date(Date.now() + 6 * 60 * 60 * 1000) },
+        isLive: false,
+      },
+      {
+        id: "3",
+        name: "Sandhya Aarti",
+        location: "Ujjain Temple",
+        dateTime: { toDate: () => new Date(Date.now() + 8 * 60 * 60 * 1000) },
+        isLive: false,
+      }
+    ]);
   };
 
   const loadCrowdData = async () => {
-    try {
-      const data = await getDocuments("crowdData");
-      setCrowdData(data);
-    } catch (error) {
-      console.error("Error loading crowd data:", error);
-      // Set default crowd data if Firebase fails
-      setCrowdData([
-        { location: "Har Ki Pauri", latitude: "29.9457", longitude: "78.1642", crowdCount: 8500, densityLevel: "high" },
-        { location: "Triveni Sangam", latitude: "25.4358", longitude: "81.8463", crowdCount: 3200, densityLevel: "medium" },
-        { location: "Chandi Devi Temple", latitude: "29.9759", longitude: "78.1354", crowdCount: 1800, densityLevel: "low" },
-      ]);
-    }
+    // Always use local dummy data for Ujjain Mahakal Lok
+    setCrowdData([
+      { location: "Mahakal Temple Main Gate", latitude: "23.1815", longitude: "75.7682", crowdCount: 8500, densityLevel: "high", waitTime: "45 min" },
+      { location: "Male Route Section", latitude: "23.1820", longitude: "75.7685", crowdCount: 6200, densityLevel: "medium", waitTime: "25 min" },
+      { location: "Female Route Section", latitude: "23.1810", longitude: "75.7685", crowdCount: 4100, densityLevel: "medium", waitTime: "15 min" },
+      { location: "Senior Citizens Path", latitude: "23.1825", longitude: "75.7680", crowdCount: 1200, densityLevel: "low", waitTime: "5 min" },
+      { location: "Temple Inner Sanctum", latitude: "23.1818", longitude: "75.7678", crowdCount: 3500, densityLevel: "medium", waitTime: "20 min" }
+    ]);
   };
 
   const scrollToSection = (sectionId: string) => {
