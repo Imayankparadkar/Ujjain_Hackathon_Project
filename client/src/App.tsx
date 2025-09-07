@@ -19,6 +19,7 @@ import NotFound from "@/pages/not-found";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { generateDummyData } from "@/lib/firebase";
+import { startRealTimeUpdates } from "@/lib/realTimeDataManager";
 
 function ProtectedRoute({ 
   children, 
@@ -62,10 +63,14 @@ function Router() {
   const [dummyDataGenerated, setDummyDataGenerated] = useState(false);
 
   useEffect(() => {
-    // Generate dummy data on first load (only in development)
+    // Generate comprehensive dummy data and start real-time updates for hackathon demo
     if (!dummyDataGenerated && !loading) {
       generateDummyData().then(() => {
         setDummyDataGenerated(true);
+        // Start real-time data updates for impressive hackathon demo
+        startRealTimeUpdates();
+        console.log("🎯 SmartKumbh Hackathon Demo Ready!");
+        console.log("📊 Features: Real-time data, QR codes, Firebase integration, Admin panel with 2FA");
       }).catch((error) => {
         console.log("Dummy data generation skipped or failed:", error);
         setDummyDataGenerated(true);

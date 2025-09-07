@@ -222,28 +222,66 @@ export const subscribeToCollection = (collectionName: string, callback: (data: a
   });
 };
 
-// Generate dummy data for development
+// Generate comprehensive dummy data for hackathon demo
 export const generateDummyData = async () => {
   try {
-    // Generate safety alerts
+    // Generate comprehensive safety alerts
     const safetyAlerts = [
       {
-        title: "High Crowd Alert",
-        message: "Har Ki Pauri experiencing high crowd density. Please use alternate routes.",
+        title: "🚨 Critical Crowd Alert",
+        message: "Mahakaleshwar Temple experiencing extremely high crowd density (8,500+ pilgrims). Use alternate Male/Female routes for faster access.",
         alertType: "crowd",
-        priority: "high",
-        location: "Har Ki Pauri",
+        priority: "critical",
+        location: "Mahakaleshwar Temple",
         isActive: true,
-        createdBy: "system",
+        createdBy: "AI System",
+        affectedAreas: ["Main Gate", "Male Route", "Female Route"],
+        estimatedWaitTime: "45 minutes",
+        alternateRoutes: ["Senior Citizen Path", "VIP Entry"],
       },
       {
-        title: "Weather Alert",
-        message: "Light rain expected in the evening. Carry umbrellas.",
+        title: "🌧️ Weather Update",
+        message: "Light rain predicted from 6 PM onwards. Temple authorities have arranged covered walkways. Carry umbrellas.",
         alertType: "weather",
         priority: "medium",
         location: "All Areas",
         isActive: true,
-        createdBy: "system",
+        createdBy: "Weather Monitoring",
+        temperature: "28°C",
+        humidity: "75%",
+        windSpeed: "12 km/h",
+      },
+      {
+        title: "🚧 Route Closure",
+        message: "East Gate temporarily closed for maintenance. Please use North or South gates for entry.",
+        alertType: "infrastructure",
+        priority: "high",
+        location: "East Gate",
+        isActive: true,
+        createdBy: "Infrastructure Team",
+        expectedDuration: "2 hours",
+        alternateEntries: ["North Gate", "South Gate"],
+      },
+      {
+        title: "📱 Network Congestion",
+        message: "High mobile network usage in Mahakal area. Use WiFi hotspots available at information centers.",
+        alertType: "network",
+        priority: "low",
+        location: "Mahakal Area",
+        isActive: true,
+        createdBy: "Network Team",
+        wifiHotspots: ["Info Center 1", "Info Center 2", "Medical Station"],
+      },
+      {
+        title: "🏥 Medical Alert",
+        message: "Extra medical staff deployed due to high temperatures. Stay hydrated and seek shade regularly.",
+        alertType: "medical",
+        priority: "medium",
+        location: "All Areas",
+        isActive: true,
+        createdBy: "Medical Team",
+        medicalStations: 8,
+        ambulancesOnStandby: 5,
       }
     ];
 
@@ -251,27 +289,78 @@ export const generateDummyData = async () => {
       await addDocument("safetyAlerts", alert);
     }
 
-    // Generate spiritual events
+    // Generate detailed spiritual events
     const spiritualEvents = [
       {
-        name: "Maha Aarti",
-        description: "Grand evening aarti ceremony at the holy ghats",
-        location: "Har Ki Pauri",
-        dateTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+        name: "Mahakal Bhasma Aarti",
+        description: "Sacred Bhasma Aarti performed with ash from cremation grounds. Only 50 devotees allowed inside sanctum.",
+        location: "Mahakaleshwar Temple - Inner Sanctum",
+        dateTime: new Date(Date.now() + 1 * 60 * 60 * 1000),
+        duration: 90,
+        isLive: true,
+        liveStreamUrl: "https://live.smartkumbh.com/bhasma-aarti",
+        reminderUserIds: [],
+        capacity: 50,
+        currentAttendees: 47,
+        specialInstructions: "Remove shoes, mobile phones not allowed",
+        significance: "Most sacred ritual of Lord Shiva",
+      },
+      {
+        name: "Ganga Aarti at Triveni",
+        description: "Evening aarti at the sacred confluence of three rivers. Mass participation with floating diyas.",
+        location: "Triveni Sangam Ghat",
+        dateTime: new Date(Date.now() + 5 * 60 * 60 * 1000),
         duration: 60,
         isLive: false,
         liveStreamUrl: "",
         reminderUserIds: [],
+        capacity: 2000,
+        currentAttendees: 1250,
+        ticketPrice: 0,
+        amenities: ["Prasad Counter", "Photo Service", "Wheelchair Access"],
       },
       {
-        name: "Ganga Puja",
-        description: "Morning prayers at the sacred confluence",
-        location: "Triveni Sangam",
-        dateTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-        duration: 45,
+        name: "Ram Katha Pravachan",
+        description: "Sacred discourse on Ramayana by renowned Sanskrit scholar Pandit Rajesh Shastri.",
+        location: "Dharmic Sabha Ground",
+        dateTime: new Date(Date.now() + 12 * 60 * 60 * 1000),
+        duration: 120,
         isLive: false,
         liveStreamUrl: "",
         reminderUserIds: [],
+        capacity: 5000,
+        currentAttendees: 3200,
+        speaker: "Pandit Rajesh Shastri",
+        languages: ["Hindi", "Sanskrit", "English translation available"],
+      },
+      {
+        name: "Sadhus Procession",
+        description: "Grand procession of Naga Sadhus and various akharas. Witness the ancient traditions of Kumbh Mela.",
+        location: "Main Procession Route",
+        dateTime: new Date(Date.now() + 18 * 60 * 60 * 1000),
+        duration: 180,
+        isLive: false,
+        liveStreamUrl: "",
+        reminderUserIds: [],
+        participatingAkharas: 13,
+        estimatedSadhus: 10000,
+        routeLength: "5.2 km",
+        viewingPoints: ["Point 1", "Point 2", "Point 3", "Point 4"],
+      },
+      {
+        name: "Midnight Abhishek",
+        description: "Special midnight abhishek (holy bath) of Lord Shiva. Limited entry with advance booking only.",
+        location: "Mahakaleshwar Temple",
+        dateTime: new Date(Date.now() + 14 * 60 * 60 * 1000),
+        duration: 45,
+        isLive: true,
+        liveStreamUrl: "https://live.smartkumbh.com/midnight-abhishek",
+        reminderUserIds: [],
+        capacity: 30,
+        currentAttendees: 30,
+        bookingRequired: true,
+        bookingFee: 500,
+        includes: ["Prasad", "Sacred Thread", "Holy Water"],
       }
     ];
 
@@ -279,33 +368,202 @@ export const generateDummyData = async () => {
       await addDocument("spiritualEvents", event);
     }
 
-    // Generate crowd data
+    // Generate comprehensive crowd data for Ujjain locations
     const locations = [
-      { name: "Har Ki Pauri", lat: "29.9457", lng: "78.1642" },
-      { name: "Triveni Sangam", lat: "25.4358", lng: "81.8463" },
-      { name: "Chandi Devi Temple", lat: "29.9759", lng: "78.1354" },
-      { name: "Main Bathing Ghat", lat: "29.9456", lng: "78.1640" },
+      { name: "Mahakaleshwar Temple Main Gate", lat: "23.1815", lng: "75.7682", type: "temple", capacity: 10000 },
+      { name: "Male Devotee Route", lat: "23.1820", lng: "75.7685", type: "route", capacity: 8000 },
+      { name: "Female Devotee Route", lat: "23.1810", lng: "75.7685", type: "route", capacity: 6000 },
+      { name: "Senior Citizens Priority Path", lat: "23.1825", lng: "75.7680", type: "route", capacity: 2000 },
+      { name: "VIP Darshan Entry", lat: "23.1812", lng: "75.7678", type: "entrance", capacity: 500 },
+      { name: "Temple Inner Sanctum", lat: "23.1818", lng: "75.7678", type: "sanctum", capacity: 100 },
+      { name: "Prasad Counter Area", lat: "23.1822", lng: "75.7683", type: "facility", capacity: 1500 },
+      { name: "Parking Area 1", lat: "23.1830", lng: "75.7690", type: "parking", capacity: 3000 },
+      { name: "Information Center", lat: "23.1805", lng: "75.7675", type: "facility", capacity: 800 },
+      { name: "Medical Station", lat: "23.1808", lng: "75.7688", type: "medical", capacity: 200 },
     ];
 
     for (const location of locations) {
-      const crowdCount = Math.floor(Math.random() * 10000) + 1000;
+      const crowdCount = Math.floor(Math.random() * location.capacity * 0.9) + Math.floor(location.capacity * 0.1);
+      const occupancyRate = Math.round((crowdCount / location.capacity) * 100);
+      
       let densityLevel = "low";
-      if (crowdCount > 7000) densityLevel = "critical";
-      else if (crowdCount > 5000) densityLevel = "high";
-      else if (crowdCount > 3000) densityLevel = "medium";
+      let waitTime = "No wait";
+      let status = "normal";
+      
+      if (occupancyRate > 90) {
+        densityLevel = "critical";
+        waitTime = "45-60 min";
+        status = "overcrowded";
+      } else if (occupancyRate > 75) {
+        densityLevel = "high";
+        waitTime = "25-35 min";
+        status = "busy";
+      } else if (occupancyRate > 50) {
+        densityLevel = "medium";
+        waitTime = "10-20 min";
+        status = "moderate";
+      } else {
+        waitTime = "No wait";
+        status = "clear";
+      }
 
       await addDocument("crowdData", {
         location: location.name,
         latitude: location.lat,
         longitude: location.lng,
         crowdCount,
+        capacity: location.capacity,
+        occupancyRate,
         densityLevel,
+        waitTime,
+        status,
+        lastUpdated: new Date(),
         timestamp: new Date(),
+        type: location.type,
+        facilities: location.type === 'medical' ? ['First Aid', 'Ambulance', 'Wheelchair'] : 
+                   location.type === 'facility' ? ['Water', 'Restroom', 'Information'] :
+                   location.type === 'parking' ? ['Security', 'CCTV', 'Lighting'] : [],
       });
     }
 
-    console.log("Dummy data generated successfully");
+    // Generate Lost & Found cases
+    const lostFoundCases = [
+      {
+        type: "missing_person",
+        name: "Ramesh Kumar",
+        age: 67,
+        description: "Elderly man, white beard, wearing orange kurta, speaks Hindi",
+        lastSeenLocation: "Mahakaleshwar Temple",
+        lastSeenTime: new Date(Date.now() - 3 * 60 * 60 * 1000),
+        contactInfo: "+91-9876543210",
+        reportedBy: "Sita Devi (Wife)",
+        status: "active",
+        priority: "high",
+        caseNumber: "LF-2024-001",
+        assignedOfficer: "Inspector Sharma",
+        medicalConditions: "Diabetes, High BP",
+      },
+      {
+        type: "missing_item",
+        name: "Black Handbag",
+        description: "Black leather handbag containing documents, mobile phone, and cash",
+        lastSeenLocation: "Prasad Counter",
+        lastSeenTime: new Date(Date.now() - 1 * 60 * 60 * 1000),
+        contactInfo: "+91-8765432109",
+        reportedBy: "Priya Sharma",
+        status: "active",
+        priority: "medium",
+        caseNumber: "LF-2024-002",
+        contents: ["Aadhaar Card", "Mobile Phone", "Cash Rs.5000", "Gold Ring"],
+      },
+      {
+        type: "found_item",
+        name: "Child's School Bag",
+        description: "Blue school bag with cartoon characters",
+        foundLocation: "Information Center",
+        foundTime: new Date(Date.now() - 30 * 60 * 1000),
+        foundBy: "Volunteer Team",
+        status: "found",
+        storageLocation: "Lost Property Office",
+        caseNumber: "LF-2024-003",
+        condition: "Good",
+      },
+      {
+        type: "missing_child",
+        name: "Arjun Patel",
+        age: 8,
+        description: "8-year-old boy, red t-shirt, blue shorts, speaks Gujarati and Hindi",
+        lastSeenLocation: "Near Temple Entrance",
+        lastSeenTime: new Date(Date.now() - 45 * 60 * 1000),
+        contactInfo: "+91-7654321098",
+        reportedBy: "Kishore Patel (Father)",
+        status: "active",
+        priority: "critical",
+        caseNumber: "LF-2024-004",
+        assignedOfficer: "Sub-Inspector Patel",
+        photo: "Available",
+        announcementMade: true,
+      }
+    ];
+
+    for (const case_ of lostFoundCases) {
+      await addDocument("lostAndFound", case_);
+    }
+
+    // Generate Cleanliness Reports
+    const cleanlinessReports = [
+      {
+        location: "Toilet Block A",
+        rating: 4,
+        issues: ["Low soap supply"],
+        reportedBy: "Anonymous",
+        facilityType: "restroom",
+        maintenanceRequired: false,
+        lastCleaned: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        cleaningFrequency: "Every 2 hours",
+        status: "good",
+      },
+      {
+        location: "Main Ghat Area",
+        rating: 3,
+        issues: ["Litter scattered", "Need more dustbins"],
+        reportedBy: "Volunteer Raj",
+        facilityType: "public_area",
+        maintenanceRequired: true,
+        actionTaken: "Cleaning crew dispatched",
+        priority: "medium",
+        status: "under_maintenance",
+      },
+      {
+        location: "Food Court",
+        rating: 5,
+        issues: [],
+        reportedBy: "Health Inspector",
+        facilityType: "food_area",
+        maintenanceRequired: false,
+        lastInspection: new Date(),
+        hygieneCertificate: "Valid",
+        status: "excellent",
+      }
+    ];
+
+    for (const report of cleanlinessReports) {
+      await addDocument("cleanlinessReports", report);
+    }
+
+    // Generate Help Booth Data
+    const helpBooths = [
+      {
+        name: "Main Information Center",
+        location: "Near Temple Entrance",
+        services: ["Information", "Lost & Found", "Emergency Contact", "Medical Aid"],
+        staffCount: 8,
+        languages: ["Hindi", "English", "Gujarati", "Marathi"],
+        contactNumber: "+91-1234567890",
+        operatingHours: "24/7",
+        currentStatus: "active",
+        equipments: ["First Aid Kit", "Wheelchair", "Lost Property Storage", "Phone Charging"],
+      },
+      {
+        name: "Tourist Help Desk",
+        location: "Main Gate",
+        services: ["Tourist Information", "Guide Services", "Complaint Registration"],
+        staffCount: 4,
+        languages: ["Hindi", "English"],
+        contactNumber: "+91-1234567891",
+        operatingHours: "6 AM - 10 PM",
+        currentStatus: "active",
+        specialServices: ["Free Maps", "Audio Guides", "Photography Services"],
+      }
+    ];
+
+    for (const booth of helpBooths) {
+      await addDocument("helpBooths", booth);
+    }
+
+    console.log("✅ Comprehensive hackathon dummy data generated successfully!");
+    console.log("📊 Generated: Safety Alerts, Events, Crowd Data, Lost & Found, Cleanliness Reports, Help Booths");
   } catch (error) {
-    console.error("Error generating dummy data:", error);
+    console.error("❌ Error generating dummy data:", error);
   }
 };
