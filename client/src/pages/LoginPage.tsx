@@ -19,9 +19,12 @@ const loginSchema = z.object({
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().optional(),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  emergencyContact: z.string().optional(),
+  emergencyContact: z.string().min(10, "Emergency contact must be at least 10 digits"),
+  age: z.number().min(1).max(120).optional(),
+  bloodGroup: z.string().optional(),
+  guardianContact: z.string().optional(),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -48,6 +51,9 @@ export default function LoginPage() {
       phone: "",
       password: "",
       emergencyContact: "",
+      age: undefined,
+      bloodGroup: "",
+      guardianContact: "",
     },
   });
 
@@ -202,23 +208,75 @@ export default function LoginPage() {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="register-phone">Phone Number</Label>
-                  <Input
-                    id="register-phone"
-                    placeholder="Enter your phone number"
-                    {...registerForm.register("phone")}
-                    data-testid="register-phone-input"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="register-phone">Phone Number *</Label>
+                    <Input
+                      id="register-phone"
+                      type="tel"
+                      placeholder="Your phone number"
+                      {...registerForm.register("phone")}
+                    />
+                    {registerForm.formState.errors.phone && (
+                      <p className="text-sm text-destructive">{registerForm.formState.errors.phone.message}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="register-age">Age</Label>
+                    <Input
+                      id="register-age"
+                      type="number"
+                      placeholder="Your age"
+                      {...registerForm.register("age", { valueAsNumber: true })}
+                    />
+                    {registerForm.formState.errors.age && (
+                      <p className="text-sm text-destructive">{registerForm.formState.errors.age.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="register-emergency">Emergency Contact *</Label>
+                    <Input
+                      id="register-emergency"
+                      type="tel"
+                      placeholder="Emergency contact number"
+                      {...registerForm.register("emergencyContact")}
+                    />
+                    {registerForm.formState.errors.emergencyContact && (
+                      <p className="text-sm text-destructive">{registerForm.formState.errors.emergencyContact.message}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="register-blood">Blood Group</Label>
+                    <select
+                      id="register-blood"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      {...registerForm.register("bloodGroup")}
+                    >
+                      <option value="">Select Blood Group</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="register-emergency">Emergency Contact</Label>
+                  <Label htmlFor="register-guardian">Guardian/Family Contact</Label>
                   <Input
-                    id="register-emergency"
-                    placeholder="Emergency contact number"
-                    {...registerForm.register("emergencyContact")}
-                    data-testid="register-emergency-input"
+                    id="register-guardian"
+                    type="tel"
+                    placeholder="Guardian or family contact (optional)"
+                    {...registerForm.register("guardianContact")}
                   />
                 </div>
 
@@ -236,13 +294,17 @@ export default function LoginPage() {
                   )}
                 </div>
 
+                <div className="text-xs text-gray-600 bg-orange-50 p-3 rounded-lg">
+                  <p className="font-semibold mb-1">🆔 QR Code Generation:</p>
+                  <p>After registration, you'll receive a unique QR code containing your contact information for emergency identification during the Kumbh Mela.</p>
+                </div>
+
                 <Button
                   type="submit"
-                  className="w-full bg-primary text-primary-foreground hover:bg-secondary"
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3"
                   disabled={isLoading}
-                  data-testid="register-submit-button"
                 >
-                  {isLoading ? "Creating Account..." : "Create Account"}
+                  {isLoading ? "Creating Account..." : "Create SmartKumbh Account"}
                 </Button>
               </form>
             </TabsContent>

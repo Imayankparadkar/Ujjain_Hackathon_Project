@@ -32,35 +32,68 @@ export const db = getFirestore(app);
 
 // Authentication functions
 export const createUser = async (email: string, password: string, userData: any) => {
+  // Generate unique QR ID
+  const qrId = `KMB-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}-${Date.now().toString().slice(-4)}`;
+  
   if (!useFirebase) {
     // Mock user creation for demo
     const mockUser = {
       uid: `mock-${Date.now()}`,
       email: email,
       ...userData,
-      qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      qrId: qrId,
       createdAt: new Date(),
+      isVerified: false,
+      isBlocked: false,
     };
     localStorage.setItem('mockUser', JSON.stringify(mockUser));
-    return mockUser;
+    return { user: mockUser };
   }
   
   try {
+    // Create Firebase user
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     
-    // Add user data to Firestore
-    await addDoc(collection(db, "users"), {
+    // Prepare user data for Firestore
+    const userDocData = {
       uid: userCredential.user.uid,
       email: userCredential.user.email,
-      ...userData,
-      qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      name: userData.name,
+      phone: userData.phone || '',
+      emergencyContact: userData.emergencyContact || '',
+      age: userData.age || null,
+      bloodGroup: userData.bloodGroup || '',
+      medicalConditions: userData.medicalConditions || [],
+      guardianContact: userData.guardianContact || '',
+      homeAddress: userData.homeAddress || '',
+      qrId: qrId,
+      role: userData.role || 'user',
+      isVerified: false,
+      isBlocked: false,
+      savedRoutes: [],
+      language: userData.language || 'en',
       createdAt: new Date(),
-    });
+      lastLogin: new Date(),
+    };
     
-    return userCredential.user;
-  } catch (error) {
+    // Add user data to Firestore
+    await addDoc(collection(db, "users"), userDocData);
+    
+    return userCredential;
+  } catch (error: any) {
     console.error('Firebase auth error:', error);
-    throw error;
+    
+    // Provide user-friendly error messages
+    let errorMessage = 'Registration failed. Please try again.';
+    if (error.code === 'auth/email-already-in-use') {
+      errorMessage = 'This email is already registered. Please use a different email or try logging in.';
+    } else if (error.code === 'auth/weak-password') {
+      errorMessage = 'Password is too weak. Please use at least 6 characters.';
+    } else if (error.code === 'auth/invalid-email') {
+      errorMessage = 'Please enter a valid email address.';
+    }
+    
+    throw new Error(errorMessage);
   }
 };
 
