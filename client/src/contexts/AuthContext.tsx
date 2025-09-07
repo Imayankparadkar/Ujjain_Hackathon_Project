@@ -53,23 +53,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           } catch (error) {
             console.error("Error fetching user profile:", error);
+            // Fallback to localStorage for persistence
+            checkLocalStorage();
           }
         } else {
-          // Check for mock user in localStorage
-          const mockUser = localStorage.getItem('mockUser');
-          if (mockUser) {
-            try {
-              const userData = JSON.parse(mockUser);
-              setUser(userData as any);
-              setUserProfile(userData);
-              setIsAdmin(userData.role === "admin");
-            } catch (error) {
-              console.error("Error parsing mock user:", error);
-            }
-          } else {
-            setUserProfile(null);
-            setIsAdmin(false);
-          }
+          checkLocalStorage();
         }
         
         setLoading(false);
@@ -79,22 +67,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       // If Firebase is not available, just check localStorage
       console.log("Firebase not available, checking local storage");
-      const mockUser = localStorage.getItem('mockUser');
-      if (mockUser) {
-        try {
-          const userData = JSON.parse(mockUser);
-          setUser(userData as any);
-          setUserProfile(userData);
-          setIsAdmin(userData.role === "admin");
-        } catch (error) {
-          console.error("Error parsing mock user:", error);
-        }
-      }
+      checkLocalStorage();
       setLoading(false);
       
       return () => {}; // Return empty cleanup function
     }
   }, []);
+
+  const checkLocalStorage = () => {
+    // Check for regular user session
+    const mockUser = localStorage.getItem('mockUser');
+    // Check for admin session
+    const adminSession = localStorage.getItem('adminSession');
+    
+    if (adminSession) {
+      try {
+        const adminData = JSON.parse(adminSession);
+        // Check if admin session is still valid (24 hour expiry)
+        const sessionAge = Date.now() - adminData.loginTime;
+        if (sessionAge < 24 * 60 * 60 * 1000) {
+          setUser(adminData as any);
+          setUserProfile(adminData);
+          setIsAdmin(true);
+          return;
+        } else {
+          // Clear expired admin session
+          localStorage.removeItem('adminSession');
+        }
+      } catch (error) {
+        console.error("Error parsing admin session:", error);
+        localStorage.removeItem('adminSession');
+      }
+    }
+    
+    if (mockUser) {
+      try {
+        const userData = JSON.parse(mockUser);
+        setUser(userData as any);
+        setUserProfile(userData);
+        setIsAdmin(userData.role === "admin");
+      } catch (error) {
+        console.error("Error parsing mock user:", error);
+        localStorage.removeItem('mockUser');
+        setUserProfile(null);
+        setIsAdmin(false);
+      }
+    } else {
+      setUserProfile(null);
+      setIsAdmin(false);
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ user, userProfile, loading, isAdmin }}>

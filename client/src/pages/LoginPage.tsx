@@ -165,7 +165,10 @@ export default function LoginPage() {
                 </Button>
 
                 <div className="text-center text-sm text-muted-foreground">
-                  Demo Admin: admin@smartkumbh.com / password: admin123
+                  <div>Demo User: user@demo.com / demo123</div>
+                  <a href="/admin/login" className="text-orange-600 hover:underline">
+                    Admin Login (Separate Portal)
+                  </a>
                 </div>
               </form>
             </TabsContent>

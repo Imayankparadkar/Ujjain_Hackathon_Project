@@ -12,6 +12,7 @@ import LostFoundPage from "@/pages/LostFoundPage";
 import SpiritualPage from "@/pages/SpiritualPage";
 import ContactPage from "@/pages/ContactPage";
 import LoginPage from "@/pages/LoginPage";
+import AdminLoginPage from "@/pages/AdminLoginPage";
 import UserDashboard from "@/pages/UserDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 import NotFound from "@/pages/not-found";
@@ -93,6 +94,7 @@ function Router() {
       <Route path="/spiritual" component={SpiritualPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/login" component={LoginPage} />
+      <Route path="/admin/login" component={AdminLoginPage} />
       
       <Route path="/dashboard">
         <ProtectedRoute>

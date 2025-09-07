@@ -66,9 +66,38 @@ export const createUser = async (email: string, password: string, userData: any)
 
 export const loginUser = async (email: string, password: string) => {
   if (!useFirebase) {
-    // Mock login for demo
-    const mockUser = JSON.parse(localStorage.getItem('mockUser') || '{}');
-    if (mockUser.email === email) {
+    // Mock login for demo - support multiple demo users
+    const demoUsers = [
+      {
+        email: 'user@demo.com',
+        password: 'demo123',
+        uid: 'demo-user-1',
+        name: 'Demo User',
+        role: 'user'
+      },
+      {
+        email: 'admin@smartkumbh.com',
+        password: 'admin123',
+        uid: 'demo-admin-1',
+        name: 'Admin User',
+        role: 'admin'
+      }
+    ];
+
+    const demoUser = demoUsers.find(u => u.email === email && u.password === password);
+    if (demoUser) {
+      const mockUser = {
+        ...demoUser,
+        qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        createdAt: new Date(),
+        isVerified: true,
+        isBlocked: false,
+        savedRoutes: [],
+        language: 'en'
+      };
+      
+      // Store in localStorage for persistence
+      localStorage.setItem('mockUser', JSON.stringify(mockUser));
       return { user: mockUser };
     } else {
       throw new Error('Invalid credentials');
