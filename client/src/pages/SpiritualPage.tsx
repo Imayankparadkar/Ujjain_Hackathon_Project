@@ -344,7 +344,7 @@ export default function SpiritualPage() {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-2">
-                        {getCategoryIcon(event.category)}
+                        {getCategoryIcon(event.category || 'puja')}
                         <CardTitle className="text-lg">{event.name}</CardTitle>
                       </div>
                       <Badge className="bg-green-100 text-green-800 border-green-200">
@@ -360,7 +360,7 @@ export default function SpiritualPage() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Users className="h-4 w-4 text-accent" />
-                        <span>{event.attendees.toLocaleString()} attending</span>
+                        <span>{(event.attendees || 0).toLocaleString()} attending</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Clock className="h-4 w-4 text-muted-foreground" />
@@ -504,8 +504,8 @@ export default function SpiritualPage() {
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-2">
                             <h4 className="font-semibold">{event.name}</h4>
-                            <Badge className={getCategoryColor(event.category)}>
-                              {event.category}
+                            <Badge className={getCategoryColor(event.category || 'puja')}>
+                              {event.category || 'puja'}
                             </Badge>
                           </div>
                           <div className="space-y-1 text-sm text-muted-foreground">
@@ -519,7 +519,7 @@ export default function SpiritualPage() {
                             </div>
                             <div className="flex items-center space-x-2">
                               <Users className="h-3 w-3" />
-                              <span>{event.attendees.toLocaleString()} expected</span>
+                              <span>{(event.attendees || 0).toLocaleString()} expected</span>
                             </div>
                           </div>
                           <p className="text-sm mt-2">{event.description}</p>
@@ -582,10 +582,10 @@ export default function SpiritualPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg mb-2">{event.name}</CardTitle>
-                      <Badge className={getCategoryColor(event.category)}>
+                      <Badge className={getCategoryColor(event.category || 'puja')}>
                         <div className="flex items-center space-x-1">
-                          {getCategoryIcon(event.category)}
-                          <span className="capitalize">{event.category}</span>
+                          {getCategoryIcon(event.category || 'puja')}
+                          <span className="capitalize">{event.category || 'puja'}</span>
                         </div>
                       </Badge>
                     </div>
@@ -607,7 +607,7 @@ export default function SpiritualPage() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Users className="h-4 w-4 text-green-600" />
-                      <span>{event.attendees.toLocaleString()} expected</span>
+                      <span>{(event.attendees || 0).toLocaleString()} expected</span>
                     </div>
                   </div>
 
@@ -654,7 +654,7 @@ export default function SpiritualPage() {
                       }}
                     >
                       <Users className="h-4 w-4 mr-2" />
-                      Join Event ({event.attendees.toLocaleString()}+)
+                      Join Event ({(event.attendees || 0).toLocaleString()}+)
                     </Button>
                     <Dialog>
                       <DialogTrigger asChild>
