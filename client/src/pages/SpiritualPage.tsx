@@ -80,6 +80,16 @@ export default function SpiritualPage() {
     }
     return 'Ancient Vedic ritual for spiritual growth and divine blessings.';
   };
+  
+  // Convert duration from minutes to readable format
+  const formatDuration = (minutes?: number | null): string => {
+    if (!minutes) return 'Duration TBD';
+    if (minutes < 60) return `${minutes} minutes`;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (remainingMinutes === 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
+    return `${hours}h ${remainingMinutes}m`;
+  };
 
   // Initialize live streams data
   useEffect(() => {
@@ -295,10 +305,16 @@ export default function SpiritualPage() {
                         onClick={() => {
                           // Open live stream in new window
                           const streamUrl = stream.streamUrl || `https://www.youtube.com/watch?v=${stream.id}`;
-                          window.open(streamUrl, '_blank', 'width=1000,height=600');
+                          const streamWindow = window.open(streamUrl, '_blank', 'width=1200,height=700,scrollbars=yes,resizable=yes');
+                          if (streamWindow) {
+                            streamWindow.focus();
+                          } else {
+                            // Fallback if popup blocked
+                            window.location.href = streamUrl;
+                          }
                           toast({
                             title: "🔴 Live Stream Opening",
-                            description: `Now watching: ${stream.title}`,
+                            description: `Now watching: ${stream.title} • ${stream.viewers.toLocaleString()} viewers`,
                           });
                         }}
                       >
@@ -364,14 +380,30 @@ export default function SpiritualPage() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span>{event.duration}</span>
+                        <span>{formatDuration(event.duration)}</span>
                       </div>
                     </div>
 
                     <p className="text-sm text-muted-foreground">{event.description}</p>
 
                     <div className="space-y-2 pt-2">
-                      <Button className="w-full bg-green-600 text-white hover:bg-green-700" data-testid={`watch-live-${event.id}`}>
+                      <Button 
+                        className="w-full bg-green-600 text-white hover:bg-green-700" 
+                        data-testid={`watch-live-${event.id}`}
+                        onClick={() => {
+                          const streamUrl = event.liveStreamUrl || `https://www.youtube.com/watch?v=${event.id}`;
+                          const streamWindow = window.open(streamUrl, '_blank', 'width=1200,height=700,scrollbars=yes,resizable=yes');
+                          if (streamWindow) {
+                            streamWindow.focus();
+                          } else {
+                            window.location.href = streamUrl;
+                          }
+                          toast({
+                            title: "🔴 Joining Live Event",
+                            description: `Now watching: ${event.name} live stream`,
+                          });
+                        }}
+                      >
                         <Play className="h-4 w-4 mr-2" />
                         Watch Live
                       </Button>
@@ -675,7 +707,7 @@ export default function SpiritualPage() {
                             <h4 className="font-semibold">{selectedEvent?.name}</h4>
                             <p><strong>Time:</strong> {selectedEvent && formatDateTime(selectedEvent.dateTime)}</p>
                             <p><strong>Location:</strong> {selectedEvent?.location}</p>
-                            <p><strong>Duration:</strong> {selectedEvent?.duration}</p>
+                            <p><strong>Duration:</strong> {formatDuration(selectedEvent?.duration)}</p>
                           </div>
                           <div className="bg-muted p-4 rounded-lg">
                             <h5 className="font-medium mb-2">Spiritual Significance:</h5>
