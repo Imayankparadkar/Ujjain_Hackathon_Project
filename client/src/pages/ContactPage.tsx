@@ -225,12 +225,12 @@ export default function ContactPage() {
       // Method 1: Try multiple EmailJS configurations
       let emailSent = false;
       
-      // Configuration attempts with different templates and parameters
+      // Configuration attempts with your working template ID
       const emailConfigs = [
         {
-          // Config 1: Your working service with minimal template
+          // Config 1: Your working service with correct template
           service: 'service_nliphhj',
-          template: 'template_ei1clxh',
+          template: 'template_31mjdri',
           params: {
             to_name: 'SmartKumbh Team',
             from_name: formData.name,
@@ -252,7 +252,7 @@ Submitted: ${new Date().toLocaleString()}`,
         {
           // Config 2: Basic parameters that work with default templates
           service: 'service_nliphhj',
-          template: 'template_ei1clxh',
+          template: 'template_31mjdri',
           params: {
             user_name: formData.name,
             user_email: formData.email || 'no-email@provided.com',
@@ -263,7 +263,7 @@ Submitted: ${new Date().toLocaleString()}`,
         {
           // Config 3: Most minimal approach
           service: 'service_nliphhj', 
-          template: 'template_ei1clxh',
+          template: 'template_31mjdri',
           params: {
             name: formData.name,
             email: formData.email || 'no-email@provided.com',
