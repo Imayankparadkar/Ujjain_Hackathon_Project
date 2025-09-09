@@ -18,6 +18,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import NotFound from "@/pages/not-found";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import { generateDummyData } from "@/lib/firebase";
 import { startRealTimeUpdates } from "@/lib/realTimeDataManager";
 
@@ -60,6 +61,7 @@ function ProtectedRoute({
 
 function Router() {
   const { user, isAdmin, loading } = useAuth();
+  const [, setLocation] = useLocation();
   const [dummyDataGenerated, setDummyDataGenerated] = useState(false);
 
   useEffect(() => {
@@ -90,8 +92,33 @@ function Router() {
     );
   }
 
+  // If user is admin, show only admin dashboard (no public site access)
+  if (user && isAdmin) {
+    return (
+      <Switch>
+        <Route path="/admin/login" component={AdminLoginPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/admin">
+          <ProtectedRoute adminOnly={true}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/">
+          <ProtectedRoute adminOnly={true}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        </Route>
+        <Route component={() => {
+          setLocation("/admin");
+          return null;
+        }} />
+      </Switch>
+    );
+  }
+
   return (
     <Switch>
+      {/* Public routes */}
       <Route path="/" component={HomePage} />
       <Route path="/features" component={FeaturesPage} />
       <Route path="/map" component={MapPage} />
@@ -101,16 +128,16 @@ function Router() {
       <Route path="/login" component={LoginPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       
+      {/* User dashboard */}
       <Route path="/dashboard">
         <ProtectedRoute>
-          {isAdmin ? <AdminDashboard /> : <UserDashboard />}
+          <UserDashboard />
         </ProtectedRoute>
       </Route>
       
+      {/* Admin routes - redirect to login if not admin */}
       <Route path="/admin">
-        <ProtectedRoute adminOnly={true}>
-          <AdminDashboard />
-        </ProtectedRoute>
+        <AdminLoginPage />
       </Route>
 
       {/* Fallback to 404 */}
