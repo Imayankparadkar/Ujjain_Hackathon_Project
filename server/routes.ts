@@ -79,47 +79,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Contact form email endpoint
-  app.post("/api/contact/send", async (req, res) => {
+  // Contact form storage endpoint
+  app.post("/api/contact/store", async (req, res) => {
+    console.log('📧 Contact form submission received for storage:', req.body);
+    
     try {
-      const { name, email, phone, category, subject, message } = req.body;
+      const contactData = req.body;
       
-      // Validate required fields
-      if (!name || !phone || !subject || !message) {
-        return res.status(400).json({ message: "Missing required fields" });
+      // Store in memory for now (in production this would go to database)
+      if (!global.contactSubmissions) {
+        global.contactSubmissions = [];
       }
-
-      const templateParams = {
-        from_name: name,
-        from_email: email || "no-email@provided.com",
-        phone: phone,
-        category: category || "General Inquiry",
-        subject: subject,
-        message: message,
-        reply_to: email || phone,
-      };
-
-      // Send email using EmailJS Node.js
-      const emailjsResponse = await emailjs.send(
-        process.env.EMAILJS_SERVICE_ID!,
-        process.env.EMAILJS_TEMPLATE_ID!,
-        templateParams,
-        {
-          publicKey: process.env.EMAILJS_PUBLIC_KEY!,
-        }
-      );
-
-      console.log('✅ Email sent successfully:', emailjsResponse.status, emailjsResponse.text);
-      res.json({ success: true, message: "Email sent successfully" });
       
+      global.contactSubmissions.push({
+        ...contactData,
+        serverTimestamp: new Date().toISOString()
+      });
+      
+      console.log('✅ Contact data stored successfully. Total submissions:', global.contactSubmissions.length);
+      
+      res.json({ 
+        success: true, 
+        message: 'Contact data stored successfully',
+        id: contactData.id
+      });
     } catch (error: any) {
-      console.error('❌ Email sending failed:', error);
+      console.error('❌ Contact storage failed:', error);
       res.status(500).json({ 
         success: false, 
-        message: "Failed to send email", 
+        message: 'Failed to store contact data',
         error: error.message 
       });
     }
+  });
+
+  // Get all contact submissions endpoint (for admin)
+  app.get("/api/contact/submissions", (req, res) => {
+    const submissions = global.contactSubmissions || [];
+    console.log('📋 Retrieved contact submissions:', submissions.length);
+    res.json({ submissions });
   });
 
   // Users endpoints
