@@ -348,6 +348,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Gemini AI Chatbot endpoint
+  app.post("/api/chat/ask", async (req, res) => {
+    try {
+      const { message, userId } = req.body;
+      
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: "Message is required" });
+      }
+
+      // Use Gemini API key from environment
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        // Fallback to smart responses if no API key
+        const smartResponses = {
+          "temple": "🕉️ Mahakaleshwar Temple is open 24/7. Bhasma Aarti happens at 4 AM daily. Current wait time is approximately 25-30 minutes.",
+          "crowd": "📊 Current crowd levels: Mahakaleshwar Temple (High), Kal Bhairav (Medium), Harsiddhi (Low). Best time to visit is early morning or late evening.",
+          "weather": "🌤️ Today's weather: Partly cloudy, 28°C. Light rain expected after 6 PM. Please carry umbrellas.",
+          "route": "🗺️ Best route to Mahakaleshwar: Take the Senior Citizen path for faster access. Avoid Main Gate between 10 AM - 4 PM due to high crowds.",
+          "emergency": "🚨 For emergencies, call 108 or visit nearest medical station. Emergency contacts: Police: 100, Medical: 108, Fire: 101",
+          "food": "🍽️ Prasad available at temple counter. Food courts located near Main Gate and Parking Area 1. All food is vegetarian and hygienic.",
+          "lost": "📢 For lost items or people, immediately contact Lost & Found booth near Information Center or call +91-1234567890",
+          "parking": "🚗 Parking areas: Area 1 (70% full), Area 2 (45% full), Area 3 (30% full). Area 3 recommended for quick exit.",
+        };
+
+        let response = "🙏 Welcome to SmartKumbh AI Assistant! I can help you with temple information, crowd updates, routes, weather, emergencies, and more. What would you like to know?";
+        
+        const lowerMessage = message.toLowerCase();
+        for (const [keyword, answer] of Object.entries(smartResponses)) {
+          if (lowerMessage.includes(keyword)) {
+            response = answer;
+            break;
+          }
+        }
+
+        return res.json({ 
+          response,
+          timestamp: new Date().toISOString(),
+          type: "ai_assistant"
+        });
+      }
+
+      // If Gemini API key is available, use Gemini API
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+      
+      const systemPrompt = `You are SmartKumbh AI Assistant, helping pilgrims at Ujjain Maha Kumbh. Provide helpful, accurate information about:
+- Temple timings, rituals, and spiritual events
+- Crowd levels and best visiting times  
+- Weather updates and safety alerts
+- Navigation and route guidance
+- Emergency services and help booths
+- Food, parking, and facilities
+- Lost & found assistance
+
+Keep responses concise, helpful, and respectful. Use appropriate emojis. Always prioritize pilgrim safety and spiritual experience.
+
+Context: Current location is Ujjain Maha Kumbh. Major temples include Mahakaleshwar, Kal Bhairav, Harsiddhi. Peak hours are 6-10 AM and 5-9 PM.`;
+
+      const requestBody = {
+        contents: [{
+          parts: [{
+            text: `${systemPrompt}\n\nUser Question: ${message}`
+          }]
+        }]
+      };
+
+      const geminiResponse = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!geminiResponse.ok) {
+        throw new Error(`Gemini API error: ${geminiResponse.status}`);
+      }
+
+      const geminiData = await geminiResponse.json();
+      const aiResponse = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't process your request. Please try again.";
+
+      // Store the conversation
+      await storage.createChatMessage({
+        userId: userId || 'anonymous',
+        message: message,
+        response: aiResponse
+      });
+
+      res.json({ 
+        response: aiResponse,
+        timestamp: new Date().toISOString(),
+        type: "ai_assistant"
+      });
+
+    } catch (error) {
+      console.error('Chatbot error:', error);
+      res.status(500).json({ 
+        error: "Sorry, I'm having trouble right now. Please try again or contact help desk.",
+        fallback: true
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -4,8 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { MessageCircle, X, Mic, Send, Volume2 } from "lucide-react";
-import { kumbhBot } from "@/lib/gemini";
-import { addDocument } from "@/lib/firebase";
+import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface Message {
@@ -70,33 +69,35 @@ export function ChatBot() {
     setIsLoading(true);
 
     try {
-      const response = await kumbhBot.sendMessage(inputMessage, selectedLanguage);
+      // Use the new API endpoint for Gemini AI
+      const response = await fetch('/api/chat/ask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: inputMessage,
+          userId: user?.uid || 'anonymous',
+          language: selectedLanguage
+        })
+      });
+      
+      const data = await response.json();
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: response,
+        text: data.response || "I'm sorry, I couldn't process your request.",
         isBot: true,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, botMessage]);
 
-      // Save chat message to Firebase or localStorage
-      try {
-        await addDocument("chatMessages", {
-          userId: user?.uid || 'anonymous',
-          message: inputMessage,
-          response: response,
-          language: selectedLanguage,
-          sessionId: `session-${Date.now()}`,
-        });
-      } catch (error) {
-        console.log("Chat message saved locally");
-      }
     } catch (error) {
+      console.error('Chatbot error:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I apologize, but I'm experiencing technical difficulties. Please try again later.",
+        text: "🙏 Namaste! I'm experiencing some technical difficulties. Please try asking about temple timings, crowd updates, weather, routes, or emergency services.",
         isBot: true,
         timestamp: new Date(),
       };
