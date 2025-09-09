@@ -349,7 +349,15 @@ export default function HomePage() {
                         {event.dateTime.toDate().toLocaleDateString()} at {event.dateTime.toDate().toLocaleTimeString()}
                       </p>
                     </div>
-                    <Button size="sm" variant="outline" className="border-orange-500 text-orange-600 hover:bg-orange-50">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-colors"
+                      onClick={() => {
+                        // Navigate to spiritual page with focus on this event
+                        window.location.href = '/spiritual';
+                      }}
+                    >
                       <Bell className="h-4 w-4 mr-1" />
                       Set Reminder
                     </Button>
