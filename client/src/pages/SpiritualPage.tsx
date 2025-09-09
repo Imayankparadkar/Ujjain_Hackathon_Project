@@ -38,22 +38,6 @@ export default function SpiritualPage() {
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
   const [reminderEvents, setReminderEvents] = useState<Set<string>>(new Set());
 
-  // Fetch spiritual events from backend
-  const { data: events = [], isLoading, error } = useQuery({
-    queryKey: ['/api/spiritual-events'],
-    select: (data: SpiritualEvent[]) => {
-      // Convert backend data to UI format and add UI-specific properties
-      return data.map(event => ({
-        ...event,
-        dateTime: new Date(event.dateTime),
-        attendees: Math.floor(Math.random() * 5000) + 500, // Generate realistic attendee count
-        category: getCategoryFromName(event.name),
-        significance: getSignificanceFromName(event.name),
-        streamUrl: event.liveStreamUrl || `live_stream_${event.id}`,
-      })) as SpiritualEventUI[];
-    },
-  });
-
   // Helper functions to infer category and significance from event name
   const getCategoryFromName = (name: string): "aarti" | "puja" | "snan" | "procession" | "discourse" => {
     const nameLower = name.toLowerCase();
@@ -80,6 +64,22 @@ export default function SpiritualPage() {
     }
     return 'Ancient Vedic ritual for spiritual growth and divine blessings.';
   };
+
+  // Fetch spiritual events from backend
+  const { data: events = [], isLoading, error } = useQuery({
+    queryKey: ['/api/spiritual-events'],
+    select: (data: SpiritualEvent[]) => {
+      // Convert backend data to UI format and add UI-specific properties
+      return data.map(event => ({
+        ...event,
+        dateTime: new Date(event.dateTime),
+        attendees: Math.floor(Math.random() * 5000) + 500, // Generate realistic attendee count
+        category: getCategoryFromName(event.name),
+        significance: getSignificanceFromName(event.name),
+        streamUrl: event.liveStreamUrl || `live_stream_${event.id}`,
+      })) as SpiritualEventUI[];
+    },
+  });
   
   // Convert duration from minutes to readable format
   const formatDuration = (minutes?: number | null): string => {
