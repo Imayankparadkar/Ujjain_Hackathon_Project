@@ -210,29 +210,15 @@ export default function ContactPage() {
         reply_to: formData.email || formData.phone,
       };
 
-      // Send email via server endpoint
-      const response = await fetch('/api/contact/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          category: formData.category,
-          subject: formData.subject,
-          message: formData.message
-        })
-      });
-
-      const result = await response.json();
+      // Send email using EmailJS directly with working credentials
+      await emailjs.send(
+        'service_sc4uhaf',    // Your service ID
+        'template_ei1clxh',   // Your template ID  
+        templateParams,
+        'meeJQZm3Annuk5wqg'   // Your public key
+      );
       
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to send email');
-      }
-      
-      console.log('✅ Email sent successfully via server:', result);
+      console.log('✅ Email sent successfully via EmailJS');
 
       toast({
         title: "Message Sent Successfully! ✅",
