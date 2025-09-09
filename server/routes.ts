@@ -54,6 +54,11 @@ const createCrowdDataSchema = z.object({
   densityLevel: z.enum(["low", "medium", "high", "critical"]),
 });
 
+// Declare global type for contact submissions
+declare global {
+  var contactSubmissions: any[];
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Config endpoint for frontend
   app.get("/api/config", async (req, res) => {

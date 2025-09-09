@@ -238,7 +238,7 @@ export class MemStorage implements IStorage {
       duration: insertEvent.duration || null,
       liveStreamUrl: insertEvent.liveStreamUrl || null,
       isLive: insertEvent.isLive || null,
-      reminderUserIds: insertEvent.reminderUserIds || [],
+      reminderUserIds: (insertEvent.reminderUserIds || []) as string[],
     };
     this.spiritualEvents.set(id, event);
     return event;
@@ -339,9 +339,9 @@ export class MemStorage implements IStorage {
       ...insertBooth,
       id,
       isActive: insertBooth.isActive || null,
-      volunteers: insertBooth.volunteers || [],
+      volunteers: (insertBooth.volunteers || []) as string[],
       contactNumber: insertBooth.contactNumber || null,
-      services: insertBooth.services || [],
+      services: (insertBooth.services || []) as string[],
     };
     this.helpBooths.set(id, booth);
     return booth;
