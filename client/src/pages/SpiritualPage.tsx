@@ -30,6 +30,7 @@ export default function SpiritualPage() {
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
+  const [reminderEvents, setReminderEvents] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Mock spiritual events data
@@ -209,6 +210,64 @@ export default function SpiritualPage() {
     });
   };
 
+  const setEventReminder = (event: SpiritualEvent) => {
+    const newReminders = new Set(reminderEvents);
+    
+    if (reminderEvents.has(event.id)) {
+      newReminders.delete(event.id);
+      toast({
+        title: "🔕 Reminder Removed",
+        description: `Reminder for ${event.name} has been cancelled.`,
+      });
+    } else {
+      newReminders.add(event.id);
+      
+      // Calculate time until event
+      const now = new Date();
+      const eventTime = new Date(event.dateTime);
+      const timeDiff = eventTime.getTime() - now.getTime();
+      
+      // Set browser notification if supported and permission granted
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const reminderTime = Math.max(timeDiff - (15 * 60 * 1000), 5000); // 15 minutes before or 5 seconds if event is soon
+        
+        setTimeout(() => {
+          new Notification(`🕉️ ${event.name} starts in 15 minutes!`, {
+            body: `Location: ${event.location}`,
+            icon: '/favicon.ico',
+            tag: event.id
+          });
+        }, reminderTime);
+      }
+      
+      toast({
+        title: "🔔 Reminder Set!",
+        description: `You'll be notified 15 minutes before ${event.name} starts.`,
+      });
+    }
+    
+    setReminderEvents(newReminders);
+    localStorage.setItem('smartkumbh_reminders', JSON.stringify(Array.from(newReminders)));
+  };
+
+  // Load saved reminders on component mount
+  useEffect(() => {
+    const savedReminders = localStorage.getItem('smartkumbh_reminders');
+    if (savedReminders) {
+      try {
+        const reminderArray = JSON.parse(savedReminders);
+        setReminderEvents(new Set(reminderArray));
+      } catch (error) {
+        console.error('Error loading saved reminders:', error);
+      }
+    }
+
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
   const getTimeUntilEvent = (date: Date) => {
     const now = new Date();
     const diff = date.getTime() - now.getTime();
@@ -236,10 +295,10 @@ export default function SpiritualPage() {
   return (
     <Layout>
       {/* Header */}
-      <section className="py-8 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+      <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Spiritual Engagement</h1>
-          <p className="text-primary-foreground/90">Live streams, events, and spiritual experiences</p>
+          <p className="text-orange-50">Live streams, events, and spiritual experiences</p>
         </div>
       </section>
 
@@ -501,15 +560,41 @@ export default function SpiritualPage() {
                           </div>
                           <p className="text-sm mt-2">{event.description}</p>
                           <div className="flex space-x-2 mt-3">
-                            <Button size="sm" variant="outline" className="flex-1 hover:bg-primary hover:text-primary-foreground transition-colors">
-                              <Bell className="h-3 w-3 mr-1" />
-                              Set Reminder
+                            <Button 
+                              size="sm" 
+                              variant={reminderEvents.has(event.id) ? "default" : "outline"}
+                              className={`flex-1 transition-colors ${
+                                reminderEvents.has(event.id) 
+                                  ? "bg-orange-500 text-white hover:bg-orange-600" 
+                                  : "hover:bg-orange-500 hover:text-white border-orange-300"
+                              }`}
+                              onClick={() => setEventReminder(event)}
+                            >
+                              <Bell className={`h-3 w-3 mr-1 ${reminderEvents.has(event.id) ? 'animate-pulse' : ''}`} />
+                              {reminderEvents.has(event.id) ? 'Reminder Set' : 'Set Reminder'}
                             </Button>
-                            <Button size="sm" variant="outline" className="flex-1 hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="flex-1 hover:bg-orange-100 hover:text-orange-800 border-orange-300 transition-colors"
+                              onClick={() => {
+                                const coords = event.location.includes('Mahakaleshwar') ? '23.1828,75.7681' : '23.1765,75.7661';
+                                window.open(`https://www.openstreetmap.org/directions?from=&to=${coords}`, '_blank');
+                              }}
+                            >
                               <MapPin className="h-3 w-3 mr-1" />
                               Get Directions
                             </Button>
-                            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                            <Button 
+                              size="sm" 
+                              className="bg-orange-500 text-white hover:bg-orange-600"
+                              onClick={() => {
+                                toast({
+                                  title: "🎉 Event Joined!",
+                                  description: `You've successfully joined ${event.name}. You'll receive updates about this event.`,
+                                });
+                              }}
+                            >
                               Join Event
                             </Button>
                           </div>
@@ -569,19 +654,23 @@ export default function SpiritualPage() {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button 
-                            variant="outline" 
-                            className="flex-1 hover:bg-primary hover:text-primary-foreground transition-colors" 
+                            variant={reminderEvents.has(event.id) ? "default" : "outline"}
+                            className={`flex-1 transition-colors ${
+                              reminderEvents.has(event.id) 
+                                ? "bg-orange-500 text-white hover:bg-orange-600" 
+                                : "hover:bg-orange-500 hover:text-white border-orange-300"
+                            }`}
                             data-testid={`set-reminder-${event.id}`}
-                            onClick={() => setSelectedEvent(event)}
+                            onClick={() => setEventReminder(event)}
                           >
-                            <Bell className="h-4 w-4 mr-1" />
-                            Remind Me
+                            <Bell className={`h-4 w-4 mr-1 ${reminderEvents.has(event.id) ? 'animate-pulse' : ''}`} />
+                            {reminderEvents.has(event.id) ? 'Reminder Set' : 'Set Reminder'}
                           </Button>
                         </DialogTrigger>
                       </Dialog>
                       <Button 
                         variant="outline" 
-                        className="flex-1 hover:bg-secondary hover:text-secondary-foreground transition-colors"
+                        className="flex-1 hover:bg-orange-100 hover:text-orange-800 border-orange-300 transition-colors"
                         onClick={() => {
                           const coords = event.location.includes('Mahakaleshwar') ? '23.1828,75.7681' : '23.1765,75.7661';
                           window.open(`https://www.openstreetmap.org/directions?from=&to=${coords}`, '_blank');
@@ -592,7 +681,7 @@ export default function SpiritualPage() {
                       </Button>
                     </div>
                     <Button 
-                      className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      className="w-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
                       onClick={() => {
                         toast({
                           title: "🎉 Event Joined!",
@@ -629,9 +718,17 @@ export default function SpiritualPage() {
                             <p className="text-sm text-muted-foreground">{selectedEvent?.significance}</p>
                           </div>
                           <div className="flex space-x-3">
-                            <Button className="flex-1" data-testid="confirm-reminder">
+                            <Button 
+                              className="flex-1 bg-orange-500 text-white hover:bg-orange-600" 
+                              data-testid="confirm-reminder"
+                              onClick={() => {
+                                if (selectedEvent) {
+                                  setEventReminder(selectedEvent);
+                                }
+                              }}
+                            >
                               <Bell className="h-4 w-4 mr-2" />
-                              Set Reminder
+                              {selectedEvent && reminderEvents.has(selectedEvent.id) ? 'Remove Reminder' : 'Set Reminder'}
                             </Button>
                             <Button variant="outline" className="flex-1">Cancel</Button>
                           </div>
