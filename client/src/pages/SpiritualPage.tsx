@@ -389,24 +389,69 @@ export default function SpiritualPage() {
                       mode="single"
                       selected={selectedDate}
                       onSelect={setSelectedDate}
-                      className="rounded-md"
+                      className="rounded-md border-0"
                       modifiers={{
-                        eventDay: events.map(event => new Date(event.dateTime.toDateString()))
+                        eventDay: events.map(event => new Date(event.dateTime.toDateString())),
+                        today: new Date()
                       }}
                       modifiersStyles={{
                         eventDay: {
                           backgroundColor: 'hsl(var(--primary))',
                           color: 'hsl(var(--primary-foreground))',
-                          fontWeight: 'bold'
+                          fontWeight: 'bold',
+                          borderRadius: '6px',
+                          transform: 'scale(1.05)',
+                          transition: 'all 0.2s ease',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        },
+                        today: {
+                          backgroundColor: 'hsl(var(--secondary))',
+                          color: 'hsl(var(--secondary-foreground))',
+                          fontWeight: 'bold',
+                          border: '2px solid hsl(var(--primary))',
+                          borderRadius: '6px'
                         }
                       }}
                     />
-                    <div className="mt-4 text-sm text-muted-foreground">
-                      <p className="font-medium mb-2">Event Legend:</p>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-primary rounded"></div>
-                        <span>Days with events</span>
+                    <div className="mt-4 space-y-3">
+                      <p className="font-semibold text-sm text-foreground">📅 Calendar Legend:</p>
+                      <div className="grid grid-cols-1 gap-2 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-4 h-4 bg-primary rounded-md shadow-sm"></div>
+                          <span className="text-muted-foreground">Events scheduled</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-4 h-4 bg-secondary border-2 border-primary rounded-md"></div>
+                          <span className="text-muted-foreground">Today</span>
+                        </div>
                       </div>
+                      {selectedDate && (
+                        <div className="mt-3 p-3 bg-muted/30 rounded-lg border border-border/50">
+                          <p className="text-sm font-medium text-foreground">
+                            📆 {selectedDate.toLocaleDateString('en-IN', { 
+                              weekday: 'long', 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            })}
+                          </p>
+                          {events.filter(event => 
+                            new Date(event.dateTime.toDateString()).getTime() === 
+                            new Date(selectedDate.toDateString()).getTime()
+                          ).length > 0 ? (
+                            <p className="text-xs text-primary mt-1 font-medium">
+                              🎉 {events.filter(event => 
+                                new Date(event.dateTime.toDateString()).getTime() === 
+                                new Date(selectedDate.toDateString()).getTime()
+                              ).length} event(s) scheduled
+                            </p>
+                          ) : (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              No events scheduled
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
