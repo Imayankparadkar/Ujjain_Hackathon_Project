@@ -760,17 +760,26 @@ export default function AttractionsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-gray-600">Interactive Map View</p>
-                  <p className="text-sm text-gray-500">
-                    {selectedAttraction.location.address}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Coordinates: {selectedAttraction.location.coordinates.join(", ")}
-                  </p>
-                </div>
+              <div className="h-96 rounded-lg overflow-hidden border">
+                <Map 
+                  center={selectedAttraction.location.coordinates as [number, number]}
+                  zoom={15}
+                  className="h-full w-full"
+                />
+              </div>
+              <div className="mt-4 text-sm text-gray-600">
+                <p className="font-medium">{selectedAttraction.location.address}</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Coordinates: {selectedAttraction.location.coordinates.join(", ")}
+                </p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2"
+                  onClick={() => setShowMap(false)}
+                >
+                  Close Map
+                </Button>
               </div>
             </CardContent>
           </Card>
