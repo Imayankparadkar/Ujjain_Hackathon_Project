@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { Layout } from "@/components/Layout";
-import { MapPin, Clock, Star, Navigation, Search, Filter, Phone, Globe, Users } from "lucide-react";
+import { MapPin, Clock, Star, Navigation, Search, Filter, Phone, Globe, Users, Info, Calendar, Eye } from "lucide-react";
 import { Map } from "@/components/ui/map";
 
 interface Attraction {
@@ -36,6 +38,8 @@ export default function AttractionsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showMap, setShowMap] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [detailAttraction, setDetailAttraction] = useState<Attraction | null>(null);
 
   useEffect(() => {
     // Comprehensive Ujjain attractions data
@@ -675,6 +679,11 @@ export default function AttractionsPage() {
     }
   };
 
+  const handleViewDetails = (attraction: Attraction) => {
+    setDetailAttraction(attraction);
+    setShowDetailModal(true);
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -822,26 +831,38 @@ export default function AttractionsPage() {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2">
                     <Button
                       size="sm"
-                      variant="outline"
-                      onClick={() => handleViewOnMap(attraction)}
-                      className="flex items-center space-x-1"
-                      data-testid={`view-map-${attraction.id}`}
-                    >
-                      <MapPin className="h-3 w-3" />
-                      <span>View on Map</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => handleGetDirections(attraction)}
+                      onClick={() => handleViewDetails(attraction)}
                       className="flex items-center space-x-1 bg-primary text-primary-foreground hover:bg-primary/90"
-                      data-testid={`get-directions-${attraction.id}`}
+                      data-testid={`view-details-${attraction.id}`}
                     >
-                      <Navigation className="h-3 w-3" />
-                      <span>Get Directions</span>
+                      <Info className="h-3 w-3" />
+                      <span>View Details & Pricing</span>
                     </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleViewOnMap(attraction)}
+                        className="flex items-center space-x-1"
+                        data-testid={`view-map-${attraction.id}`}
+                      >
+                        <MapPin className="h-3 w-3" />
+                        <span>Map</span>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleGetDirections(attraction)}
+                        className="flex items-center space-x-1"
+                        data-testid={`get-directions-${attraction.id}`}
+                      >
+                        <Navigation className="h-3 w-3" />
+                        <span>Directions</span>
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
@@ -891,6 +912,223 @@ export default function AttractionsPage() {
           </div>
         )}
       </div>
+
+      {/* Detailed Attraction Modal */}
+      <Dialog open={showDetailModal} onOpenChange={setShowDetailModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {detailAttraction && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center space-x-2 text-xl">
+                  <span>{detailAttraction.name}</span>
+                  <Badge className={getCategoryColor(detailAttraction.category)}>
+                    {detailAttraction.category}
+                  </Badge>
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {/* Hero Image and Rating */}
+                <div className="relative">
+                  <img
+                    src={detailAttraction.image}
+                    alt={detailAttraction.name}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full p-2">
+                    <div className="flex items-center space-x-2">
+                      <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                      <span className="font-bold">{detailAttraction.rating}</span>
+                      <span className="text-sm text-gray-600">({detailAttraction.reviews} reviews)</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* About Section */}
+                <div>
+                  <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                    <Info className="h-5 w-5" />
+                    <span>About</span>
+                  </h3>
+                  <p className="text-gray-700 mb-4">{detailAttraction.description}</p>
+                  
+                  {/* Significance */}
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-orange-800 mb-2">Spiritual Significance</h4>
+                    <p className="text-orange-700">{detailAttraction.significance}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Pricing & Practical Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                      <span>💰</span>
+                      <span>Entry Fee & Pricing</span>
+                    </h3>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-lg font-semibold text-green-800">{detailAttraction.entryFee}</p>
+                      <p className="text-sm text-green-600 mt-1">
+                        {detailAttraction.entryFee === "Free" ? "No entry charges required" : "Check for special darshan pricing"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                      <Clock className="h-5 w-5" />
+                      <span>Timings</span>
+                    </h3>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-lg font-semibold text-blue-800">{detailAttraction.timings}</p>
+                      <p className="text-sm text-blue-600 mt-1">Daily operating hours</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Best Time to Visit */}
+                <div>
+                  <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                    <Calendar className="h-5 w-5" />
+                    <span>Best Time to Visit</span>
+                  </h3>
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <p className="text-purple-700">{detailAttraction.bestTimeToVisit}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Highlights */}
+                <div>
+                  <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                    <Eye className="h-5 w-5" />
+                    <span>Highlights & Features</span>
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {detailAttraction.highlights.map((highlight, index) => (
+                      <Badge key={index} variant="outline" className="py-2 px-3 text-center">
+                        {highlight}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Location Information */}
+                <div>
+                  <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                    <MapPin className="h-5 w-5" />
+                    <span>Location & Address</span>
+                  </h3>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <p className="font-medium">{detailAttraction.location.address}</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Coordinates: {detailAttraction.location.coordinates.join(", ")}
+                    </p>
+                  </div>
+
+                  {/* Nearby Attractions */}
+                  {detailAttraction.nearbyAttractions.length > 0 && (
+                    <div className="mt-4">
+                      <h4 className="font-semibold mb-2">Nearby Attractions</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {detailAttraction.nearbyAttractions.map((nearby, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {nearby}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <Separator />
+
+                {/* Contact Information */}
+                {(detailAttraction.contact || detailAttraction.website) && (
+                  <div>
+                    <h3 className="text-lg font-bold mb-3 flex items-center space-x-2">
+                      <Phone className="h-5 w-5" />
+                      <span>Contact Information</span>
+                    </h3>
+                    <div className="space-y-2">
+                      {detailAttraction.contact && (
+                        <div className="flex items-center space-x-2">
+                          <Phone className="h-4 w-4 text-gray-500" />
+                          <span>{detailAttraction.contact}</span>
+                        </div>
+                      )}
+                      {detailAttraction.website && (
+                        <div className="flex items-center space-x-2">
+                          <Globe className="h-4 w-4 text-gray-500" />
+                          <a 
+                            href={`https://${detailAttraction.website}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            {detailAttraction.website}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <Separator />
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-4">
+                  <Button
+                    onClick={() => {
+                      handleViewOnMap(detailAttraction);
+                      setShowDetailModal(false);
+                    }}
+                    variant="outline"
+                    className="flex items-center space-x-2"
+                  >
+                    <MapPin className="h-4 w-4" />
+                    <span>View on Map</span>
+                  </Button>
+                  <Button
+                    onClick={() => handleGetDirections(detailAttraction)}
+                    className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    <Navigation className="h-4 w-4" />
+                    <span>Get Directions</span>
+                  </Button>
+                  {detailAttraction.contact && (
+                    <Button
+                      onClick={() => window.open(`tel:${detailAttraction.contact}`, '_self')}
+                      variant="outline"
+                      className="flex items-center space-x-2"
+                    >
+                      <Phone className="h-4 w-4" />
+                      <span>Call</span>
+                    </Button>
+                  )}
+                  {detailAttraction.website && (
+                    <Button
+                      onClick={() => window.open(`https://${detailAttraction.website}`, '_blank')}
+                      variant="outline"
+                      className="flex items-center space-x-2"
+                    >
+                      <Globe className="h-4 w-4" />
+                      <span>Visit Website</span>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
