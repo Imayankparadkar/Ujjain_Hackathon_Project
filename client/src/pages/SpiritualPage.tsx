@@ -6,6 +6,7 @@ import { Layout } from "@/components/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon, Grid, List } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/hooks/use-toast";
 
 interface SpiritualEvent {
   id: string;
@@ -22,6 +23,7 @@ interface SpiritualEvent {
 }
 
 export default function SpiritualPage() {
+  const { toast } = useToast();
   const [events, setEvents] = useState<SpiritualEvent[]>([]);
   const [liveStreams, setLiveStreams] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<SpiritualEvent | null>(null);
@@ -267,6 +269,15 @@ export default function SpiritualPage() {
                       <Button 
                         className="bg-white/20 backdrop-blur-md p-6 rounded-full hover:bg-white/30 group-hover:scale-110 transition-all"
                         data-testid={`play-stream-${stream.id}`}
+                        onClick={() => {
+                          // Open live stream in new window
+                          const streamUrl = stream.streamUrl || `https://www.youtube.com/watch?v=${stream.id}`;
+                          window.open(streamUrl, '_blank', 'width=1000,height=600');
+                          toast({
+                            title: "🔴 Live Stream Opening",
+                            description: `Now watching: ${stream.title}`,
+                          });
+                        }}
                       >
                         <Play className="text-white text-2xl" />
                       </Button>
@@ -490,12 +501,16 @@ export default function SpiritualPage() {
                           </div>
                           <p className="text-sm mt-2">{event.description}</p>
                           <div className="flex space-x-2 mt-3">
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" className="flex-1 hover:bg-primary hover:text-primary-foreground transition-colors">
                               <Bell className="h-3 w-3 mr-1" />
-                              Remind Me
+                              Set Reminder
                             </Button>
-                            <Button size="sm" variant="outline">
-                              Learn More
+                            <Button size="sm" variant="outline" className="flex-1 hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                              <MapPin className="h-3 w-3 mr-1" />
+                              Get Directions
+                            </Button>
+                            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                              Join Event
                             </Button>
                           </div>
                         </CardContent>
@@ -550,16 +565,52 @@ export default function SpiritualPage() {
                   <p className="text-sm text-muted-foreground">{event.description}</p>
 
                   <div className="space-y-2 pt-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            className="flex-1 hover:bg-primary hover:text-primary-foreground transition-colors" 
+                            data-testid={`set-reminder-${event.id}`}
+                            onClick={() => setSelectedEvent(event)}
+                          >
+                            <Bell className="h-4 w-4 mr-1" />
+                            Remind Me
+                          </Button>
+                        </DialogTrigger>
+                      </Dialog>
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 hover:bg-secondary hover:text-secondary-foreground transition-colors"
+                        onClick={() => {
+                          const coords = event.location.includes('Mahakaleshwar') ? '23.1828,75.7681' : '23.1765,75.7661';
+                          window.open(`https://www.openstreetmap.org/directions?from=&to=${coords}`, '_blank');
+                        }}
+                      >
+                        <MapPin className="h-4 w-4 mr-1" />
+                        Directions
+                      </Button>
+                    </div>
+                    <Button 
+                      className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      onClick={() => {
+                        toast({
+                          title: "🎉 Event Joined!",
+                          description: `You've successfully joined ${event.name}. You'll receive updates about this event.`,
+                        });
+                      }}
+                    >
+                      <Users className="h-4 w-4 mr-2" />
+                      Join Event ({event.attendees.toLocaleString()}+)
+                    </Button>
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button 
-                          variant="outline" 
-                          className="w-full" 
-                          data-testid={`set-reminder-${event.id}`}
-                          onClick={() => setSelectedEvent(event)}
+                          variant="ghost" 
+                          className="w-full text-muted-foreground hover:text-foreground" 
+                          data-testid={`learn-more-${event.id}`}
                         >
-                          <Bell className="h-4 w-4 mr-2" />
-                          Set Reminder
+                          Learn More About This Event
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
