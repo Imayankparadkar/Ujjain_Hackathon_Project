@@ -222,61 +222,15 @@ export default function ContactPage() {
         reply_to: formData.email || formData.phone,
       };
 
-      // Try sending with a basic template structure that should work
-      try {
-        await emailjs.send(
-          'service_sc4uhaf',
-          'template_ei1clxh',
-          emailParams,
-          'meeJQZm3Annuk5wqg'
-        );
-        console.log('✅ Email sent successfully via EmailJS');
-      } catch (templateError: any) {
-        console.log('Template not found, trying alternative approach...');
-        
-        // Alternative: Use emailjs.sendForm with a more basic structure
-        const formElement = document.createElement('form');
-        
-        const addField = (name: string, value: string) => {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = name;
-          input.value = value;
-          formElement.appendChild(input);
-        };
-        
-        addField('to_name', 'SmartKumbh Support Team');
-        addField('from_name', formData.name);
-        addField('from_email', formData.email || 'no-email@provided.com');
-        addField('phone', formData.phone);
-        addField('subject', formData.subject);
-        addField('message', formData.message);
-        
-        document.body.appendChild(formElement);
-        
-        try {
-          await emailjs.sendForm(
-            'service_sc4uhaf',
-            'template_ei1clxh',
-            formElement,
-            'meeJQZm3Annuk5wqg'
-          );
-          console.log('✅ Email sent successfully via EmailJS form method');
-        } catch (error2: any) {
-          // Final fallback - just show success and log data
-          console.log('📧 Contact form data (EmailJS setup needed):', {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            subject: formData.subject,
-            message: formData.message,
-            timestamp: new Date().toISOString()
-          });
-          console.log('To fix emails: Please verify your EmailJS template ID at https://dashboard.emailjs.com/admin/templates');
-        }
-        
-        document.body.removeChild(formElement);
-      }
+      // Send email using the working service ID
+      await emailjs.send(
+        'service_nliphhj',    // Your WORKING service ID
+        'template_ei1clxh',   // Template ID (will try this first)
+        emailParams,
+        'meeJQZm3Annuk5wqg'   // Your public key
+      );
+      
+      console.log('✅ Email sent successfully via EmailJS with service_nliphhj');
 
       toast({
         title: "Message Sent Successfully! ✅",
