@@ -27,17 +27,25 @@ export default function ContactPage() {
   } | null>(null);
 
   useEffect(() => {
-    // Fetch EmailJS config from API
-    fetch('/api/config')
-      .then(res => res.json())
-      .then(data => {
-        if (data.emailjs) {
-          setEmailConfig(data.emailjs);
-        }
-      })
-      .catch(error => {
-        console.error('Failed to fetch EmailJS config:', error);
-      });
+    // Initialize EmailJS - using direct initialization
+    emailjs.init({
+      publicKey: 'tVyg2A5xLlMlVD8_7',
+      // Block headless browsers for security
+      blockHeadless: true,
+      limitRate: {
+        // Set the limit rate for the application
+        id: 'app',
+        // Allow 1 request per 10s
+        throttle: 10000,
+      },
+    });
+    
+    // Set config for the component
+    setEmailConfig({
+      serviceId: 'service_z35jfsh',
+      templateId: 'template_37v5b0c',
+      publicKey: 'tVyg2A5xLlMlVD8_7'
+    });
   }, []);
 
   const emergencyContacts = [
