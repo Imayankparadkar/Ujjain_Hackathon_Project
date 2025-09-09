@@ -7,7 +7,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import QRGenerator from "@/components/QRGenerator";
 import QRScanner from "@/components/QRScanner";
 import { UserProfile } from "@/lib/qrcode";
-import { getDocuments, subscribeToCollection } from "@/lib/firebase";
+import { api, createPollingSubscription } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 import { QrCode, Scan, MapPin, AlertTriangle, Calendar, Phone, Route, Shield, Bell, Users, Clock, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -31,32 +33,38 @@ export default function UserDashboard() {
   useEffect(() => {
     loadDashboardData();
     
-    // Real-time data subscriptions
-    const unsubscribeAlerts = subscribeToCollection(
-      "safetyAlerts",
+    // Real-time data subscriptions using polling
+    const unsubscribeAlerts = createPollingSubscription(
+      "/api/safety-alerts",
       (data) => {
         const activeAlerts = data.filter((alert: any) => alert.isActive).slice(0, 3);
         setAlerts(activeAlerts);
         setRealTimeStats(prev => ({ ...prev, activeAlerts: activeAlerts.length }));
-      }
+      },
+      5000
     );
 
-    const unsubscribeCrowd = subscribeToCollection(
-      "crowdData",
+    const unsubscribeCrowd = createPollingSubscription(
+      "/api/crowd-data",
       (data) => {
         setCrowdData(data);
         const totalVisitors = data.reduce((sum: number, item: any) => sum + (item.crowdCount || 0), 0);
         setRealTimeStats(prev => ({ ...prev, totalVisitors }));
-      }
+      },
+      3000
     );
 
-    const unsubscribeEvents = subscribeToCollection(
-      "spiritualEvents",
+    const unsubscribeEvents = createPollingSubscription(
+      "/api/spiritual-events",
       (data) => {
-        const upcoming = data.filter((event: any) => new Date(event.dateTime.seconds * 1000) > new Date()).slice(0, 3);
+        const upcoming = data.filter((event: any) => {
+          const eventDate = new Date(event.dateTime);
+          return eventDate > new Date();
+        }).slice(0, 3);
         setEvents(upcoming);
         setRealTimeStats(prev => ({ ...prev, upcomingEvents: upcoming.length }));
-      }
+      },
+      5000
     );
 
     // Simulate real-time visitor count updates
@@ -77,11 +85,22 @@ export default function UserDashboard() {
 
   const loadDashboardData = async () => {
     try {
-      const [lostFoundData] = await Promise.all([
-        getDocuments("lostAndFound")
+      const [lostFoundData, dashboardStats] = await Promise.all([
+        api.getLostFoundCases(),
+        api.getDashboardStats()
       ]);
       
       setLostFoundCases(lostFoundData.slice(0, 3));
+      
+      // Update stats with real data
+      if (dashboardStats) {
+        setRealTimeStats(prev => ({
+          ...prev,
+          totalVisitors: dashboardStats.totalUsers || prev.totalVisitors,
+          activeAlerts: dashboardStats.activeAlerts || prev.activeAlerts,
+          lostFoundCases: dashboardStats.lostFoundCases || prev.lostFoundCases
+        }));
+      }
     } catch (error) {
       console.error("Error loading dashboard data:", error);
     }
@@ -293,14 +312,14 @@ export default function UserDashboard() {
             {alerts.length > 0 ? (
               <div className="space-y-3">
                 {alerts.map((alert, index) => (
-                  <div key={index} className={`p-4 rounded-lg border-l-4 ${getAlertPriorityColor(alert.priority)}`}>
+                  <div key={index} className={`p-4 rounded-lg border-l-4 ${getAlertPriorityColor(alert.priority)}`} data-testid={`alert-${index}`}>
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-semibold text-gray-800">{alert.title}</h4>
                         <p className="text-sm text-gray-600 mt-1">{alert.message}</p>
                         <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
                           <span>📍 {alert.location}</span>
-                          <span>⏰ {new Date(alert.createdAt?.seconds * 1000).toLocaleTimeString()}</span>
+                          <span>⏰ {new Date(alert.createdAt).toLocaleTimeString()}</span>
                           <span className={`px-2 py-1 rounded-full text-xs ${getAlertPriorityColor(alert.priority)}`}>
                             {alert.priority.toUpperCase()}
                           </span>
@@ -327,20 +346,26 @@ export default function UserDashboard() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {crowdData.slice(0, 6).map((location, index) => (
-                <div key={index} className={`p-4 rounded-lg border ${getCrowdStatusColor(location.densityLevel)}`}>
+                <div key={index} className={`p-4 rounded-lg border ${getCrowdStatusColor(location.densityLevel)}`} data-testid={`crowd-location-${index}`}>
                   <h4 className="font-semibold text-gray-800 text-sm">{location.location}</h4>
                   <div className="mt-2 space-y-1">
                     <div className="flex justify-between text-xs">
                       <span>Current Count:</span>
-                      <span className="font-bold">{location.crowdCount?.toLocaleString()}</span>
+                      <span className="font-bold" data-testid={`crowd-count-${index}`}>{location.crowdCount?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-xs">
                       <span>Wait Time:</span>
-                      <span className="font-bold">{location.waitTime}</span>
+                      <span className="font-bold" data-testid={`wait-time-${index}`}>{location.waitTime || 'No wait'}</span>
                     </div>
                     <div className="flex justify-between text-xs">
                       <span>Status:</span>
-                      <span className="font-bold capitalize">{location.status}</span>
+                      <span className="font-bold capitalize" data-testid={`status-${index}`}>{location.status || location.densityLevel}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Density:</span>
+                      <span className={`font-bold capitalize ${getCrowdStatusColor(location.densityLevel).split(' ')[0]}`}>
+                        {location.densityLevel}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -351,34 +376,34 @@ export default function UserDashboard() {
 
         {/* Quick Access Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="border-purple-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105">
+          <Card className="border-purple-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/map'}>
             <CardContent className="p-6 text-center">
               <MapPin className="h-12 w-12 text-purple-600 mx-auto mb-4" />
               <h3 className="font-semibold text-gray-800 mb-2">Interactive Map</h3>
               <p className="text-sm text-gray-600 mb-4">Navigate with AI-powered route optimization and real-time crowd density</p>
-              <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50">
+              <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50" data-testid="open-map-button">
                 Open Live Map
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="border-red-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105">
+          <Card className="border-red-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/lost-found'}>
             <CardContent className="p-6 text-center">
               <AlertTriangle className="h-12 w-12 text-red-600 mx-auto mb-4" />
               <h3 className="font-semibold text-gray-800 mb-2">Lost & Found</h3>
               <p className="text-sm text-gray-600 mb-4">Report missing persons/items or search our database with AI matching</p>
-              <Button variant="outline" className="w-full border-red-600 text-red-600 hover:bg-red-50">
+              <Button variant="outline" className="w-full border-red-600 text-red-600 hover:bg-red-50" data-testid="access-lost-found-button">
                 Access Service
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="border-indigo-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105">
+          <Card className="border-indigo-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/spiritual'}>
             <CardContent className="p-6 text-center">
               <Calendar className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
               <h3 className="font-semibold text-gray-800 mb-2">Spiritual Events</h3>
               <p className="text-sm text-gray-600 mb-4">Live streaming, event reminders, and sacred ceremony schedules</p>
-              <Button variant="outline" className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-50">
+              <Button variant="outline" className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-50" data-testid="view-events-button">
                 View Live Events
               </Button>
             </CardContent>

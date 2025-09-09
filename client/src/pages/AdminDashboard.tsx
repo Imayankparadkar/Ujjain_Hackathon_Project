@@ -11,7 +11,9 @@ import { Map } from "@/components/ui/map";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocation } from "wouter";
-import { getDocuments, addDocument, updateDocument, deleteDocument, subscribeToCollection } from "@/lib/firebase";
+import { api, createPollingSubscription } from "@/lib/api";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 import { 
   Users, Search, BarChart3, Leaf, Heart, HelpCircle, FileText, Download, 
   MessageSquare, AlertTriangle, CheckCircle, X, Edit, Plus, MapPin, 
@@ -97,10 +99,22 @@ export default function AdminDashboard() {
     activeAlerts: 0,
   });
 
+  // Search and filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterType, setFilterType] = useState("all");
+
   useEffect(() => {
     loadAllData();
     setupRealtimeListeners();
   }, []);
+
+  // React Query hooks for real-time data
+  const { data: dashboardStats, refetch: refetchStats } = useQuery({
+    queryKey: ["/api/dashboard/stats"],
+    queryFn: api.getDashboardStats,
+    refetchInterval: 10000, // Refetch every 10 seconds
+  });
 
   const loadAllData = async () => {
     setLoading(true);
@@ -114,13 +128,13 @@ export default function AdminDashboard() {
         eventsData,
         boothsData
       ] = await Promise.all([
-        getDocuments("users"),
-        getDocuments("lostAndFound"),
-        getDocuments("cleanlinessReports"),
-        getDocuments("crowdData"),
-        getDocuments("safetyAlerts"),
-        getDocuments("spiritualEvents"),
-        getDocuments("helpBooths"),
+        api.getUsers(),
+        api.getLostFoundCases(),
+        api.getCleanlinessReports(),
+        api.getCrowdData(),
+        api.getSafetyAlerts(),
+        api.getSpiritualEvents(),
+        api.getHelpBooths(),
       ]);
 
       // Process lost & found data and include localStorage reports
@@ -172,17 +186,16 @@ export default function AdminDashboard() {
   };
 
   const setupRealtimeListeners = () => {
-    // Subscribe to real-time updates for critical data
-    subscribeToCollection("safetyAlerts", (data) => {
+    // Setup polling for real-time updates
+    const unsubscribeAlerts = createPollingSubscription("/api/safety-alerts", (data) => {
       setSafetyAlerts(data);
       setStats(prev => ({ ...prev, activeAlerts: data.filter((a: any) => a.isActive).length }));
-    });
+    }, 5000);
 
-    subscribeToCollection("crowdData", setCrowdData);
+    const unsubscribeCrowd = createPollingSubscription("/api/crowd-data", setCrowdData, 3000);
     
-    // Subscribe to lost & found updates
-    subscribeToCollection("lostAndFound", (data) => {
-      // Include localStorage data with Firebase data
+    const unsubscribeLostFound = createPollingSubscription("/api/lost-found", (data) => {
+      // Include localStorage data with API data
       const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
       const processedLocalReports = localReports.map((item: any) => ({
         id: item.id,
@@ -202,8 +215,14 @@ export default function AdminDashboard() {
       const allCases = [...data, ...processedLocalReports];
       setLostFoundCases(allCases);
       setStats(prev => ({ ...prev, lostFoundCases: allCases.filter((c: any) => c.status === "active").length }));
-      console.log("Real-time update: Lost & Found cases:", allCases.length);
-    });
+    }, 5000);
+
+    // Cleanup function
+    return () => {
+      unsubscribeAlerts();
+      unsubscribeCrowd();
+      unsubscribeLostFound();
+    };
   };
 
   const handleUserAction = async (userId: string, action: "verify" | "block" | "unblock") => {
@@ -213,8 +232,9 @@ export default function AdminDashboard() {
       if (action === "block") updates.isBlocked = true;
       if (action === "unblock") updates.isBlocked = false;
 
-      await updateDocument("users", userId, updates);
+      await api.updateUser(userId, updates);
       await loadAllData(); // Refresh data
+      queryClient.invalidateQueries({ queryKey: ["/api/users"] });
 
       toast({
         title: "Success",
@@ -238,12 +258,12 @@ export default function AdminDashboard() {
         updates.resolvedAt = new Date();
       }
       if (action === "forward") {
-        // In real implementation, this would notify police
         updates.assignedOfficer = "Police Station 1";
       }
 
-      await updateDocument("lostAndFound", caseId, updates);
+      await api.updateLostFoundCase(caseId, updates);
       await loadAllData();
+      queryClient.invalidateQueries({ queryKey: ["/api/lost-found"] });
 
       toast({
         title: "Success",
@@ -260,7 +280,7 @@ export default function AdminDashboard() {
 
   const createSafetyAlert = async () => {
     try {
-      await addDocument("safetyAlerts", {
+      await api.createSafetyAlert({
         ...newAlert,
         isActive: true,
         createdBy: userProfile?.name || "Admin",
@@ -289,9 +309,9 @@ export default function AdminDashboard() {
 
   const createSpiritualEvent = async () => {
     try {
-      await addDocument("spiritualEvents", {
+      await api.createSpiritualEvent({
         ...newEvent,
-        dateTime: new Date(newEvent.dateTime),
+        dateTime: newEvent.dateTime,
         isLive: false,
         reminderUserIds: [],
       });
@@ -320,13 +340,14 @@ export default function AdminDashboard() {
 
   const assignStaffToReport = async (reportId: string, staffName: string) => {
     try {
-      await updateDocument("cleanlinessReports", reportId, {
+      await api.updateCleanlinessReport(reportId, {
         assignedStaff: staffName,
         isResolved: true,
         resolvedAt: new Date(),
       });
 
       await loadAllData();
+      queryClient.invalidateQueries({ queryKey: ["/api/cleanliness-reports"] });
 
       toast({
         title: "Staff Assigned",
@@ -342,29 +363,29 @@ export default function AdminDashboard() {
   };
 
   const broadcastSMS = async () => {
-    // In real implementation, this would integrate with SMS gateway
-    toast({
-      title: "SMS Broadcast Sent",
-      description: "Emergency SMS has been sent to all registered users.",
-    });
+    try {
+      await api.broadcastEmergencySMS("Emergency alert: Please follow safety instructions and evacuation routes.");
+      toast({
+        title: "SMS Broadcast Sent",
+        description: "Emergency SMS has been sent to all registered users.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to broadcast SMS.",
+        variant: "destructive",
+      });
+    }
   };
 
   const activateEvacuationRoute = async () => {
     try {
-      await addDocument("safetyAlerts", {
-        title: "EVACUATION ALERT",
-        message: "Emergency evacuation routes have been activated. Please follow the designated paths.",
-        alertType: "emergency",
-        priority: "critical",
-        location: "All Areas",
-        isActive: true,
-        createdBy: userProfile?.name || "Admin",
-      });
-
+      await api.activateEvacuationRoute();
       toast({
         title: "Evacuation Activated",
         description: "Emergency evacuation routes are now active.",
       });
+      await loadAllData(); // Refresh to show new alert
     } catch (error) {
       toast({
         title: "Error",
@@ -389,7 +410,24 @@ export default function AdminDashboard() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">User Management</h2>
         <div className="flex space-x-2">
-          <Input placeholder="Search users..." className="w-64" />
+          <Input 
+            placeholder="Search users..."
+            className="w-64"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            data-testid="search-users-input"
+          />
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="verified">Verified</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="blocked">Blocked</SelectItem>
+            </SelectContent>
+          </Select>
           <Button variant="outline" data-testid="export-users-button">
             <Download className="h-4 w-4 mr-2" />
             Export
@@ -411,7 +449,17 @@ export default function AdminDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
+              {users
+                .filter((user) => {
+                  const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+                  const matchesStatus = filterStatus === "all" ||
+                                       (filterStatus === "verified" && user.isVerified) ||
+                                       (filterStatus === "pending" && !user.isVerified) ||
+                                       (filterStatus === "blocked" && user.isBlocked);
+                  return matchesSearch && matchesStatus;
+                })
+                .map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium" data-testid={`user-name-${user.id}`}>
                     {user.name}
@@ -476,6 +524,28 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Lost & Found Management</h2>
 
+      <div className="mb-4 flex space-x-2">
+        <Input 
+          placeholder="Search cases..."
+          className="w-64"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          data-testid="search-cases-input"
+        />
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Filter type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="missing_person">Missing Person</SelectItem>
+            <SelectItem value="missing_item">Missing Item</SelectItem>
+            <SelectItem value="found_person">Found Person</SelectItem>
+            <SelectItem value="found_item">Found Item</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -484,7 +554,12 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="space-y-4">
               {lostFoundCases
-                .filter(c => c.type.includes("missing_person"))
+                .filter(c => {
+                  const matchesType = filterType === "all" || c.type === filterType;
+                  const matchesSearch = c.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                      c.reportedBy.toLowerCase().includes(searchTerm.toLowerCase());
+                  return c.type.includes("missing_person") && matchesType && matchesSearch;
+                })
                 .map((case_) => (
                   <div key={case_.id} className="p-4 border border-border rounded">
                     <div className="font-medium" data-testid={`missing-person-${case_.id}`}>
@@ -536,7 +611,12 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="space-y-4">
               {lostFoundCases
-                .filter(c => c.type.includes("found"))
+                .filter(c => {
+                  const matchesType = filterType === "all" || c.type === filterType;
+                  const matchesSearch = c.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                      c.reportedBy.toLowerCase().includes(searchTerm.toLowerCase());
+                  return c.type.includes("found") && matchesType && matchesSearch;
+                })
                 .map((case_) => (
                   <div key={case_.id} className="p-4 border border-border rounded">
                     <div className="font-medium" data-testid={`found-item-${case_.id}`}>
