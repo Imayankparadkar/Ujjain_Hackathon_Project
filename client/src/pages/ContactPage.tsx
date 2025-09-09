@@ -222,20 +222,80 @@ export default function ContactPage() {
         reply_to: formData.email || formData.phone,
       };
 
-      // Store contact submission in database and simulate email success
-      try {
-        // First attempt: Try real EmailJS sending with proper service ID
-        await emailjs.send(
-          'service_nliphhj',
-          'template_ei1clxh',
-          emailParams,
-          'meeJQZm3Annuk5wqg'
-        );
-        console.log('✅ Email sent successfully via EmailJS!');
-      } catch (emailError: any) {
-        console.log('📧 EmailJS unavailable, storing contact data locally...');
-        
-        // Store contact data in localStorage as backup
+      // Method 1: Try multiple EmailJS configurations
+      let emailSent = false;
+      
+      // Configuration attempts with different templates and parameters
+      const emailConfigs = [
+        {
+          // Config 1: Your working service with minimal template
+          service: 'service_nliphhj',
+          template: 'template_ei1clxh',
+          params: {
+            to_name: 'SmartKumbh Team',
+            from_name: formData.name,
+            message: `Contact Form Submission
+
+Name: ${formData.name}
+Email: ${formData.email || 'Not provided'}
+Phone: ${formData.phone}
+Category: ${formData.category || 'General'}
+Subject: ${formData.subject}
+
+Message:
+${formData.message}
+
+Submitted: ${new Date().toLocaleString()}`,
+            reply_to: formData.email || formData.phone
+          }
+        },
+        {
+          // Config 2: Basic parameters that work with default templates
+          service: 'service_nliphhj',
+          template: 'template_ei1clxh',
+          params: {
+            user_name: formData.name,
+            user_email: formData.email || 'no-email@provided.com',
+            message: formData.message,
+            subject: formData.subject
+          }
+        },
+        {
+          // Config 3: Most minimal approach
+          service: 'service_nliphhj', 
+          template: 'template_ei1clxh',
+          params: {
+            name: formData.name,
+            email: formData.email || 'no-email@provided.com',
+            message: `${formData.subject}\n\n${formData.message}\n\nPhone: ${formData.phone}`
+          }
+        }
+      ];
+
+      // Try each configuration
+      for (let i = 0; i < emailConfigs.length && !emailSent; i++) {
+        const config = emailConfigs[i];
+        try {
+          console.log(`🔄 Attempting email configuration ${i + 1}...`);
+          await emailjs.send(
+            config.service,
+            config.template,
+            config.params,
+            'meeJQZm3Annuk5wqg'
+          );
+          console.log(`✅ Email sent successfully with configuration ${i + 1}!`);
+          emailSent = true;
+          break;
+        } catch (configError: any) {
+          console.log(`❌ Configuration ${i + 1} failed:`, configError.text || configError.message);
+          if (i === emailConfigs.length - 1) {
+            console.log('🔄 All email configurations failed, storing data...');
+          }
+        }
+      }
+
+      // Method 2: If all EmailJS attempts fail, store data
+      if (!emailSent) {
         const contactSubmissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
         const newSubmission = {
           id: Date.now(),
@@ -246,25 +306,25 @@ export default function ContactPage() {
           subject: formData.subject,
           message: formData.message,
           timestamp: new Date().toISOString(),
-          status: 'pending'
+          status: 'pending_email'
         };
         
         contactSubmissions.push(newSubmission);
         localStorage.setItem('contactSubmissions', JSON.stringify(contactSubmissions));
         
-        console.log('✅ Contact form data saved successfully!', {
+        console.log('✅ Contact form data saved for manual processing!', {
           totalSubmissions: contactSubmissions.length,
           latestSubmission: newSubmission
         });
         
-        // Also send to server endpoint for backup storage
+        // Also send to server
         try {
           await fetch('/api/contact/store', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newSubmission)
           });
-          console.log('✅ Contact data also stored on server');
+          console.log('✅ Contact data stored on server for email processing');
         } catch (serverError) {
           console.log('⚠️ Server storage failed, but local storage succeeded');
         }
