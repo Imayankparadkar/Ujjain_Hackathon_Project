@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,25 @@ export default function ContactPage() {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailConfig, setEmailConfig] = useState<{
+    serviceId: string;
+    templateId: string;
+    publicKey: string;
+  } | null>(null);
+
+  useEffect(() => {
+    // Fetch EmailJS config from API
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.emailjs) {
+          setEmailConfig(data.emailjs);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch EmailJS config:', error);
+      });
+  }, []);
 
   const emergencyContacts = [
     {
@@ -173,12 +192,14 @@ export default function ContactPage() {
       };
 
       // Send email using EmailJS
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+      if (!emailConfig) {
+        throw new Error('EmailJS configuration not loaded. Please refresh the page and try again.');
+      }
+      
+      const { serviceId, templateId, publicKey } = emailConfig;
       
       if (!serviceId || !templateId || !publicKey) {
-        throw new Error('EmailJS configuration missing. Please check environment variables.');
+        throw new Error('EmailJS configuration incomplete. Please contact support.');
       }
       
       await emailjs.send(serviceId, templateId, templateParams, publicKey);

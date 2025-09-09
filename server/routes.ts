@@ -54,6 +54,21 @@ const createCrowdDataSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Config endpoint for frontend
+  app.get("/api/config", async (req, res) => {
+    try {
+      res.json({
+        emailjs: {
+          serviceId: process.env.EMAILJS_SERVICE_ID,
+          templateId: process.env.EMAILJS_TEMPLATE_ID,
+          publicKey: process.env.EMAILJS_PUBLIC_KEY,
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch config" });
+    }
+  });
+
   // Users endpoints
   app.get("/api/users", async (req, res) => {
     try {
