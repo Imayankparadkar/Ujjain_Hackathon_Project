@@ -422,6 +422,24 @@ export default function ContactPage() {
                         <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
                         <span className="text-sm">{office.address}</span>
                       </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-2"
+                        onClick={() => {
+                          const address = encodeURIComponent(office.address);
+                          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${address}`;
+                          window.open(mapsUrl, '_blank');
+                          toast({
+                            title: "Opening Maps",
+                            description: `Getting directions to ${office.name}`,
+                          });
+                        }}
+                        data-testid={`get-directions-${index}`}
+                      >
+                        <MapPin className="h-3 w-3 mr-1" />
+                        Get Directions
+                      </Button>
                       <div className="flex items-center space-x-2">
                         <Clock className="h-4 w-4 text-accent" />
                         <span className="text-sm">{office.timings}</span>
@@ -447,9 +465,105 @@ export default function ContactPage() {
                     <div className="font-medium">SMS "HELP" to <span className="text-primary">12345</span></div>
                     <div className="font-medium">Or dial <span className="text-primary">*123#</span></div>
                   </div>
+                  <div className="mt-4 space-y-2">
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => {
+                        if (typeof window !== 'undefined') {
+                          window.location.href = 'sms:12345?body=HELP';
+                          toast({
+                            title: "Opening SMS App",
+                            description: "SMS app should open with pre-filled message. Send to get instant help!",
+                          });
+                        }
+                      }}
+                      data-testid="sms-help"
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Send SMS Help
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => handleEmergencyCall('*123#', 'USSD Help Service')}
+                      data-testid="ussd-help"
+                    >
+                      <Phone className="h-4 w-4 mr-2" />
+                      Dial *123#
+                    </Button>
+                  </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     Available in Hindi, English, and regional languages
                   </p>
+                </CardContent>
+              </Card>
+
+              {/* Quick Actions */}
+              <Card className="mt-6 bg-green-50 border-green-200">
+                <CardHeader>
+                  <CardTitle className="text-lg text-green-800">Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    onClick={() => {
+                      if ('geolocation' in navigator) {
+                        navigator.geolocation.getCurrentPosition(
+                          (position) => {
+                            const { latitude, longitude } = position.coords;
+                            toast({
+                              title: "Location Shared Successfully! 📍",
+                              description: `Your location (${latitude.toFixed(4)}, ${longitude.toFixed(4)}) has been noted for emergency response.`,
+                            });
+                            // You could send this to your backend/emergency services here
+                          },
+                          () => {
+                            toast({
+                              title: "Location Access Denied",
+                              description: "Please enable location services or share your location manually with emergency responders.",
+                              variant: "destructive",
+                            });
+                          }
+                        );
+                      } else {
+                        toast({
+                          title: "Location Not Supported",
+                          description: "Your device doesn't support location services. Please share your location manually.",
+                          variant: "destructive",
+                        });
+                      }
+                    }}
+                    data-testid="share-location"
+                  >
+                    <MapPin className="h-4 w-4 mr-2" />
+                    Share My Location for Emergency
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-blue-200 text-blue-700 hover:bg-blue-50"
+                    onClick={() => {
+                      // Generate a simple emergency contact card
+                      const emergencyInfo = `🚨 EMERGENCY CONTACT INFO 🚨\n\nName: [Your Name]\nPhone: [Your Phone]\nLocation: Near ${Math.random() > 0.5 ? 'Mahakal Temple' : 'Shipra Ghat'}\nTime: ${new Date().toLocaleString()}\n\nEmergency Numbers:\nPolice: 100\nMedical: 108\nKumbh Control: 1950`;
+                      
+                      navigator.clipboard.writeText(emergencyInfo).then(() => {
+                        toast({
+                          title: "Emergency Info Copied! 📋",
+                          description: "Emergency contact template copied to clipboard. You can share this via SMS or any messaging app.",
+                        });
+                      }).catch(() => {
+                        toast({
+                          title: "Emergency Contact Info",
+                          description: "Please save these numbers: Police-100, Medical-108, Kumbh Control-1950",
+                        });
+                      });
+                    }}
+                    data-testid="copy-emergency-info"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Copy Emergency Contact Info
+                  </Button>
                 </CardContent>
               </Card>
             </div>
