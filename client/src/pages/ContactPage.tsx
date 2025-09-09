@@ -6,7 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Layout } from "@/components/Layout";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Mail, MapPin, Clock, Shield, Heart, Home, AlertTriangle } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Shield, Heart, Home, AlertTriangle, Send, CheckCircle } from "lucide-react";
+import emailjs from '@emailjs/browser';
+import { toast } from "@/hooks/use-toast";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ export default function ContactPage() {
     subject: "",
     message: ""
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const emergencyContacts = [
     {
@@ -110,19 +113,98 @@ export default function ContactPage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmergencyCall = (number: string, title: string) => {
+    if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+      // Try to initiate call on mobile devices
+      window.location.href = `tel:${number}`;
+    } else {
+      // Copy number to clipboard as fallback
+      navigator.clipboard.writeText(number).then(() => {
+        toast({
+          title: `${title} Number Copied`,
+          description: `${number} has been copied to your clipboard. You can now dial this number.`,
+        });
+      }).catch(() => {
+        toast({
+          title: `Emergency Number: ${number}`,
+          description: `Please dial ${number} for ${title}`,
+        });
+      });
+    }
+  };
+
+  const handleHelplineCall = (number: string, title: string) => {
+    if (typeof window !== 'undefined') {
+      // Try to initiate call
+      window.location.href = `tel:${number}`;
+      
+      // Show confirmation toast
+      toast({
+        title: `Calling ${title}`,
+        description: `Dialing ${number}... If the call doesn't connect automatically, please dial manually.`,
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add success toast here
-    alert("Your message has been sent! We'll get back to you soon.");
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      category: "",
-      subject: "",
-      message: ""
-    });
+    
+    if (!formData.name || !formData.phone || !formData.subject || !formData.message) {
+      toast({
+        title: "Form Incomplete",
+        description: "Please fill in all required fields (marked with *)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Prepare email template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email || "no-email@provided.com",
+        phone: formData.phone,
+        category: formData.category || "General Inquiry",
+        subject: formData.subject,
+        message: formData.message,
+        reply_to: formData.email || formData.phone,
+      };
+
+      // Send email using EmailJS
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID || process.env.EMAILJS_SERVICE_ID!,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID!,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY || process.env.EMAILJS_PUBLIC_KEY!
+      );
+
+      toast({
+        title: "Message Sent Successfully! ✅",
+        description: "We've received your message and will get back to you within 24 hours.",
+      });
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        subject: "",
+        message: ""
+      });
+      
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      toast({
+        title: "Failed to Send Message",
+        description: "There was an error sending your message. Please try again or call us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -152,6 +234,7 @@ export default function ContactPage() {
                   <p className="text-sm text-muted-foreground">{contact.description}</p>
                   <Button 
                     className="w-full mt-4" 
+                    onClick={() => handleEmergencyCall(contact.number, contact.title)}
                     data-testid={`call-${contact.number}`}
                   >
                     <Phone className="h-4 w-4 mr-2" />
@@ -194,7 +277,11 @@ export default function ContactPage() {
                     <span>{helpline.timings}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">{helpline.description}</p>
-                  <Button className="w-full mt-3" data-testid={`call-helpline-${index}`}>
+                  <Button 
+                    className="w-full mt-3" 
+                    onClick={() => handleHelplineCall(helpline.number, helpline.title)}
+                    data-testid={`call-helpline-${index}`}
+                  >
                     <Phone className="h-4 w-4 mr-2" />
                     Call Helpline
                   </Button>
@@ -298,11 +385,21 @@ export default function ContactPage() {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-primary text-primary-foreground hover:bg-secondary"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-primary-foreground hover:bg-secondary disabled:opacity-50"
                   data-testid="submit-contact-form"
                 >
-                  <Mail className="h-4 w-4 mr-2" />
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Message
+                    </>
+                  )}
                 </Button>
               </form>
             </div>
