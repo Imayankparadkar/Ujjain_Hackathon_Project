@@ -42,15 +42,15 @@ export default function LostFoundPage() {
     loadLostFoundCases();
     // Set up real-time subscription for updates
     const unsubscribe = subscribeToCollection("lostAndFound", (data: any[]) => {
-      const formattedCases = data.map(item => ({
+      const formattedCases: LostFoundCase[] = data.map(item => ({
         id: item.id,
-        type: item.type === "missing_person" || item.type === "missing_child" ? "person" : "item",
+        type: (item.type === "missing_person" || item.type === "missing_child" ? "person" : "item") as "person" | "item",
         name: item.name,
         description: item.description,
         lastSeen: formatTimeAgo(item.lastSeenTime || item.foundTime || item.createdAt),
         location: item.lastSeenLocation || item.foundLocation || "Unknown",
         contact: item.contactInfo || "N/A",
-        status: item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status,
+        status: (item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status) as "active" | "found" | "resolved",
         reportedAt: item.createdAt?.toDate?.() || new Date(item.createdAt),
         category: item.category || "General"
       }));
@@ -65,15 +65,15 @@ export default function LostFoundPage() {
   const loadLostFoundCases = async () => {
     try {
       const data = await getDocuments("lostAndFound");
-      const formattedCases = data.map((item: any) => ({
+      const formattedCases: LostFoundCase[] = data.map((item: any) => ({
         id: item.id,
-        type: item.type === "missing_person" || item.type === "missing_child" ? "person" : "item",
+        type: (item.type === "missing_person" || item.type === "missing_child" ? "person" : "item") as "person" | "item",
         name: item.name,
         description: item.description,
         lastSeen: formatTimeAgo(item.lastSeenTime || item.foundTime || item.createdAt),
         location: item.lastSeenLocation || item.foundLocation || "Unknown",
         contact: item.contactInfo || "N/A",
-        status: item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status,
+        status: (item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status) as "active" | "found" | "resolved",
         reportedAt: item.createdAt?.toDate?.() || new Date(item.createdAt),
         category: item.category || "General"
       }));
@@ -453,12 +453,28 @@ export default function LostFoundPage() {
               <Button 
                 className="flex-1 bg-primary text-primary-foreground" 
                 data-testid="submit-report"
+                disabled={isLoading}
                 onClick={() => {
-                  setShowReportModal(false);
-                  // Add success toast here
+                  const formData = {
+                    name: (document.getElementById('name') as HTMLInputElement)?.value || '',
+                    contact: (document.getElementById('contact') as HTMLInputElement)?.value || '',
+                    description: (document.getElementById('description') as HTMLTextAreaElement)?.value || '',
+                    location: (document.getElementById('location') as HTMLInputElement)?.value || '',
+                  };
+                  
+                  if (!formData.name || !formData.contact || !formData.description || !formData.location) {
+                    toast({
+                      title: "Missing Information",
+                      description: "Please fill in all required fields.",
+                      variant: "destructive"
+                    });
+                    return;
+                  }
+                  
+                  handleSubmitReport(formData);
                 }}
               >
-                Submit Report
+                {isLoading ? "Submitting..." : "Submit Report"}
               </Button>
               <Button variant="outline" className="flex-1" onClick={() => setShowReportModal(false)}>
                 Cancel
