@@ -6,7 +6,9 @@ import { Map } from "@/components/ui/map";
 import { Layout } from "@/components/Layout";
 import { getDocuments, subscribeToCollection } from "@/lib/firebase";
 import { Route, Navigation, Shield, Leaf, Microchip, Phone, Search, AlertTriangle, Calendar, MapPin, QrCode, MessageSquare, Bell } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import QRGenerator from "@/components/QRGenerator";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Stats {
   liveVisitors: number;
@@ -24,6 +26,8 @@ interface SpiritualEvent {
 }
 
 export default function HomePage() {
+  const { user, userProfile } = useAuth();
+  const [, setLocation] = useLocation();
   const [stats, setStats] = useState<Stats>({
     liveVisitors: 245786,
     safetyAlerts: 12,
@@ -33,6 +37,7 @@ export default function HomePage() {
   const [spiritualEvents, setSpiritualEvents] = useState<SpiritualEvent[]>([]);
   const [crowdData, setCrowdData] = useState<any[]>([]);
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
 
   useEffect(() => {
     // Load dynamic data from Firebase
@@ -245,8 +250,11 @@ export default function HomePage() {
                   <QrCode className="h-12 w-12 text-orange-600 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-gray-800 mb-2">Generate My QR ID</h3>
                   <p className="text-gray-600 mb-4">Get your unique pilgrim identification</p>
-                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                    Generate QR Code
+                  <Button 
+                    onClick={() => user ? setShowQRModal(true) : setLocation('/login')}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    {user ? 'Generate QR Code' : 'Login to Generate QR'}
                   </Button>
                 </div>
               </Card>
@@ -256,9 +264,11 @@ export default function HomePage() {
                   <Navigation className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-gray-800 mb-2">Route Planner</h3>
                   <p className="text-gray-600 mb-4">AI-powered personalized navigation</p>
-                  <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
-                    Plan My Route
-                  </Button>
+                  <Link href="/map">
+                    <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
+                      Plan My Route
+                    </Button>
+                  </Link>
                 </div>
               </Card>
             </div>
@@ -278,17 +288,21 @@ export default function HomePage() {
               <Search className="h-16 w-16 text-red-600 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Search Found</h3>
               <p className="text-gray-600 mb-6">Search our database of found items and persons</p>
-              <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
-                Search Database
-              </Button>
+              <Link href="/lost-found">
+                <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+                  Search Database
+                </Button>
+              </Link>
             </Card>
             <Card className="p-8 text-center hover:shadow-xl transition-shadow border-orange-200 bg-white/80 backdrop-blur-sm">
               <AlertTriangle className="h-16 w-16 text-orange-600 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Report Missing</h3>
               <p className="text-gray-600 mb-6">Report missing persons or items immediately</p>
-              <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                Report Missing
-              </Button>
+              <Link href="/lost-found">
+                <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+                  Report Missing
+                </Button>
+              </Link>
             </Card>
           </div>
         </div>
@@ -311,9 +325,11 @@ export default function HomePage() {
                     <div className="text-purple-600">Mahakal Bhasma Aarti</div>
                   </div>
                 </div>
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
-                  Watch Live Stream
-                </Button>
+                <Link href="/spiritual">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                    Watch Live Stream
+                  </Button>
+                </Link>
               </div>
             </div>
             <div className="space-y-4">
@@ -390,6 +406,18 @@ export default function HomePage() {
               <p className="text-sm text-gray-500 mt-2">Showcasing AI navigation, safety features, and spiritual engagement</p>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* QR Code Generation Modal */}
+      <Dialog open={showQRModal} onOpenChange={setShowQRModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Generate Your SmartKumbh QR Code</DialogTitle>
+          </DialogHeader>
+          {user && userProfile && (
+            <QRGenerator userProfile={userProfile} />
+          )}
         </DialogContent>
       </Dialog>
     </Layout>
