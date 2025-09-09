@@ -10,11 +10,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Map } from "@/components/ui/map";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLocation } from "wouter";
 import { getDocuments, addDocument, updateDocument, deleteDocument, subscribeToCollection } from "@/lib/firebase";
 import { 
   Users, Search, BarChart3, Leaf, Heart, HelpCircle, FileText, Download, 
   MessageSquare, AlertTriangle, CheckCircle, X, Edit, Plus, MapPin, 
-  Calendar, Settings, Bell, Send, ArrowLeft, Home
+  Calendar, Settings, Bell, Send, ArrowLeft, Home, LogOut
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -58,6 +59,7 @@ interface CleanlinessReport {
 export default function AdminDashboard() {
   const { userProfile } = useAuth();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [activePanel, setActivePanel] = useState("users");
   const [loading, setLoading] = useState(false);
 
@@ -324,6 +326,16 @@ export default function AdminDashboard() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminSession');
+    localStorage.removeItem('mockUser');
+    setLocation('/admin-login');
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
   };
 
   const renderUserManagement = () => (
@@ -954,6 +966,18 @@ export default function AdminDashboard() {
                   <span>{item.label}</span>
                 </button>
               ))}
+              
+              {/* Logout Button */}
+              <div className="mt-8 pt-4 border-t border-border">
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left p-3 rounded-lg transition-colors flex items-center space-x-3 text-destructive hover:bg-destructive/10"
+                  data-testid="admin-logout-button"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
+              </div>
             </div>
           </nav>
         </aside>
