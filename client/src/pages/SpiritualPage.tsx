@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon, Grid, List } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
 interface SpiritualEvent {
@@ -353,9 +353,120 @@ export default function SpiritualPage() {
       {/* Upcoming Events */}
       <section className="py-8 bg-card">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-6">Upcoming Events & Rituals</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Upcoming Events & Rituals</h2>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="flex items-center space-x-1"
+                data-testid="list-view-toggle"
+              >
+                <List className="h-4 w-4" />
+                <span>List</span>
+              </Button>
+              <Button
+                variant={viewMode === 'calendar' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('calendar')}
+                className="flex items-center space-x-1"
+                data-testid="calendar-view-toggle"
+              >
+                <CalendarIcon className="h-4 w-4" />
+                <span>Calendar</span>
+              </Button>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {viewMode === 'calendar' ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Calendar */}
+              <div className="lg:col-span-1">
+                <Card>
+                  <CardContent className="p-4">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      className="rounded-md"
+                      modifiers={{
+                        eventDay: events.map(event => new Date(event.dateTime.toDateString()))
+                      }}
+                      modifiersStyles={{
+                        eventDay: {
+                          backgroundColor: 'hsl(var(--primary))',
+                          color: 'hsl(var(--primary-foreground))',
+                          fontWeight: 'bold'
+                        }
+                      }}
+                    />
+                    <div className="mt-4 text-sm text-muted-foreground">
+                      <p className="font-medium mb-2">Event Legend:</p>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-primary rounded"></div>
+                        <span>Days with events</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              {/* Selected Date Events */}
+              <div className="lg:col-span-2">
+                <h3 className="font-semibold mb-4">
+                  {selectedDate ? `Events on ${selectedDate.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}` : 'Select a date to view events'}
+                </h3>
+                <div className="space-y-4">
+                  {selectedDate && events
+                    .filter(event => event.dateTime.toDateString() === selectedDate.toDateString())
+                    .map((event) => (
+                      <Card key={event.id} className="hover:shadow-md transition-all">
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-semibold">{event.name}</h4>
+                            <Badge className={getCategoryColor(event.category)}>
+                              {event.category}
+                            </Badge>
+                          </div>
+                          <div className="space-y-1 text-sm text-muted-foreground">
+                            <div className="flex items-center space-x-2">
+                              <Clock className="h-3 w-3" />
+                              <span>{event.dateTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <MapPin className="h-3 w-3" />
+                              <span>{event.location}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Users className="h-3 w-3" />
+                              <span>{event.attendees.toLocaleString()} expected</span>
+                            </div>
+                          </div>
+                          <p className="text-sm mt-2">{event.description}</p>
+                          <div className="flex space-x-2 mt-3">
+                            <Button size="sm" variant="outline">
+                              <Bell className="h-3 w-3 mr-1" />
+                              Remind Me
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              Learn More
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  {selectedDate && events.filter(event => event.dateTime.toDateString() === selectedDate.toDateString()).length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <CalendarIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No events scheduled for this date</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {upcomingEvents.map((event) => (
               <Card key={event.id} className="group hover:shadow-lg transition-all">
                 <CardHeader className="pb-3">
@@ -444,6 +555,7 @@ export default function SpiritualPage() {
               </Card>
             ))}
           </div>
+          )}
         </div>
       </section>
 
