@@ -14,7 +14,7 @@ import { getDocuments, addDocument, updateDocument, deleteDocument, subscribeToC
 import { 
   Users, Search, BarChart3, Leaf, Heart, HelpCircle, FileText, Download, 
   MessageSquare, AlertTriangle, CheckCircle, X, Edit, Plus, MapPin, 
-  Calendar, Settings, Bell, Send 
+  Calendar, Settings, Bell, Send, ArrowLeft, Home
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 

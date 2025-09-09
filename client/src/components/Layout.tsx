@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { logoutUser } from "@/lib/firebase";
 import { Link, useLocation } from "wouter";
-import { User, Eye, LogOut } from "lucide-react";
+import { User, Eye, LogOut, Bell, ArrowLeft } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -55,14 +55,22 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                   <span className="text-muted-foreground">|</span>
                   <Link href="/dashboard" className={location === "/dashboard" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-dashboard">Dashboard</Link>
                   {isAdmin && (
-                    <Link href="/admin" className={location === "/admin" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-admin">Admin</Link>
+                    <>
+                      <Link href="/admin" className={location === "/admin" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-admin">Admin</Link>
+                      {location === "/admin" && (
+                        <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors flex items-center" data-testid="back-to-user-dashboard">
+                          <ArrowLeft className="h-4 w-4 mr-1" />
+                          User View
+                        </Link>
+                      )}
+                    </>
                   )}
                 </>
               )}
             </div>
 
             {/* Right Side Controls */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               {/* Elderly Mode Toggle */}
               <div className="flex items-center space-x-2">
                 <Eye className="h-4 w-4 text-muted-foreground" />
@@ -71,15 +79,28 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                   onCheckedChange={toggleElderlyMode}
                   data-testid="elderly-mode-toggle"
                 />
-                <span className="text-sm text-muted-foreground">Elder</span>
+                <span className="text-sm text-muted-foreground hidden sm:inline">Elder</span>
               </div>
+
+              {/* Notification icon */}
+              {user && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative"
+                  data-testid="notification-button"
+                >
+                  <Bell className="h-4 w-4" />
+                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">3</span>
+                </Button>
+              )}
 
               {/* User Controls */}
               {user ? (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-2">
                     <User className="h-4 w-4" />
-                    <span className="text-sm" data-testid="user-name">
+                    <span className="text-sm hidden sm:inline" data-testid="user-name">
                       {userProfile?.name || user.email}
                     </span>
                   </div>
@@ -90,8 +111,8 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                     className="text-destructive hover:text-destructive/80"
                     data-testid="logout-button"
                   >
-                    <LogOut className="h-4 w-4 mr-1" />
-                    Logout
+                    <LogOut className="h-4 w-4 sm:mr-1" />
+                    <span className="hidden sm:inline">Logout</span>
                   </Button>
                 </div>
               ) : (
