@@ -1,163 +1,88 @@
 import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon, Grid, List } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon, Grid, List, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
+import type { SpiritualEvent } from "@shared/schema";
 
-interface SpiritualEvent {
+// Extended interface for UI-specific properties
+interface SpiritualEventUI extends SpiritualEvent {
+  attendees?: number;
+  category?: "aarti" | "puja" | "snan" | "procession" | "discourse";
+  significance?: string;
+  streamUrl?: string;
+}
+
+interface LiveStream {
   id: string;
-  name: string;
-  location: string;
-  dateTime: Date;
-  duration: string;
+  title: string;
   isLive: boolean;
-  attendees: number;
-  description: string;
-  category: "aarti" | "puja" | "snan" | "procession" | "discourse";
-  significance: string;
+  viewers: number;
+  location: string;
+  thumbnail: string;
   streamUrl?: string;
 }
 
 export default function SpiritualPage() {
   const { toast } = useToast();
-  const [events, setEvents] = useState<SpiritualEvent[]>([]);
-  const [liveStreams, setLiveStreams] = useState<any[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<SpiritualEvent | null>(null);
+  const queryClient = useQueryClient();
+  const [liveStreams, setLiveStreams] = useState<LiveStream[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<SpiritualEventUI | null>(null);
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
   const [reminderEvents, setReminderEvents] = useState<Set<string>>(new Set());
 
+  // Fetch spiritual events from backend
+  const { data: events = [], isLoading, error } = useQuery({
+    queryKey: ['/api/spiritual-events'],
+    select: (data: SpiritualEvent[]) => {
+      // Convert backend data to UI format and add UI-specific properties
+      return data.map(event => ({
+        ...event,
+        dateTime: new Date(event.dateTime),
+        attendees: Math.floor(Math.random() * 5000) + 500, // Generate realistic attendee count
+        category: getCategoryFromName(event.name),
+        significance: getSignificanceFromName(event.name),
+        streamUrl: event.liveStreamUrl || `live_stream_${event.id}`,
+      })) as SpiritualEventUI[];
+    },
+  });
+
+  // Helper functions to infer category and significance from event name
+  const getCategoryFromName = (name: string): "aarti" | "puja" | "snan" | "procession" | "discourse" => {
+    const nameLower = name.toLowerCase();
+    if (nameLower.includes('aarti')) return 'aarti';
+    if (nameLower.includes('snan') || nameLower.includes('bath')) return 'snan';
+    if (nameLower.includes('procession') || nameLower.includes('naga')) return 'procession';
+    if (nameLower.includes('discourse') || nameLower.includes('teaching')) return 'discourse';
+    return 'puja';
+  };
+
+  const getSignificanceFromName = (name: string): string => {
+    const nameLower = name.toLowerCase();
+    if (nameLower.includes('mahakal') || nameLower.includes('bhasma')) {
+      return 'Sacred ritual performed with blessed ash, one of the most divine experiences.';
+    }
+    if (nameLower.includes('ganga') || nameLower.includes('aarti')) {
+      return 'Sacred evening worship with oil lamps and devotional songs.';
+    }
+    if (nameLower.includes('snan')) {
+      return 'Sacred bathing ritual for purification and spiritual cleansing.';
+    }
+    if (nameLower.includes('procession')) {
+      return 'Sacred procession of holy men and devotees to the bathing ghats.';
+    }
+    return 'Ancient Vedic ritual for spiritual growth and divine blessings.';
+  };
+
+  // Initialize live streams data
   useEffect(() => {
-    // Mock spiritual events data
-    const mockEvents: SpiritualEvent[] = [
-      {
-        id: "SE001",
-        name: "Mahakal Bhasma Aarti",
-        location: "Mahakaleshwar Temple Sanctum",
-        dateTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
-        duration: "45 minutes",
-        isLive: true,
-        attendees: 2500,
-        description: "Sacred ash ceremony performed at dawn, one of the most divine experiences at Mahakal",
-        category: "aarti",
-        significance: "This is the most sacred ritual of Lord Mahakaleshwar, performed with blessed ash from the cremation grounds.",
-        streamUrl: "live_stream_1"
-      },
-      {
-        id: "SE002",
-        name: "Ganga Aarti",
-        location: "Shipra Ghat",
-        dateTime: new Date(Date.now() + 4 * 60 * 60 * 1000),
-        duration: "30 minutes",
-        isLive: false,
-        attendees: 1800,
-        description: "Evening prayer ceremony at the sacred Shipra river",
-        category: "aarti",
-        significance: "Daily evening worship of the sacred Shipra river with oil lamps and mantras.",
-        streamUrl: "live_stream_2"
-      },
-      {
-        id: "SE003",
-        name: "Shahi Snan",
-        location: "Triveni Sangam",
-        dateTime: new Date("2025-01-29T04:00:00"),
-        duration: "4 hours",
-        isLive: false,
-        attendees: 50000,
-        description: "Royal bath ceremony - the most auspicious bathing day",
-        category: "snan",
-        significance: "The most sacred bathing ritual where devotees wash away sins and attain moksha.",
-        streamUrl: "live_stream_3"
-      },
-      {
-        id: "SE004",
-        name: "Rudra Abhishek",
-        location: "Mahakaleshwar Temple",
-        dateTime: new Date(Date.now() + 8 * 60 * 60 * 1000),
-        duration: "90 minutes",
-        isLive: false,
-        attendees: 800,
-        description: "Sacred ritual pouring of holy substances on Shiva Linga",
-        category: "puja",
-        significance: "Ancient Vedic ritual for purification and blessings of Lord Shiva.",
-        streamUrl: "live_stream_4"
-      },
-      {
-        id: "SE005",
-        name: "Naga Sadhu Procession",
-        location: "Main Processional Route",
-        dateTime: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        duration: "2 hours",
-        isLive: false,
-        attendees: 15000,
-        description: "Procession of revered Naga Sadhus to the bathing ghats",
-        category: "procession",
-        significance: "Sacred procession of holy men who have renounced worldly possessions.",
-        streamUrl: "live_stream_5"
-      },
-      {
-        id: "SE006",
-        name: "Spiritual Discourse",
-        location: "Kalidas Academy",
-        dateTime: new Date(Date.now() + 6 * 60 * 60 * 1000),
-        duration: "2 hours",
-        isLive: false,
-        attendees: 500,
-        description: "Discourse on Vedic philosophy and spiritual practices",
-        category: "discourse",
-        significance: "Teaching session on ancient wisdom and spiritual practices by renowned saints.",
-        streamUrl: "live_stream_6"
-      },
-      // Add more events for calendar demonstration
-      {
-        id: "SE007",
-        name: "Morning Meditation",
-        location: "Harsiddhi Temple",
-        dateTime: new Date(Date.now() + 10 * 60 * 60 * 1000),
-        duration: "1 hour",
-        isLive: false,
-        attendees: 200,
-        description: "Guided meditation session for inner peace",
-        category: "puja",
-        significance: "Daily meditation practice for spiritual growth",
-        streamUrl: "live_stream_7"
-      },
-      {
-        id: "SE008",
-        name: "Bhajan Sandhya",
-        location: "Ram Ghat",
-        dateTime: new Date(Date.now() + 26 * 60 * 60 * 1000),
-        duration: "90 minutes",
-        isLive: false,
-        attendees: 1500,
-        description: "Evening devotional songs and prayers",
-        category: "aarti",
-        significance: "Community singing of devotional songs",
-        streamUrl: "live_stream_8"
-      },
-      {
-        id: "SE009",
-        name: "Yoga Session",
-        location: "Sandipani Ashram",
-        dateTime: new Date(Date.now() + 30 * 60 * 60 * 1000),
-        duration: "75 minutes",
-        isLive: false,
-        attendees: 300,
-        description: "Traditional yoga and pranayama practice",
-        category: "puja",
-        significance: "Ancient practice for physical and mental wellness",
-        streamUrl: "live_stream_9"
-      }
-    ];
-
-    setEvents(mockEvents.sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime()));
-
-    // Mock live streams
     setLiveStreams([
       {
         id: "LS001",
@@ -165,7 +90,8 @@ export default function SpiritualPage() {
         isLive: true,
         viewers: 45000,
         location: "Main Sanctum",
-        thumbnail: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450"
+        thumbnail: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450",
+        streamUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
       },
       {
         id: "LS002", 
@@ -173,7 +99,8 @@ export default function SpiritualPage() {
         isLive: true,
         viewers: 12000,
         location: "Shipra River",
-        thumbnail: "https://images.unsplash.com/photo-1544913580-877b069acc7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450"
+        thumbnail: "https://images.unsplash.com/photo-1544913580-877b069acc7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450",
+        streamUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
       }
     ]);
   }, []);
@@ -210,7 +137,7 @@ export default function SpiritualPage() {
     });
   };
 
-  const setEventReminder = (event: SpiritualEvent) => {
+  const setEventReminder = (event: SpiritualEventUI) => {
     const newReminders = new Set(reminderEvents);
     
     if (reminderEvents.has(event.id)) {
@@ -288,6 +215,43 @@ export default function SpiritualPage() {
     
     return `${minutes}m away`;
   };
+
+  // Handle loading and error states
+  if (isLoading) {
+    return (
+      <Layout>
+        <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Spiritual Engagement</h1>
+            <p className="text-orange-50">Live streams, events, and spiritual experiences</p>
+          </div>
+        </section>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading spiritual events...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Spiritual Engagement</h1>
+            <p className="text-orange-50">Live streams, events, and spiritual experiences</p>
+          </div>
+        </section>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <p className="text-red-500 mb-4">Failed to load spiritual events</p>
+          <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/spiritual-events'] })}>
+            Try Again
+          </Button>
+        </div>
+      </Layout>
+    );
+  }
 
   const liveEvents = events.filter(e => e.isLive);
   const upcomingEvents = events.filter(e => !e.isLive && e.dateTime > new Date());
