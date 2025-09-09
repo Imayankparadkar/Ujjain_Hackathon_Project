@@ -8,10 +8,14 @@ import { Layout } from "@/components/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Search, AlertTriangle, Clock, MapPin, Phone, User, Package, CheckCircle } from "lucide-react";
-import { getDocuments, addDocument, subscribeToCollection } from "@/lib/firebase";
+import { getDocuments, addDocument, updateDocument, subscribeToCollection } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 interface LostFoundCase {
   id: string;
@@ -25,7 +29,20 @@ interface LostFoundCase {
   reportedAt: string;
   category?: string;
   imageUrl?: string;
+  reportedBy?: string;
+  assignedOfficer?: string;
 }
+
+const reportFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  contact: z.string().min(10, "Valid contact number required"),
+  description: z.string().min(10, "Detailed description required"),
+  location: z.string().min(1, "Location is required"),
+  category: z.string().optional(),
+  lastSeenTime: z.string().optional()
+});
+
+type ReportFormData = z.infer<typeof reportFormSchema>;
 
 export default function LostFoundPage() {
   const { user } = useAuth();
@@ -37,24 +54,49 @@ export default function LostFoundPage() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportType, setReportType] = useState<"person" | "item">("person");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const form = useForm<ReportFormData>({
+    resolver: zodResolver(reportFormSchema),
+    defaultValues: {
+      name: "",
+      contact: "",
+      description: "",
+      location: "",
+      category: "",
+      lastSeenTime: ""
+    }
+  });
 
   useEffect(() => {
     loadLostFoundCases();
     // Set up real-time subscription for updates
     const unsubscribe = subscribeToCollection("lostAndFound", (data: any[]) => {
-      const formattedCases: LostFoundCase[] = data.map(item => ({
+      console.log("Received real-time lost & found data:", data);
+      const firebaseCases: LostFoundCase[] = data.map(item => ({
         id: item.id,
         type: (item.type === "missing_person" || item.type === "missing_child" ? "person" : "item") as "person" | "item",
-        name: item.name,
+        name: item.name || extractNameFromDescription(item.description),
         description: item.description,
-        lastSeen: formatTimeAgo(item.lastSeenTime || item.foundTime || item.createdAt),
-        location: item.lastSeenLocation || item.foundLocation || "Unknown",
-        contact: item.contactInfo || "N/A",
+        lastSeen: formatTimeAgo(item.lastSeenTime || item.createdAt),
+        location: item.lastSeenLocation || "Unknown",
+        contact: item.contactPhone || item.contactInfo || "N/A",
         status: (item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status) as "active" | "found" | "resolved",
         reportedAt: item.createdAt?.toDate?.() || new Date(item.createdAt),
-        category: item.category || "General"
+        category: item.category || "General",
+        reportedBy: item.reportedBy,
+        assignedOfficer: item.assignedOfficer
       }));
-      setCases(formattedCases);
+      
+      // Add localStorage data as fallback
+      const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+      const localCases: LostFoundCase[] = localReports.map((item: any) => ({
+        ...item,
+        lastSeen: formatTimeAgo(item.reportedAt)
+      }));
+      
+      const allCases = [...firebaseCases, ...localCases];
+      setCases(allCases);
     });
 
     return () => {
@@ -65,27 +107,44 @@ export default function LostFoundPage() {
   const loadLostFoundCases = async () => {
     try {
       const data = await getDocuments("lostAndFound");
-      const formattedCases: LostFoundCase[] = data.map((item: any) => ({
+      console.log("Loaded lost & found data:", data);
+      
+      // Process Firebase data
+      const firebaseCases: LostFoundCase[] = data.map((item: any) => ({
         id: item.id,
         type: (item.type === "missing_person" || item.type === "missing_child" ? "person" : "item") as "person" | "item",
-        name: item.name,
+        name: item.name || extractNameFromDescription(item.description),
         description: item.description,
-        lastSeen: formatTimeAgo(item.lastSeenTime || item.foundTime || item.createdAt),
-        location: item.lastSeenLocation || item.foundLocation || "Unknown",
-        contact: item.contactInfo || "N/A",
+        lastSeen: formatTimeAgo(item.lastSeenTime || item.createdAt),
+        location: item.lastSeenLocation || "Unknown",
+        contact: item.contactPhone || item.contactInfo || "N/A",
         status: (item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status) as "active" | "found" | "resolved",
         reportedAt: item.createdAt?.toDate?.() || new Date(item.createdAt),
-        category: item.category || "General"
+        category: item.category || "General",
+        reportedBy: item.reportedBy,
+        assignedOfficer: item.assignedOfficer
       }));
-      setCases(formattedCases);
+      
+      // Add localStorage data as fallback
+      const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+      const localCases: LostFoundCase[] = localReports.map((item: any) => ({
+        ...item,
+        lastSeen: formatTimeAgo(item.reportedAt)
+      }));
+      
+      const allCases = [...firebaseCases, ...localCases];
+      setCases(allCases);
     } catch (error) {
       console.error("Error loading lost & found cases:", error);
-      // Fallback to mock data if Firebase fails
+      // Fallback to mock and local data if Firebase fails
       loadMockData();
     }
   };
 
   const loadMockData = () => {
+    // Load from localStorage first
+    const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+    
     const mockCases: LostFoundCase[] = [
       {
         id: "LF001",
@@ -111,7 +170,13 @@ export default function LostFoundPage() {
         category: "Electronics"
       }
     ];
-    setCases(mockCases);
+    
+    const localCases: LostFoundCase[] = localReports.map((item: any) => ({
+      ...item,
+      lastSeen: formatTimeAgo(item.reportedAt)
+    }));
+    
+    setCases([...mockCases, ...localCases]);
   };
 
   const formatTimeAgo = (date: any) => {
@@ -123,12 +188,19 @@ export default function LostFoundPage() {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
     
+    if (diffMins < 1) return "Just now";
     if (diffMins < 60) return `${diffMins} minutes ago`;
     if (diffHours < 24) return `${diffHours} hours ago`;
     return `${diffDays} days ago`;
   };
 
-  const handleSubmitReport = async (formData: any) => {
+  const extractNameFromDescription = (description: string) => {
+    if (!description) return "Unknown";
+    const nameMatch = description.match(/Name:\s*([^\n]+)/);
+    return nameMatch ? nameMatch[1].trim() : description.substring(0, 30) + (description.length > 30 ? "..." : "");
+  };
+
+  const handleSubmitReport = async (formData: ReportFormData) => {
     if (!user) {
       toast({
         title: "Login Required",
@@ -140,34 +212,128 @@ export default function LostFoundPage() {
 
     setIsLoading(true);
     try {
-      await addDocument("lostAndFound", {
+      const reportData = {
         type: reportType === "person" ? "missing_person" : "missing_item",
-        name: formData.name,
-        description: formData.description,
+        reportedBy: user.email || "Anonymous",
+        contactPhone: formData.contact,
+        description: `Name: ${formData.name}\n\nDescription: ${formData.description}\n\nCategory: ${formData.category || 'Not specified'}`,
         lastSeenLocation: formData.location,
-        lastSeenTime: new Date(),
-        contactInfo: formData.contact,
-        reportedBy: user.email,
         status: "active",
+        isApproved: false,
+        assignedOfficer: null,
         priority: reportType === "person" ? "critical" : "medium",
-        caseNumber: `LF-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}`,
-        createdAt: new Date()
-      });
+        caseNumber: `LF-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
+        createdAt: new Date(),
+        name: formData.name,
+        category: formData.category || "General",
+        lastSeenTime: formData.lastSeenTime ? new Date(formData.lastSeenTime) : new Date()
+      };
+
+      console.log("Submitting report data:", reportData);
+      await addDocument("lostAndFound", reportData);
 
       toast({
         title: "✅ Report Submitted Successfully",
-        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted. We'll notify you with any updates.`,
+        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted. Case ID: ${reportData.caseNumber}`,
       });
       
+      form.reset();
+      setSelectedCategory("");
       setShowReportModal(false);
+      // Reload cases to show the new submission
+      loadLostFoundCases();
     } catch (error) {
-      toast({
-        title: "❌ Submission Failed",
-        description: "Unable to submit your report. Please check your connection and try again.",
-        variant: "destructive"
-      });
+      console.error("Firebase submission error:", error);
+      // Try localStorage fallback
+      try {
+        const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+        const newReport = {
+          id: `LOCAL-${Date.now()}`,
+          type: reportType,
+          name: formData.name,
+          description: formData.description,
+          lastSeen: "Just now",
+          location: formData.location,
+          contact: formData.contact,
+          status: "active",
+          reportedAt: new Date().toISOString(),
+          category: formData.category || "General",
+          reportedBy: user.email || "Anonymous"
+        };
+        localReports.push(newReport);
+        localStorage.setItem('lostFoundReports', JSON.stringify(localReports));
+        
+        toast({
+          title: "✅ Report Saved Locally",
+          description: "Your report has been saved. It will be synced when connection is restored.",
+        });
+        
+        form.reset();
+        setSelectedCategory("");
+        setShowReportModal(false);
+        loadLostFoundCases();
+      } catch (localError) {
+        toast({
+          title: "❌ Submission Failed",
+          description: "Unable to submit your report. Please check your connection and try again.",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleMarkAsFound = async (caseId: string) => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to update case status.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await updateDocument("lostAndFound", caseId, {
+        status: "found",
+        resolvedAt: new Date(),
+        resolvedBy: user.email
+      });
+      
+      toast({
+        title: "✅ Case Updated",
+        description: "Case marked as found successfully.",
+      });
+      
+      loadLostFoundCases();
+    } catch (error) {
+      console.error("Error updating case:", error);
+      // Try localStorage update
+      const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+      const updatedReports = localReports.map((report: any) => 
+        report.id === caseId ? { ...report, status: "found" } : report
+      );
+      localStorage.setItem('lostFoundReports', JSON.stringify(updatedReports));
+      
+      toast({
+        title: "✅ Case Updated Locally",
+        description: "Case marked as found. Changes will sync when connection is restored.",
+      });
+      
+      loadLostFoundCases();
+    }
+  };
+
+  const handleContactReporter = (contact: string) => {
+    if (contact && contact !== "N/A") {
+      window.open(`tel:${contact}`, '_blank');
+    } else {
+      toast({
+        title: "Contact Information",
+        description: "Contact information not available for this case.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -200,7 +366,7 @@ export default function LostFoundPage() {
   };
 
   const stats = [
-    { label: "Total Cases", value: cases.length, color: "text-primary" },
+    { label: "Total Cases", value: cases.length, color: "text-orange-600" },
     { label: "Active Cases", value: cases.filter(c => c.status === "active").length, color: "text-red-600" },
     { label: "Found Today", value: cases.filter(c => c.status === "found").length, color: "text-yellow-600" },
     { label: "Resolved", value: cases.filter(c => c.status === "resolved").length, color: "text-green-600" }
@@ -209,10 +375,10 @@ export default function LostFoundPage() {
   return (
     <Layout>
       {/* Header */}
-      <section className="py-8 bg-primary text-primary-foreground">
+      <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Lost & Found Service</h1>
-          <p className="text-primary-foreground/90">Report and search for missing persons and items</p>
+          <p className="text-orange-100">Report and search for missing persons and items</p>
         </div>
       </section>
 
@@ -234,12 +400,17 @@ export default function LostFoundPage() {
       <section className="py-6 bg-muted">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
+            <Dialog open={showReportModal && reportType === "person"} onOpenChange={(open) => {
+              if (!open) setShowReportModal(false);
+            }}>
               <DialogTrigger asChild>
                 <Button 
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90" 
+                  className="bg-red-600 text-white hover:bg-red-700" 
                   data-testid="report-missing-button"
-                  onClick={() => setReportType("person")}
+                  onClick={() => {
+                    setReportType("person");
+                    setShowReportModal(true);
+                  }}
                 >
                   <AlertTriangle className="mr-2 h-5 w-5" />
                   Report Missing Person
@@ -247,10 +418,12 @@ export default function LostFoundPage() {
               </DialogTrigger>
             </Dialog>
 
-            <Dialog>
+            <Dialog open={showReportModal && reportType === "item"} onOpenChange={(open) => {
+              if (!open) setShowReportModal(false);
+            }}>
               <DialogTrigger asChild>
                 <Button 
-                  className="bg-accent text-accent-foreground hover:bg-accent/90"
+                  className="bg-orange-600 text-white hover:bg-orange-700"
                   data-testid="report-item-button"
                   onClick={() => {
                     setReportType("item");
@@ -263,7 +436,7 @@ export default function LostFoundPage() {
               </DialogTrigger>
             </Dialog>
 
-            <Button variant="outline" data-testid="emergency-contact-button">
+            <Button variant="outline" data-testid="emergency-contact-button" className="border-orange-500 text-orange-600 hover:bg-orange-50">
               <Phone className="mr-2 h-5 w-5" />
               Emergency Contact: 1950
             </Button>
@@ -318,15 +491,15 @@ export default function LostFoundPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCases.map((case_) => (
-              <Card key={case_.id} className="group hover:shadow-lg transition-all">
+              <Card key={case_.id} className="group hover:shadow-lg transition-all border-l-4 border-l-orange-500">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-2">
                       {case_.type === "person" ? 
-                        <User className="h-5 w-5 text-primary" /> : 
-                        <Package className="h-5 w-5 text-accent" />
+                        <User className="h-5 w-5 text-orange-600" /> : 
+                        <Package className="h-5 w-5 text-orange-600" />
                       }
-                      <CardTitle className="text-lg">{case_.name}</CardTitle>
+                      <CardTitle className="text-lg text-gray-800">{case_.name}</CardTitle>
                     </div>
                     <Badge className={`${getStatusColor(case_.status)} flex items-center space-x-1`}>
                       {getStatusIcon(case_.status)}
@@ -340,11 +513,11 @@ export default function LostFoundPage() {
                   
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-primary" />
+                      <MapPin className="h-4 w-4 text-orange-600" />
                       <span>Last seen: {case_.location}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Clock className="h-4 w-4 text-accent" />
+                      <Clock className="h-4 w-4 text-orange-600" />
                       <span>{case_.lastSeen}</span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -355,16 +528,23 @@ export default function LostFoundPage() {
 
                   {case_.status === "active" && (
                     <div className="pt-3 space-y-2">
-                      <Button variant="outline" className="w-full text-sm" data-testid={`contact-${case_.id}`}>
+                      <Button 
+                        variant="outline" 
+                        className="w-full text-sm border-orange-500 text-orange-600 hover:bg-orange-50" 
+                        data-testid={`contact-${case_.id}`}
+                        onClick={() => handleContactReporter(case_.contact)}
+                      >
                         <Phone className="h-4 w-4 mr-2" />
                         Contact Reporter
                       </Button>
-                      {case_.type === "person" && (
-                        <Button className="w-full text-sm bg-green-600 text-white hover:bg-green-700" data-testid={`found-${case_.id}`}>
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Mark as Found
-                        </Button>
-                      )}
+                      <Button 
+                        className="w-full text-sm bg-green-600 text-white hover:bg-green-700" 
+                        data-testid={`found-${case_.id}`}
+                        onClick={() => handleMarkAsFound(case_.id)}
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Mark as Found
+                      </Button>
                     </div>
                   )}
                 </CardContent>
@@ -390,101 +570,156 @@ export default function LostFoundPage() {
               Report Missing {reportType === "person" ? "Person" : "Item"}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name">Name *</Label>
-                <Input 
-                  id="name" 
-                  placeholder={reportType === "person" ? "Person's name" : "Item name"}
-                  data-testid="report-name"
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmitReport)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name *</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder={reportType === "person" ? "Person's name" : "Item name"}
+                          data-testid="report-name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="contact"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact Number *</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="+91 9876543210" 
+                          data-testid="report-contact"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div>
-                <Label htmlFor="contact">Contact Number *</Label>
-                <Input id="contact" placeholder="+91 9876543210" data-testid="report-contact" />
-              </div>
-            </div>
 
-            <div>
-              <Label htmlFor="description">Description *</Label>
-              <Textarea 
-                id="description" 
-                placeholder={reportType === "person" ? 
-                  "Physical description, clothing, any medical conditions..." : 
-                  "Item description, color, brand, distinctive features..."
-                }
-                rows={3}
-                data-testid="report-description"
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description *</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder={reportType === "person" ? 
+                          "Physical description, clothing, any medical conditions..." : 
+                          "Item description, color, brand, distinctive features..."
+                        }
+                        rows={3}
+                        data-testid="report-description"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="location">Last Seen Location *</Label>
-                <Input id="location" placeholder="Specific area or landmark" data-testid="report-location" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Seen Location *</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Specific area or landmark" 
+                          data-testid="report-location"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastSeenTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>When Last Seen</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="datetime-local" 
+                          data-testid="report-time"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div>
-                <Label htmlFor="time">When Last Seen</Label>
-                <Input id="time" type="datetime-local" data-testid="report-time" />
+
+              {reportType === "item" && (
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Item Category</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="electronics">Electronics</SelectItem>
+                          <SelectItem value="documents">Documents</SelectItem>
+                          <SelectItem value="jewelry">Jewelry</SelectItem>
+                          <SelectItem value="religious">Religious Items</SelectItem>
+                          <SelectItem value="clothing">Clothing</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <div className="flex space-x-4 pt-4">
+                <Button 
+                  type="submit"
+                  className="flex-1 bg-orange-600 text-white hover:bg-orange-700" 
+                  data-testid="submit-report"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Submitting..." : "Submit Report"}
+                </Button>
+                <Button 
+                  type="button"
+                  variant="outline" 
+                  className="flex-1" 
+                  onClick={() => setShowReportModal(false)}
+                >
+                  Cancel
+                </Button>
               </div>
-            </div>
 
-            {reportType === "item" && (
-              <div>
-                <Label htmlFor="category">Item Category</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="electronics">Electronics</SelectItem>
-                    <SelectItem value="documents">Documents</SelectItem>
-                    <SelectItem value="jewelry">Jewelry</SelectItem>
-                    <SelectItem value="religious">Religious Items</SelectItem>
-                    <SelectItem value="clothing">Clothing</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="text-sm text-muted-foreground bg-orange-50 p-3 rounded-lg border border-orange-200">
+                <strong>Important:</strong> For immediate emergencies, call 100 (Police) or 108 (Medical Emergency)
               </div>
-            )}
-
-            <div className="flex space-x-4 pt-4">
-              <Button 
-                className="flex-1 bg-primary text-primary-foreground" 
-                data-testid="submit-report"
-                disabled={isLoading}
-                onClick={() => {
-                  const formData = {
-                    name: (document.getElementById('name') as HTMLInputElement)?.value || '',
-                    contact: (document.getElementById('contact') as HTMLInputElement)?.value || '',
-                    description: (document.getElementById('description') as HTMLTextAreaElement)?.value || '',
-                    location: (document.getElementById('location') as HTMLInputElement)?.value || '',
-                  };
-                  
-                  if (!formData.name || !formData.contact || !formData.description || !formData.location) {
-                    toast({
-                      title: "Missing Information",
-                      description: "Please fill in all required fields.",
-                      variant: "destructive"
-                    });
-                    return;
-                  }
-                  
-                  handleSubmitReport(formData);
-                }}
-              >
-                {isLoading ? "Submitting..." : "Submit Report"}
-              </Button>
-              <Button variant="outline" className="flex-1" onClick={() => setShowReportModal(false)}>
-                Cancel
-              </Button>
-            </div>
-
-            <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
-              <strong>Important:</strong> For immediate emergencies, call 100 (Police) or 108 (Medical Emergency)
-            </div>
-          </div>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </Layout>
