@@ -155,15 +155,15 @@ export default function LostFoundPage() {
       });
 
       toast({
-        title: "Report Submitted",
-        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted successfully.`,
+        title: "✅ Report Submitted Successfully",
+        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted. We'll notify you with any updates.`,
       });
       
       setShowReportModal(false);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to submit report. Please try again.",
+        title: "❌ Submission Failed",
+        description: "Unable to submit your report. Please check your connection and try again.",
         variant: "destructive"
       });
     } finally {
