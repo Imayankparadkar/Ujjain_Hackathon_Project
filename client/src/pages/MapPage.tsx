@@ -7,9 +7,10 @@ import { Map } from "@/components/ui/map";
 import { MapPin, Navigation, Users, AlertTriangle, Clock, Phone, Shield, Heart, Home } from "lucide-react";
 
 export default function MapPage() {
-  const [selectedRoute, setSelectedRoute] = useState<string>("male");
+  const [selectedRoute, setSelectedRoute] = useState<string>("all");
   const [crowdData, setCrowdData] = useState<any[]>([]);
   const [facilityData, setFacilityData] = useState<any[]>([]);
+  const [ghatData, setGhatData] = useState<any[]>([]);
 
   useEffect(() => {
     // Mock Ujjain Mahakal Lok data with 3D path visualization
@@ -115,32 +116,88 @@ export default function MapPage() {
         capacity: "300 people/min"
       }
     ]);
+
+    // Enhanced ghat data for bathing areas
+    setGhatData([
+      {
+        name: "Main Bathing Ghat",
+        latitude: "23.1800",
+        longitude: "75.7670",
+        type: "main",
+        capacity: 500,
+        currentOccupancy: 320,
+        facilities: ["Changing Rooms", "Lockers", "Fresh Water", "Medical Aid", "Security"]
+      },
+      {
+        name: "Female-Only Bathing Ghat",
+        latitude: "23.1795",
+        longitude: "75.7675",
+        type: "female",
+        capacity: 300,
+        currentOccupancy: 180,
+        facilities: ["Private Changing", "Female Security", "Fresh Water", "First Aid", "Children Area"]
+      },
+      {
+        name: "Senior Citizens Ghat",
+        latitude: "23.1805",
+        longitude: "75.7665",
+        type: "senior",
+        capacity: 200,
+        currentOccupancy: 85,
+        facilities: ["Wheelchair Access", "Assisted Bathing", "Medical Support", "Rest Areas", "Priority Entry"]
+      },
+      {
+        name: "Family Bathing Ghat",
+        latitude: "23.1798",
+        longitude: "75.7672",
+        type: "family",
+        capacity: 400,
+        currentOccupancy: 220,
+        facilities: ["Family Rooms", "Child Safety", "Lockers", "Fresh Water", "Food Counter"]
+      }
+    ]);
   }, []);
 
   const routes = [
     { 
+      id: "all", 
+      name: "All Routes", 
+      color: "#6B7280", 
+      description: "View all available routes and choose your path",
+      estimatedTime: "Varies",
+      crowdLevel: "Mixed"
+    },
+    { 
       id: "male", 
       name: "Male Devotees Path", 
       color: "#FF6B35", 
-      description: "Optimized for male pilgrims with direct access",
-      estimatedTime: "45 minutes",
+      description: "Optimized for male pilgrims ending at Main Bathing Ghat",
+      estimatedTime: "55 minutes (Temple: 45 min + Ghat: 10 min)",
       crowdLevel: "High"
     },
     { 
       id: "female", 
       name: "Female Devotees Path", 
       color: "#FFB74D", 
-      description: "Safe and comfortable route for female pilgrims",
-      estimatedTime: "35 minutes",
+      description: "Safe route for female pilgrims ending at Female-Only Ghat",
+      estimatedTime: "45 minutes (Temple: 35 min + Ghat: 10 min)",
       crowdLevel: "Medium"
     },
     { 
       id: "elderly", 
       name: "Senior Citizens Path", 
       color: "#4CAF50", 
-      description: "Gentle route with rest areas for elderly pilgrims",
-      estimatedTime: "25 minutes",
+      description: "Priority route with assistance ending at Senior Citizens Ghat",
+      estimatedTime: "35 minutes (Temple: 25 min + Ghat: 10 min)",
       crowdLevel: "Low"
+    },
+    { 
+      id: "family", 
+      name: "Family Path", 
+      color: "#9C27B0", 
+      description: "Child-friendly route ending at Family Bathing Ghat",
+      estimatedTime: "50 minutes (Temple: 40 min + Ghat: 10 min)",
+      crowdLevel: "Medium"
     }
   ];
 
@@ -237,10 +294,16 @@ export default function MapPage() {
                     className="h-[600px] rounded-lg"
                     crowdData={crowdData}
                     facilityData={facilityData}
+                    ghatData={ghatData}
                     showHeatmap={true}
                     showPaths={true}
+                    selectedRoute={selectedRoute}
                     center={[23.1815, 75.7682]} // Mahakal Temple coordinates
                     zoom={17}
+                    onLocationClick={(location) => {
+                      console.log('Location clicked:', location);
+                      // Handle location click - could show details, navigate, etc.
+                    }}
                   />
                 </CardContent>
               </Card>
@@ -252,6 +315,7 @@ export default function MapPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    {/* Crowd Density */}
                     <div className="flex items-center space-x-2">
                       <div className="w-3 h-3 bg-red-600 rounded-full"></div>
                       <span>Very High Crowd</span>
@@ -268,6 +332,8 @@ export default function MapPage() {
                       <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                       <span>Low Crowd</span>
                     </div>
+
+                    {/* Facilities */}
                     <div className="flex items-center space-x-2">
                       <span>🚻</span>
                       <span>Toilets</span>
@@ -283,6 +349,28 @@ export default function MapPage() {
                     <div className="flex items-center space-x-2">
                       <span>🚪</span>
                       <span>Emergency Exits</span>
+                    </div>
+
+                    {/* Bathing Ghats */}
+                    <div className="flex items-center space-x-2">
+                      <span>🛁</span>
+                      <span>Bathing Ghats</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3" style={{backgroundColor: "#FF6B35"}}></div>
+                      <span>Male Route</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3" style={{backgroundColor: "#FFB74D"}}></div>
+                      <span>Female Route</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3" style={{backgroundColor: "#4CAF50"}}></div>
+                      <span>Senior Route</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3" style={{backgroundColor: "#9C27B0"}}></div>
+                      <span>Family Route</span>
                     </div>
                   </div>
                 </CardContent>
@@ -311,6 +399,49 @@ export default function MapPage() {
                       </Badge>
                     </div>
                   ))}
+                </CardContent>
+              </Card>
+
+              {/* Ghat Status */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    🛁 Bathing Ghats Status
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ghatData.map((ghat, index) => {
+                    const occupancyRate = (ghat.currentOccupancy / ghat.capacity) * 100;
+                    let statusColor = "text-green-600";
+                    if (occupancyRate > 80) statusColor = "text-red-600";
+                    else if (occupancyRate > 60) statusColor = "text-orange-600";
+                    
+                    return (
+                      <div key={index} className="p-3 bg-muted rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-medium text-sm">{ghat.name}</div>
+                          <Badge variant="outline" className={statusColor}>
+                            {occupancyRate.toFixed(0)}%
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-muted-foreground mb-2">
+                          {ghat.currentOccupancy}/{ghat.capacity} people
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              occupancyRate > 80 ? 'bg-red-500' : 
+                              occupancyRate > 60 ? 'bg-orange-500' : 'bg-green-500'
+                            }`}
+                            style={{ width: `${occupancyRate}%` }}
+                          />
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Type: {ghat.type} • {ghat.facilities.slice(0, 2).join(', ')}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </CardContent>
               </Card>
 
