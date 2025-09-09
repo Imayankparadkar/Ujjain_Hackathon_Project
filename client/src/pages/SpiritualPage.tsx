@@ -37,7 +37,7 @@ export default function SpiritualPage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
 
-  // Debug log to check viewMode state
+  // Debug log to check viewMode state - can be removed after testing
   console.log('🔄 Current viewMode:', viewMode);
   const [reminderEvents, setReminderEvents] = useState<Set<string>>(new Set());
 
