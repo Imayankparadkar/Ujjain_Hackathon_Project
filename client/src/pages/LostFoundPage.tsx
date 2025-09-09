@@ -9,6 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, AlertTriangle, Clock, MapPin, Phone, User, Package, CheckCircle } from "lucide-react";
+import { getDocuments, addDocument, subscribeToCollection } from "@/lib/firebase";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface LostFoundCase {
   id: string;
@@ -25,15 +28,64 @@ interface LostFoundCase {
 }
 
 export default function LostFoundPage() {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [cases, setCases] = useState<LostFoundCase[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<"all" | "person" | "item">("all");
   const [filterStatus, setFilterStatus] = useState<"all" | "active" | "found" | "resolved">("all");
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportType, setReportType] = useState<"person" | "item">("person");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Mock data for lost and found cases
+    loadLostFoundCases();
+    // Set up real-time subscription for updates
+    const unsubscribe = subscribeToCollection("lostAndFound", (data: any[]) => {
+      const formattedCases = data.map(item => ({
+        id: item.id,
+        type: item.type === "missing_person" || item.type === "missing_child" ? "person" : "item",
+        name: item.name,
+        description: item.description,
+        lastSeen: formatTimeAgo(item.lastSeenTime || item.foundTime || item.createdAt),
+        location: item.lastSeenLocation || item.foundLocation || "Unknown",
+        contact: item.contactInfo || "N/A",
+        status: item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status,
+        reportedAt: item.createdAt?.toDate?.() || new Date(item.createdAt),
+        category: item.category || "General"
+      }));
+      setCases(formattedCases);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  const loadLostFoundCases = async () => {
+    try {
+      const data = await getDocuments("lostAndFound");
+      const formattedCases = data.map((item: any) => ({
+        id: item.id,
+        type: item.type === "missing_person" || item.type === "missing_child" ? "person" : "item",
+        name: item.name,
+        description: item.description,
+        lastSeen: formatTimeAgo(item.lastSeenTime || item.foundTime || item.createdAt),
+        location: item.lastSeenLocation || item.foundLocation || "Unknown",
+        contact: item.contactInfo || "N/A",
+        status: item.status === "reunited" || item.status === "claimed" ? "resolved" : item.status,
+        reportedAt: item.createdAt?.toDate?.() || new Date(item.createdAt),
+        category: item.category || "General"
+      }));
+      setCases(formattedCases);
+    } catch (error) {
+      console.error("Error loading lost & found cases:", error);
+      // Fallback to mock data if Firebase fails
+      loadMockData();
+    }
+  };
+
+  const loadMockData = () => {
     const mockCases: LostFoundCase[] = [
       {
         id: "LF001",
@@ -57,57 +109,67 @@ export default function LostFoundPage() {
         status: "found",
         reportedAt: "2025-01-15T08:15:00Z",
         category: "Electronics"
-      },
-      {
-        id: "LF003",
-        type: "person",
-        name: "Meera Devi",
-        description: "Female, 45 years old, wearing red saree, carrying small bag. Speaks only Hindi.",
-        lastSeen: "30 minutes ago",
-        location: "Community Kitchen Area",
-        contact: "+91 9876543212",
-        status: "active",
-        reportedAt: "2025-01-15T12:00:00Z"
-      },
-      {
-        id: "LF004",
-        type: "item",
-        name: "Wallet with Documents",
-        description: "Brown leather wallet containing Aadhaar card, PAN card, and ₹5000 cash",
-        lastSeen: "6 hours ago",
-        location: "Parking Area B",
-        contact: "+91 9876543213",
-        status: "resolved",
-        reportedAt: "2025-01-15T06:45:00Z",
-        category: "Documents"
-      },
-      {
-        id: "LF005",
-        type: "person",
-        name: "Child - Arjun",
-        description: "Male child, 8 years old, wearing blue shirt and jeans. Speaks Hindi and English.",
-        lastSeen: "15 minutes ago",
-        location: "Near Medical Aid Post",
-        contact: "+91 9876543214",
-        status: "found",
-        reportedAt: "2025-01-15T12:15:00Z"
-      },
-      {
-        id: "LF006",
-        type: "item",
-        name: "Prayer Bag",
-        description: "Red cloth bag containing prayer books, rudraksha mala, and personal items",
-        lastSeen: "3 hours ago",
-        location: "Female Route Section 2",
-        contact: "+91 9876543215",
-        status: "active",
-        reportedAt: "2025-01-15T09:30:00Z",
-        category: "Religious Items"
       }
     ];
-
     setCases(mockCases);
-  }, []);
+  };
+
+  const formatTimeAgo = (date: any) => {
+    if (!date) return "Unknown";
+    const now = new Date();
+    const then = date.toDate ? date.toDate() : new Date(date);
+    const diffMs = now.getTime() - then.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 60) return `${diffMins} minutes ago`;
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    return `${diffDays} days ago`;
+  };
+
+  const handleSubmitReport = async (formData: any) => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to report missing items or persons.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await addDocument("lostAndFound", {
+        type: reportType === "person" ? "missing_person" : "missing_item",
+        name: formData.name,
+        description: formData.description,
+        lastSeenLocation: formData.location,
+        lastSeenTime: new Date(),
+        contactInfo: formData.contact,
+        reportedBy: user.email,
+        status: "active",
+        priority: reportType === "person" ? "critical" : "medium",
+        caseNumber: `LF-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}`,
+        createdAt: new Date()
+      });
+
+      toast({
+        title: "Report Submitted",
+        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted successfully.`,
+      });
+      
+      setShowReportModal(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit report. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredCases = cases.filter(case_ => {
     const matchesSearch = case_.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
