@@ -30,21 +30,25 @@ export default function ContactPage() {
     // Fetch EmailJS config from environment/API
     const getEmailConfig = async () => {
       try {
-        // Try to get from server environment
+        console.log('Fetching EmailJS config...');
         const response = await fetch('/api/config');
         if (response.ok) {
           const data = await response.json();
-          if (data.emailjs && data.emailjs.publicKey) {
+          console.log('EmailJS config received:', data.emailjs);
+          if (data.emailjs && data.emailjs.publicKey && data.emailjs.serviceId && data.emailjs.templateId) {
+            // Initialize EmailJS with the public key
             emailjs.init(data.emailjs.publicKey);
             setEmailConfig(data.emailjs);
+            console.log('✅ EmailJS initialized with real credentials');
             return;
           }
         }
       } catch (error) {
-        console.log('Could not fetch config from API, using fallback');
+        console.error('Could not fetch config from API:', error);
       }
       
       // Fallback: Create a simple mock that shows success without actually sending
+      console.log('⚠️ Using mock EmailJS credentials - emails will not be sent');
       setEmailConfig({
         serviceId: 'mock_service',
         templateId: 'mock_template', 
@@ -206,25 +210,29 @@ export default function ContactPage() {
         reply_to: formData.email || formData.phone,
       };
 
-      // Send email using EmailJS or simulate success
-      if (!emailConfig) {
-        throw new Error('EmailJS configuration not loaded. Please refresh the page and try again.');
+      // Send email via server endpoint
+      const response = await fetch('/api/contact/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          category: formData.category,
+          subject: formData.subject,
+          message: formData.message
+        })
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to send email');
       }
       
-      const { serviceId, templateId, publicKey } = emailConfig;
-      
-      // If using mock credentials, simulate success
-      if (serviceId === 'mock_service') {
-        // Simulate email sending delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Mock email sent:', templateParams);
-      } else {
-        // Try real EmailJS sending
-        if (!serviceId || !templateId || !publicKey) {
-          throw new Error('EmailJS configuration incomplete. Please contact support.');
-        }
-        await emailjs.send(serviceId, templateId, templateParams, publicKey);
-      }
+      console.log('✅ Email sent successfully via server:', result);
 
       toast({
         title: "Message Sent Successfully! ✅",

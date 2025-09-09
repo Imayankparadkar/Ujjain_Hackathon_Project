@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
+import emailjs from '@emailjs/nodejs';
 
 // Validation schemas
 const createUserSchema = z.object({
@@ -57,15 +58,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Config endpoint for frontend
   app.get("/api/config", async (req, res) => {
     try {
+      const emailjsConfig = {
+        serviceId: process.env.EMAILJS_SERVICE_ID,
+        templateId: process.env.EMAILJS_TEMPLATE_ID,
+        publicKey: process.env.EMAILJS_PUBLIC_KEY,
+      };
+      
+      console.log('EmailJS Config:', {
+        serviceId: emailjsConfig.serviceId ? 'SET' : 'MISSING',
+        templateId: emailjsConfig.templateId ? 'SET' : 'MISSING', 
+        publicKey: emailjsConfig.publicKey ? 'SET' : 'MISSING'
+      });
+      
       res.json({
-        emailjs: {
-          serviceId: process.env.EMAILJS_SERVICE_ID,
-          templateId: process.env.EMAILJS_TEMPLATE_ID,
-          publicKey: process.env.EMAILJS_PUBLIC_KEY,
-        }
+        emailjs: emailjsConfig
       });
     } catch (error) {
+      console.error('Config endpoint error:', error);
       res.status(500).json({ message: "Failed to fetch config" });
+    }
+  });
+
+  // Contact form email endpoint
+  app.post("/api/contact/send", async (req, res) => {
+    try {
+      const { name, email, phone, category, subject, message } = req.body;
+      
+      // Validate required fields
+      if (!name || !phone || !subject || !message) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      const templateParams = {
+        from_name: name,
+        from_email: email || "no-email@provided.com",
+        phone: phone,
+        category: category || "General Inquiry",
+        subject: subject,
+        message: message,
+        reply_to: email || phone,
+      };
+
+      // Send email using EmailJS Node.js
+      const emailjsResponse = await emailjs.send(
+        process.env.EMAILJS_SERVICE_ID!,
+        process.env.EMAILJS_TEMPLATE_ID!,
+        templateParams,
+        {
+          publicKey: process.env.EMAILJS_PUBLIC_KEY!,
+        }
+      );
+
+      console.log('✅ Email sent successfully:', emailjsResponse.status, emailjsResponse.text);
+      res.json({ success: true, message: "Email sent successfully" });
+      
+    } catch (error: any) {
+      console.error('❌ Email sending failed:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to send email", 
+        error: error.message 
+      });
     }
   });
 
