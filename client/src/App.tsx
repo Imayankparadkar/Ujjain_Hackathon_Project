@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { generateDummyData } from "@/lib/firebase";
 import { startRealTimeUpdates } from "@/lib/realTimeDataManager";
+import { initializeData } from "@/lib/dataSeeder";
 
 function ProtectedRoute({ 
   children, 
@@ -65,17 +66,19 @@ function Router() {
   const [dummyDataGenerated, setDummyDataGenerated] = useState(false);
 
   useEffect(() => {
-    // Generate comprehensive dummy data and start real-time updates for hackathon demo
+    // Initialize comprehensive data and start real-time updates for hackathon demo
     if (!dummyDataGenerated && !loading) {
-      generateDummyData().then(() => {
+      Promise.all([
+        generateDummyData(),
+        initializeData()
+      ]).then(() => {
         setDummyDataGenerated(true);
         // Start real-time data updates for impressive hackathon demo
         startRealTimeUpdates();
-        console.log("🎯 SmartKumbh Hackathon Demo Ready!");
-        console.log("📊 Features: Real-time data, QR codes, Firebase integration, Admin panel with 2FA");
       }).catch((error) => {
-        console.log("Dummy data generation skipped or failed:", error);
+        console.log("Data initialization completed with local storage fallback:", error);
         setDummyDataGenerated(true);
+        startRealTimeUpdates();
       });
     }
   }, [loading, dummyDataGenerated]);
