@@ -123,8 +123,27 @@ export default function AdminDashboard() {
         getDocuments("helpBooths"),
       ]);
 
+      // Process lost & found data and include localStorage reports
+      const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+      const processedLocalReports = localReports.map((item: any) => ({
+        id: item.id,
+        type: item.type === "person" ? "missing_person" : "missing_item",
+        reportedBy: item.reportedBy || "Anonymous",
+        contactPhone: item.contact,
+        description: `Name: ${item.name}\n\nDescription: ${item.description}\n\nCategory: ${item.category || 'General'}`,
+        lastSeenLocation: item.location,
+        status: item.status || "active",
+        isApproved: false,
+        assignedOfficer: null,
+        createdAt: new Date(item.reportedAt),
+        name: item.name,
+        category: item.category || "General"
+      }));
+
+      const allLostFoundCases = [...lostFoundData, ...processedLocalReports];
+
       setUsers(usersData as User[]);
-      setLostFoundCases(lostFoundData as LostFoundCase[]);
+      setLostFoundCases(allLostFoundCases as LostFoundCase[]);
       setCleanlinessReports(cleanlinessData as CleanlinessReport[]);
       setCrowdData(crowdDataResult);
       setSafetyAlerts(alertsData);
@@ -135,9 +154,11 @@ export default function AdminDashboard() {
       setStats({
         totalUsers: usersData.length,
         activePilgrims: usersData.filter((u: any) => !u.isBlocked).length,
-        lostFoundCases: lostFoundData.filter((c: any) => c.status === "active").length,
+        lostFoundCases: allLostFoundCases.filter((c: any) => c.status === "active").length,
         activeAlerts: alertsData.filter((a: any) => a.isActive).length,
       });
+
+      console.log("Admin dashboard loaded:", allLostFoundCases.length, "lost & found cases");
     } catch (error) {
       console.error("Error loading data:", error);
       toast({
@@ -158,6 +179,31 @@ export default function AdminDashboard() {
     });
 
     subscribeToCollection("crowdData", setCrowdData);
+    
+    // Subscribe to lost & found updates
+    subscribeToCollection("lostAndFound", (data) => {
+      // Include localStorage data with Firebase data
+      const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+      const processedLocalReports = localReports.map((item: any) => ({
+        id: item.id,
+        type: item.type === "person" ? "missing_person" : "missing_item",
+        reportedBy: item.reportedBy || "Anonymous",
+        contactPhone: item.contact,
+        description: `Name: ${item.name}\n\nDescription: ${item.description}\n\nCategory: ${item.category || 'General'}`,
+        lastSeenLocation: item.location,
+        status: item.status || "active",
+        isApproved: false,
+        assignedOfficer: null,
+        createdAt: new Date(item.reportedAt),
+        name: item.name,
+        category: item.category || "General"
+      }));
+
+      const allCases = [...data, ...processedLocalReports];
+      setLostFoundCases(allCases);
+      setStats(prev => ({ ...prev, lostFoundCases: allCases.filter((c: any) => c.status === "active").length }));
+      console.log("Real-time update: Lost & Found cases:", allCases.length);
+    });
   };
 
   const handleUserAction = async (userId: string, action: "verify" | "block" | "unblock") => {
