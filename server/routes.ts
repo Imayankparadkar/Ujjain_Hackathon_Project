@@ -358,7 +358,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Use Gemini API key from environment
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = process.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
         // Fallback to smart responses if no API key
         const smartResponses = {
