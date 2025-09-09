@@ -63,7 +63,7 @@ export default function AttractionsPage() {
         website: "mahakaleshwar.nic.in",
         significance: "Most revered Jyotirlinga temple with unique south-facing lingam",
         bestTimeToVisit: "October to March, Early morning for Bhasma Aarti",
-        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800"
+        image: "https://images.unsplash.com/photo-1580551695436-7b1a2e0f94c3?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT002", 
@@ -83,7 +83,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2551234",
         significance: "One of the 51 Shaktipeeths where Goddess Sati's elbow fell",
         bestTimeToVisit: "During Navaratri and winter months",
-        image: "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800"
+        image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT003",
@@ -102,7 +102,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Mahakaleshwar Temple", "Shipra River", "Kaal Bhairav Temple"],
         significance: "Important pilgrimage site for holy baths in Shipra River",
         bestTimeToVisit: "Evening for aarti, winter months",
-        image: "https://images.unsplash.com/photo-1544913580-877b069acc7b?w=800"
+        image: "https://images.unsplash.com/photo-1544913580-877b069acc7b?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT004",
@@ -122,7 +122,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2552345",
         significance: "Guardian deity of Ujjain, offered liquor as prasad",
         bestTimeToVisit: "Evening hours, winter season",
-        image: "https://images.unsplash.com/photo-1605379399642-870262d3d051?w=800"
+        image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT005",
@@ -142,7 +142,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2553456",
         significance: "Legendary education center of Lord Krishna",
         bestTimeToVisit: "Morning hours, winter season",
-        image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800"
+        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT006",
@@ -161,7 +161,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Sandipani Ashram", "ISKCON Temple", "Bhartihari Caves"],
         significance: "Important temple for Goddess Kalika worship",
         bestTimeToVisit: "During festivals, winter months",
-        image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800"
+        image: "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT007",
@@ -181,7 +181,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2554567",
         significance: "Repository of regional history and culture",
         bestTimeToVisit: "Morning hours, winter season",
-        image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800"
+        image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT008",
@@ -200,7 +200,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Sandipani Ashram", "ISKCON Temple", "Kaal Bhairav Temple"],
         significance: "Popular recreational spot for families",
         bestTimeToVisit: "Evening hours, winter season",
-        image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800"
+        image: "https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT009",
@@ -221,7 +221,7 @@ export default function AttractionsPage() {
         website: "iskconujjain.org",
         significance: "International temple promoting Krishna consciousness",
         bestTimeToVisit: "During festivals, evening aarti",
-        image: "https://images.unsplash.com/photo-1591069201230-6741aceaa7b4?w=800"
+        image: "https://images.unsplash.com/photo-1591069201230-6741aceaa7b4?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT010",
@@ -240,7 +240,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Gadhkalika Temple", "Sandipani Ashram", "ISKCON Temple"],
         significance: "Temple dedicated to Mother India",
         bestTimeToVisit: "National holidays, winter season",
-        image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800"
+        image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT011",
@@ -260,7 +260,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2556789",
         significance: "Important Krishna temple with beautiful architecture",
         bestTimeToVisit: "During Krishna festivals, winter months",
-        image: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800"
+        image: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT012",
@@ -280,7 +280,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2557890",
         significance: "Historic astronomical observatory from 18th century",
         bestTimeToVisit: "Morning hours, winter season",
-        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800"
+        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT013",
@@ -300,7 +300,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2558901",
         significance: "Dedicated to legendary King Vikramaditya",
         bestTimeToVisit: "Morning hours, weekdays",
-        image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800"
+        image: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT014",
@@ -321,7 +321,7 @@ export default function AttractionsPage() {
         website: "kalidasaakademi.org",
         significance: "Center for Sanskrit literature and Kalidasa's works",
         bestTimeToVisit: "Morning hours, cultural events",
-        image: "https://images.unsplash.com/photo-1481277542470-605612bd2d61?w=800"
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT015",
@@ -340,7 +340,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Mahakaleshwar Temple", "Harsiddhi Temple", "Ram Ghat"],
         significance: "Modern development enhancing temple experience",
         bestTimeToVisit: "Evening hours, all seasons",
-        image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800"
+        image: "https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT016",
@@ -360,7 +360,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2560123",
         significance: "Birthplace of Mars planet according to Hindu astronomy",
         bestTimeToVisit: "Tuesday (Mangal Day), winter season",
-        image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800"
+        image: "https://images.unsplash.com/photo-1605379399642-870262d3d051?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT017",
@@ -380,7 +380,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2561234",
         significance: "Important temple for planetary remedies",
         bestTimeToVisit: "Saturday (Shani Day), evening hours",
-        image: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800"
+        image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT018",
@@ -400,7 +400,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2562345",
         significance: "Historic Mughal era palace",
         bestTimeToVisit: "Morning hours, winter season",
-        image: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?w=800"
+        image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT019",
@@ -419,7 +419,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Kaliyadeh Palace", "Shipra River", "Chaubis Khamba Temple"],
         significance: "Associated with King Bhartrihari's meditation",
         bestTimeToVisit: "Morning hours, winter season",
-        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+        image: "https://images.unsplash.com/photo-1566843972142-a7fcb70de55a?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT020",
@@ -439,7 +439,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2563456",
         significance: "Famous for its 24-pillar architecture",
         bestTimeToVisit: "During Navaratri, winter months",
-        image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800"
+        image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT021",
@@ -459,7 +459,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2564567",
         significance: "Famous for large Ganesh idol",
         bestTimeToVisit: "During Ganesh Chaturthi, winter months",
-        image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800"
+        image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT022",
@@ -479,7 +479,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2565678",
         significance: "Famous for removing obstacles and fulfilling wishes",
         bestTimeToVisit: "Wednesday and Sunday, during Ganesh festivals",
-        image: "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800"
+        image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT023",
@@ -500,7 +500,7 @@ export default function AttractionsPage() {
         website: "wwfwaterpark.com",
         significance: "Popular recreational destination for families",
         bestTimeToVisit: "Summer months, weekends",
-        image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800"
+        image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT024",
@@ -520,7 +520,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2567890",
         significance: "Entertainment and recreation complex",
         bestTimeToVisit: "Summer season, holidays",
-        image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800"
+        image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT025",
@@ -540,7 +540,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2568901",
         significance: "Symbol of communal harmony",
         bestTimeToVisit: "Evening hours, winter season",
-        image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800"
+        image: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT026",
@@ -559,7 +559,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Ram Ghat", "Shipra River", "Mangalnath Temple"],
         significance: "Venue for the sacred Kumbh Mela",
         bestTimeToVisit: "During Kumbh Mela (every 12 years), cultural events",
-        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800"
+        image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT027",
@@ -579,7 +579,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2569012",
         significance: "Modern temple with traditional values",
         bestTimeToVisit: "Evening hours, winter season",
-        image: "https://images.unsplash.com/photo-1591069201230-6741aceaa7b4?w=800"
+        image: "https://images.unsplash.com/photo-1588960017762-b06a8d2fdc6e?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT028",
@@ -598,7 +598,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Mahakaleshwar Temple", "Ram Ghat", "Harsiddhi Temple"],
         significance: "Historic water body and recreation spot",
         bestTimeToVisit: "Evening hours, winter season",
-        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+        image: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80&auto=format&fit=crop"
       }
     ];
 
