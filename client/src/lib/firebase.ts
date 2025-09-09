@@ -2,29 +2,71 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
-// Parse Firebase config from environment variable or use mock data
+// Use local storage-based database for full functionality
 let firebaseConfig;
 let useFirebase = false;
 
-try {
-  const configString = import.meta.env.VITE_FIREBASE_CONFIG;
-  if (configString && configString !== '{}' && configString.includes('apiKey')) {
-    firebaseConfig = JSON.parse(configString);
-    useFirebase = true;
-  } else {
-    throw new Error('No valid Firebase config');
+// Always use local storage for demo purposes
+console.log('🏠 Using advanced local storage database for full functionality');
+firebaseConfig = {
+  apiKey: "demo-api-key",
+  authDomain: "smartkumbh-demo.firebaseapp.com",
+  projectId: "smartkumbh-demo",
+  storageBucket: "smartkumbh-demo.firebasestorage.app",
+  appId: "demo-app-id",
+};
+useFirebase = false;
+
+// Initialize comprehensive local database
+class LocalDatabase {
+  private static instance: LocalDatabase;
+  private dbName = 'SmartKumbhDB';
+  
+  static getInstance() {
+    if (!LocalDatabase.instance) {
+      LocalDatabase.instance = new LocalDatabase();
+    }
+    return LocalDatabase.instance;
   }
-} catch (error) {
-  console.log('Using local mock data instead of Firebase');
-  firebaseConfig = {
-    apiKey: "demo-api-key",
-    authDomain: "smartkumbh-demo.firebaseapp.com",
-    projectId: "smartkumbh-demo",
-    storageBucket: "smartkumbh-demo.firebasestorage.app",
-    appId: "demo-app-id",
-  };
-  useFirebase = false;
+  
+  get(collection: string): any[] {
+    const data = localStorage.getItem(`${this.dbName}_${collection}`);
+    return data ? JSON.parse(data) : [];
+  }
+  
+  set(collection: string, data: any[]): void {
+    localStorage.setItem(`${this.dbName}_${collection}`, JSON.stringify(data));
+  }
+  
+  add(collection: string, item: any): string {
+    const items = this.get(collection);
+    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    const newItem = { ...item, id, createdAt: new Date().toISOString() };
+    items.push(newItem);
+    this.set(collection, items);
+    return id;
+  }
+  
+  update(collection: string, id: string, updates: any): boolean {
+    const items = this.get(collection);
+    const index = items.findIndex(item => item.id === id);
+    if (index >= 0) {
+      items[index] = { ...items[index], ...updates, updatedAt: new Date().toISOString() };
+      this.set(collection, items);
+      return true;
+    }
+    return false;
+  }
+  
+  delete(collection: string, id: string): boolean {
+    const items = this.get(collection);
+    const filtered = items.filter(item => item.id !== id);
+    this.set(collection, filtered);
+    return filtered.length < items.length;
+  }
 }
+
+const localDB = LocalDatabase.getInstance();
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -152,17 +194,8 @@ export const logoutUser = async () => {
 // Firestore utility functions
 export const addDocument = async (collectionName: string, data: any) => {
   if (!useFirebase) {
-    // Store in localStorage for demo
-    const key = `mock_${collectionName}`;
-    const existing = JSON.parse(localStorage.getItem(key) || '[]');
-    const newDoc = {
-      id: Date.now().toString(),
-      ...data,
-      createdAt: new Date(),
-    };
-    existing.push(newDoc);
-    localStorage.setItem(key, JSON.stringify(existing));
-    return { id: newDoc.id };
+    const id = localDB.add(collectionName, data);
+    return { id };
   }
   
   try {
@@ -172,16 +205,15 @@ export const addDocument = async (collectionName: string, data: any) => {
     });
   } catch (error) {
     console.error('Firebase addDocument error:', error);
-    return { id: Date.now().toString() };
+    // Fallback to local storage
+    const id = localDB.add(collectionName, data);
+    return { id };
   }
 };
 
 export const getDocuments = async (collectionName: string, conditions?: any) => {
   if (!useFirebase) {
-    // Return mock data from localStorage
-    const key = `mock_${collectionName}`;
-    const data = JSON.parse(localStorage.getItem(key) || '[]');
-    return data;
+    return localDB.get(collectionName);
   }
   
   try {
@@ -195,31 +227,70 @@ export const getDocuments = async (collectionName: string, conditions?: any) => 
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error('Firebase getDocuments error:', error);
-    return [];
+    return localDB.get(collectionName);
   }
 };
 
 export const updateDocument = async (collectionName: string, docId: string, data: any) => {
-  const docRef = doc(db, collectionName, docId);
-  return await updateDoc(docRef, data);
+  if (!useFirebase) {
+    return localDB.update(collectionName, docId, data);
+  }
+  
+  try {
+    const docRef = doc(db, collectionName, docId);
+    return await updateDoc(docRef, data);
+  } catch (error) {
+    console.error('Firebase updateDocument error:', error);
+    return localDB.update(collectionName, docId, data);
+  }
 };
 
 export const deleteDocument = async (collectionName: string, docId: string) => {
-  const docRef = doc(db, collectionName, docId);
-  return await deleteDoc(docRef);
+  if (!useFirebase) {
+    return localDB.delete(collectionName, docId);
+  }
+  
+  try {
+    const docRef = doc(db, collectionName, docId);
+    return await deleteDoc(docRef);
+  } catch (error) {
+    console.error('Firebase deleteDocument error:', error);
+    return localDB.delete(collectionName, docId);
+  }
 };
 
 export const subscribeToCollection = (collectionName: string, callback: (data: any[]) => void, conditions?: any) => {
-  let q = query(collection(db, collectionName));
-  
-  if (conditions) {
-    q = query(collection(db, collectionName), ...conditions);
+  if (!useFirebase) {
+    // For local storage, simulate real-time updates by polling
+    const interval = setInterval(() => {
+      const data = localDB.get(collectionName);
+      callback(data);
+    }, 5000); // Update every 5 seconds
+    
+    // Return cleanup function
+    return () => clearInterval(interval);
   }
   
-  return onSnapshot(q, (snapshot) => {
-    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    callback(data);
-  });
+  try {
+    let q = query(collection(db, collectionName));
+    
+    if (conditions) {
+      q = query(collection(db, collectionName), ...conditions);
+    }
+    
+    return onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      callback(data);
+    });
+  } catch (error) {
+    console.error('Firebase subscription error:', error);
+    // Fallback to local polling
+    const interval = setInterval(() => {
+      const data = localDB.get(collectionName);
+      callback(data);
+    }, 5000);
+    return () => clearInterval(interval);
+  }
 };
 
 // Generate comprehensive dummy data for hackathon demo
