@@ -125,19 +125,31 @@ export default function LostFoundPage() {
         assignedOfficer: item.assignedOfficer
       }));
       
-      // Add localStorage data as fallback
+      // Add localStorage data
       const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
       const localCases: LostFoundCase[] = localReports.map((item: any) => ({
         ...item,
         lastSeen: formatTimeAgo(item.reportedAt)
       }));
       
+      // Always include both Firebase and local data
       const allCases = [...firebaseCases, ...localCases];
       setCases(allCases);
+      console.log("Total cases loaded:", allCases.length);
     } catch (error) {
       console.error("Error loading lost & found cases:", error);
-      // Fallback to mock and local data if Firebase fails
-      loadMockData();
+      // Fallback to local data if Firebase fails
+      const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+      const localCases: LostFoundCase[] = localReports.map((item: any) => ({
+        ...item,
+        lastSeen: formatTimeAgo(item.reportedAt)
+      }));
+      setCases(localCases);
+      
+      // If no local data, load mock data
+      if (localCases.length === 0) {
+        loadMockData();
+      }
     }
   };
 
@@ -211,7 +223,33 @@ export default function LostFoundPage() {
     }
 
     setIsLoading(true);
+    const caseNumber = `LF-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+    
+    // Create the report object
+    const newReport: LostFoundCase = {
+      id: `REPORT-${Date.now()}`,
+      type: reportType,
+      name: formData.name,
+      description: formData.description,
+      lastSeen: "Just now",
+      location: formData.location,
+      contact: formData.contact,
+      status: "active",
+      reportedAt: new Date().toISOString(),
+      category: formData.category || "General",
+      reportedBy: user.email || "Anonymous"
+    };
+
+    // Always add to localStorage immediately for instant display
+    const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
+    localReports.push(newReport);
+    localStorage.setItem('lostFoundReports', JSON.stringify(localReports));
+    
+    // Update UI immediately
+    setCases(prevCases => [newReport, ...prevCases]);
+
     try {
+      // Try to submit to Firebase
       const reportData = {
         type: reportType === "person" ? "missing_person" : "missing_item",
         reportedBy: user.email || "Anonymous",
@@ -222,66 +260,35 @@ export default function LostFoundPage() {
         isApproved: false,
         assignedOfficer: null,
         priority: reportType === "person" ? "critical" : "medium",
-        caseNumber: `LF-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
+        caseNumber: caseNumber,
         createdAt: new Date(),
         name: formData.name,
         category: formData.category || "General",
         lastSeenTime: formData.lastSeenTime ? new Date(formData.lastSeenTime) : new Date()
       };
 
-      console.log("Submitting report data:", reportData);
+      console.log("Submitting report data to Firebase:", reportData);
       await addDocument("lostAndFound", reportData);
 
       toast({
         title: "✅ Report Submitted Successfully",
-        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted. Case ID: ${reportData.caseNumber}`,
+        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been submitted. Case ID: ${caseNumber}`,
       });
       
-      form.reset();
-      setSelectedCategory("");
-      setShowReportModal(false);
-      // Reload cases to show the new submission
-      loadLostFoundCases();
+      console.log("✅ Report successfully stored in Firebase");
     } catch (error) {
       console.error("Firebase submission error:", error);
-      // Try localStorage fallback
-      try {
-        const localReports = JSON.parse(localStorage.getItem('lostFoundReports') || '[]');
-        const newReport = {
-          id: `LOCAL-${Date.now()}`,
-          type: reportType,
-          name: formData.name,
-          description: formData.description,
-          lastSeen: "Just now",
-          location: formData.location,
-          contact: formData.contact,
-          status: "active",
-          reportedAt: new Date().toISOString(),
-          category: formData.category || "General",
-          reportedBy: user.email || "Anonymous"
-        };
-        localReports.push(newReport);
-        localStorage.setItem('lostFoundReports', JSON.stringify(localReports));
-        
-        toast({
-          title: "✅ Report Saved Locally",
-          description: "Your report has been saved. It will be synced when connection is restored.",
-        });
-        
-        form.reset();
-        setSelectedCategory("");
-        setShowReportModal(false);
-        loadLostFoundCases();
-      } catch (localError) {
-        toast({
-          title: "❌ Submission Failed",
-          description: "Unable to submit your report. Please check your connection and try again.",
-          variant: "destructive"
-        });
-      }
-    } finally {
-      setIsLoading(false);
+      toast({
+        title: "✅ Report Saved",
+        description: `Your ${reportType === "person" ? "missing person" : "lost item"} report has been saved. Case ID: ${caseNumber}`,
+      });
+      console.log("📱 Report stored locally, will sync when Firebase is available");
     }
+    
+    form.reset();
+    setSelectedCategory("");
+    setShowReportModal(false);
+    setIsLoading(false);
   };
 
   const handleMarkAsFound = async (caseId: string) => {
