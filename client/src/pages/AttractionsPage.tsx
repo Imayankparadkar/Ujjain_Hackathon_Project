@@ -63,7 +63,7 @@ export default function AttractionsPage() {
         website: "mahakaleshwar.nic.in",
         significance: "Most revered Jyotirlinga temple with unique south-facing lingam",
         bestTimeToVisit: "October to March, Early morning for Bhasma Aarti",
-        image: "https://images.unsplash.com/photo-1580551695436-7b1a2e0f94c3?w=800&q=80&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT002", 
@@ -102,7 +102,7 @@ export default function AttractionsPage() {
         nearbyAttractions: ["Mahakaleshwar Temple", "Shipra River", "Kaal Bhairav Temple"],
         significance: "Important pilgrimage site for holy baths in Shipra River",
         bestTimeToVisit: "Evening for aarti, winter months",
-        image: "https://images.unsplash.com/photo-1544913580-877b069acc7b?w=800&q=80&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1566312627554-e6ddd18bfb8a?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT004",
@@ -221,7 +221,7 @@ export default function AttractionsPage() {
         website: "iskconujjain.org",
         significance: "International temple promoting Krishna consciousness",
         bestTimeToVisit: "During festivals, evening aarti",
-        image: "https://images.unsplash.com/photo-1591069201230-6741aceaa7b4?w=800&q=80&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT010",
@@ -400,7 +400,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2562345",
         significance: "Historic Mughal era palace",
         bestTimeToVisit: "Morning hours, winter season",
-        image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800&q=80&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT019",
@@ -459,7 +459,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2564567",
         significance: "Famous for large Ganesh idol",
         bestTimeToVisit: "During Ganesh Chaturthi, winter months",
-        image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&q=80&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1591069201230-6741aceaa7b4?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT022",
@@ -579,7 +579,7 @@ export default function AttractionsPage() {
         contact: "+91-734-2569012",
         significance: "Modern temple with traditional values",
         bestTimeToVisit: "Evening hours, winter season",
-        image: "https://images.unsplash.com/photo-1588960017762-b06a8d2fdc6e?w=800&q=80&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1580551695436-7b1a2e0f94c3?w=800&q=80&auto=format&fit=crop"
       },
       {
         id: "ATT028",
