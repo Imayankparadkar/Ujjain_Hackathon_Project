@@ -15,6 +15,7 @@ import LoginPage from "@/pages/LoginPage";
 import AdminLoginPage from "@/pages/AdminLoginPage";
 import UserDashboard from "@/pages/UserDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AttractionsPage from "@/pages/AttractionsPage";
 import NotFound from "@/pages/not-found";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
@@ -128,6 +129,7 @@ function Router() {
       <Route path="/lost-found" component={LostFoundPage} />
       <Route path="/spiritual" component={SpiritualPage} />
       <Route path="/contact" component={ContactPage} />
+      <Route path="/attractions" component={AttractionsPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       

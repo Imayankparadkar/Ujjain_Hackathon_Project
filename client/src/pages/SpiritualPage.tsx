@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
 interface SpiritualEvent {
   id: string;
@@ -25,6 +26,8 @@ export default function SpiritualPage() {
   const [liveStreams, setLiveStreams] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<SpiritualEvent | null>(null);
   const [showReminderDialog, setShowReminderDialog] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
 
   useEffect(() => {
     // Mock spiritual events data
@@ -106,6 +109,46 @@ export default function SpiritualPage() {
         category: "discourse",
         significance: "Teaching session on ancient wisdom and spiritual practices by renowned saints.",
         streamUrl: "live_stream_6"
+      },
+      // Add more events for calendar demonstration
+      {
+        id: "SE007",
+        name: "Morning Meditation",
+        location: "Harsiddhi Temple",
+        dateTime: new Date(Date.now() + 10 * 60 * 60 * 1000),
+        duration: "1 hour",
+        isLive: false,
+        attendees: 200,
+        description: "Guided meditation session for inner peace",
+        category: "puja",
+        significance: "Daily meditation practice for spiritual growth",
+        streamUrl: "live_stream_7"
+      },
+      {
+        id: "SE008",
+        name: "Bhajan Sandhya",
+        location: "Ram Ghat",
+        dateTime: new Date(Date.now() + 26 * 60 * 60 * 1000),
+        duration: "90 minutes",
+        isLive: false,
+        attendees: 1500,
+        description: "Evening devotional songs and prayers",
+        category: "aarti",
+        significance: "Community singing of devotional songs",
+        streamUrl: "live_stream_8"
+      },
+      {
+        id: "SE009",
+        name: "Yoga Session",
+        location: "Sandipani Ashram",
+        dateTime: new Date(Date.now() + 30 * 60 * 60 * 1000),
+        duration: "75 minutes",
+        isLive: false,
+        attendees: 300,
+        description: "Traditional yoga and pranayama practice",
+        category: "puja",
+        significance: "Ancient practice for physical and mental wellness",
+        streamUrl: "live_stream_9"
       }
     ];
 

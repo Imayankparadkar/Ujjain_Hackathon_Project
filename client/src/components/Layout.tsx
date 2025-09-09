@@ -48,6 +48,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
               <Link href="/map" className={location === "/map" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-map">Map</Link>
               <Link href="/lost-found" className={location === "/lost-found" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-lost-found">Lost & Found</Link>
               <Link href="/spiritual" className={location === "/spiritual" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-spiritual">Spiritual Live</Link>
+              <Link href="/attractions" className={location === "/attractions" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-attractions">Attractions</Link>
               <Link href="/contact" className={location === "/contact" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-contact">Contact</Link>
               
               {user && (
