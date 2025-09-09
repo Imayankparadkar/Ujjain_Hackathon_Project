@@ -649,6 +649,32 @@ export default function AttractionsPage() {
     setShowMap(true);
   };
 
+  const handleGetDirections = (attraction: Attraction) => {
+    const [lat, lng] = attraction.location.coordinates;
+    // Try to get user's current location for better navigation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+          // Open OpenStreetMap with navigation from user location to destination
+          const navigationUrl = `https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=${userLat}%2C${userLng}%3B${lat}%2C${lng}`;
+          window.open(navigationUrl, '_blank');
+        },
+        (error) => {
+          // Fallback: Open map centered on destination
+          const fallbackUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=16`;
+          window.open(fallbackUrl, '_blank');
+          console.log('Location access denied, opening destination on map');
+        }
+      );
+    } else {
+      // Fallback for browsers without geolocation
+      const fallbackUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=16`;
+      window.open(fallbackUrl, '_blank');
+    }
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -788,21 +814,35 @@ export default function AttractionsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-4">
-                  <div className="flex items-center space-x-1">
-                    <Users className="h-4 w-4 text-gray-400" />
-                    <span className="text-xs text-gray-500">{attraction.reviews} reviews</span>
+                <div className="space-y-2 mt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-1">
+                      <Users className="h-4 w-4 text-gray-400" />
+                      <span className="text-xs text-gray-500">{attraction.reviews} reviews</span>
+                    </div>
                   </div>
                   
-                  <Button
-                    size="sm"
-                    onClick={() => handleViewOnMap(attraction)}
-                    className="flex items-center space-x-1"
-                    data-testid={`view-map-${attraction.id}`}
-                  >
-                    <Navigation className="h-3 w-3" />
-                    <span>View on Map</span>
-                  </Button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleViewOnMap(attraction)}
+                      className="flex items-center space-x-1"
+                      data-testid={`view-map-${attraction.id}`}
+                    >
+                      <MapPin className="h-3 w-3" />
+                      <span>View on Map</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => handleGetDirections(attraction)}
+                      className="flex items-center space-x-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                      data-testid={`get-directions-${attraction.id}`}
+                    >
+                      <Navigation className="h-3 w-3" />
+                      <span>Get Directions</span>
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Highlights */}
