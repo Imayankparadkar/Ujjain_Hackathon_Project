@@ -1,0 +1,49 @@
+provide a customized route planner and spiritual journey assistant for pilgrims visiting for 2 months. The app should include the following features:
+
+Dynamic Route Planning:
+
+If a pilgrim is arriving by railway station, the map should guide them step by step to reach their designated rituals and routes.
+
+If arriving by bus stand, show the correct route towards the ghats and important rituals.
+
+If arriving by private vehicle, display dedicated parking zones and guide them from the parking lot to the ghat.
+
+Spiritual Ritual Journey Flow:
+
+The app should show the exact sequence of rituals a pilgrim has to perform at Mahakumbh (darshan spots, holy dips, temples, spiritual camps).
+
+Highlight priority spots such as temples, ghats, akharas, and ritual areas.
+
+Customized Bathing Zones at Shipra Ghat:
+
+Separate bathing areas for men, women, and families with clear navigation paths.
+
+Crowd management integration to show real-time congestion (optional advanced feature).
+
+Map Features:
+
+Use an interactive map (OpenStreetMap / Google Maps API / Mapbox) with markers for ghats, rituals, temples, medical camps, food stalls, and parking.
+
+The map should provide walking + vehicle navigation depending on the entry point.
+
+User Experience:
+
+Pilgrims should be able to select how they are coming (railway, bus, car).
+
+Based on the selection, the app should auto-generate the customized journey + route map for their visit.
+
+Provide multi-language support (Hindi, English).
+
+Scalability & Design:
+
+Mobile-first, simple UI with clear navigation arrows and icons for temples, ghats, rituals, and facilities.
+
+Include safety and emergency information (police booths, lost & found, hospitals).
+
+The output should be a prototype plan + wireframe or working code snippet for a MERN stack or React + Mapbox/OpenStreetMap based application, showcasing the above functionality. Make it visually engaging and user-friendly for lakhs of visitors.
+
+👉 This prompt will help AI tools generate mockups, code, or workflow designs for your customized Mahakumbh map app.
+
+Do you want me to also write the technical breakdown (like which APIs, libraries, and database structure to use) so you can directly start building it?
+
+ChatGPT can make mistakes. Check important info. See Cookie
