@@ -411,39 +411,41 @@ export default function LostFoundPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-6 bg-card border-b">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+      {/* Emergency Actions Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Report & Emergency Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Immediate assistance for missing persons and lost items with 24/7 support during your pilgrimage</p>
           </div>
-        </div>
-      </section>
-
-      {/* Action Buttons */}
-      <section className="py-6 bg-muted">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             <Dialog open={showReportModal && reportType === "person"} onOpenChange={(open) => {
               if (!open) setShowReportModal(false);
             }}>
               <DialogTrigger asChild>
-                <Button 
-                  className="bg-red-600 text-white hover:bg-red-700" 
-                  data-testid="report-missing-button"
-                  onClick={() => {
-                    setReportType("person");
-                    setShowReportModal(true);
-                  }}
-                >
-                  <AlertTriangle className="mr-2 h-5 w-5" />
-                  Report Missing Person
-                </Button>
+                <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden group cursor-pointer">
+                  <CardContent className="p-10 text-center">
+                    <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center">
+                        <AlertTriangle className="h-8 w-8 text-red-600" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-4">Missing Person</h3>
+                    <p className="text-base text-gray-600 mb-6 leading-relaxed">Report a missing family member or friend with immediate priority assistance</p>
+                    <Button 
+                      className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg" 
+                      data-testid="report-missing-button"
+                      onClick={() => {
+                        setReportType("person");
+                        setShowReportModal(true);
+                      }}
+                    >
+                      <AlertTriangle className="h-5 w-5 mr-3" />
+                      Report Missing Person
+                    </Button>
+                  </CardContent>
+                </Card>
               </DialogTrigger>
             </Dialog>
 
@@ -451,141 +453,246 @@ export default function LostFoundPage() {
               if (!open) setShowReportModal(false);
             }}>
               <DialogTrigger asChild>
-                <Button 
-                  className="bg-orange-600 text-white hover:bg-orange-700"
-                  data-testid="report-item-button"
-                  onClick={() => {
-                    setReportType("item");
-                    setShowReportModal(true);
-                  }}
-                >
-                  <Package className="mr-2 h-5 w-5" />
-                  Report Lost Item
-                </Button>
+                <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden group cursor-pointer">
+                  <CardContent className="p-10 text-center">
+                    <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center">
+                        <Package className="h-8 w-8 text-orange-600" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-4">Lost Item</h3>
+                    <p className="text-base text-gray-600 mb-6 leading-relaxed">Report lost belongings with detailed description for quick recovery</p>
+                    <Button 
+                      className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
+                      data-testid="report-item-button"
+                      onClick={() => {
+                        setReportType("item");
+                        setShowReportModal(true);
+                      }}
+                    >
+                      <Package className="h-5 w-5 mr-3" />
+                      Report Lost Item
+                    </Button>
+                  </CardContent>
+                </Card>
               </DialogTrigger>
             </Dialog>
 
-            <Button variant="outline" data-testid="emergency-contact-button" className="border-orange-500 text-orange-600 hover:bg-orange-50">
-              <Phone className="mr-2 h-5 w-5" />
-              Emergency Contact: 1950
-            </Button>
+            <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden group cursor-pointer">
+              <CardContent className="p-10 text-center">
+                <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center">
+                    <Phone className="h-8 w-8 text-green-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">Emergency Helpline</h3>
+                <p className="text-base text-gray-600 mb-6 leading-relaxed">24/7 emergency assistance for immediate help during crisis</p>
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg" 
+                  data-testid="emergency-contact-button"
+                  onClick={() => window.open('tel:1950', '_blank')}
+                >
+                  <Phone className="h-5 w-5 mr-3" />
+                  Call: 1950
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {stats.map((stat, index) => (
+              <div key={index} className="bg-white rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className={`text-4xl font-bold mb-2 ${stat.color}`}>{stat.value}</div>
+                <div className="text-lg text-gray-600 font-medium">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Search and Filters */}
-      <section className="py-6 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <Input
-                placeholder="Search by name, description, or location..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-                data-testid="search-input"
-              />
-            </div>
-            <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
-              <SelectTrigger className="w-full md:w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="person">Person</SelectItem>
-                <SelectItem value="item">Item</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
-              <SelectTrigger className="w-full md:w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="found">Found</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
-              </SelectContent>
-            </Select>
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Search Active Cases</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Find missing persons and lost items using our advanced search and filtering system</p>
           </div>
+          
+          <div className="bg-gray-50 rounded-3xl p-10 mb-12">
+            <div className="flex flex-col lg:flex-row gap-6 mb-8">
+              <div className="flex-1">
+                <Label htmlFor="search" className="text-lg font-semibold text-gray-700 mb-3 block">Search Cases</Label>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    id="search"
+                    placeholder="Search by name, description, or location..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500 w-full"
+                    data-testid="search-input"
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:w-96">
+                <div>
+                  <Label className="text-lg font-semibold text-gray-700 mb-3 block">Case Type</Label>
+                  <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+                    <SelectTrigger className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="person">Missing Person</SelectItem>
+                      <SelectItem value="item">Lost Item</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label className="text-lg font-semibold text-gray-700 mb-3 block">Status</Label>
+                  <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+                    <SelectTrigger className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="found">Found</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
 
-          <div className="text-sm text-muted-foreground mb-4">
-            Showing {filteredCases.length} of {cases.length} cases
+            <div className="flex items-center justify-between">
+              <div className="text-lg text-gray-600 font-medium">
+                Showing <span className="font-bold text-orange-600">{filteredCases.length}</span> of <span className="font-bold">{cases.length}</span> cases
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <Clock className="h-4 w-4" />
+                <span>Updated in real-time</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Cases List */}
-      <section className="py-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCases.map((case_) => (
-              <Card key={case_.id} className="group hover:shadow-lg transition-all border-l-4 border-l-orange-500">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-2">
-                      {case_.type === "person" ? 
-                        <User className="h-5 w-5 text-orange-600" /> : 
-                        <Package className="h-5 w-5 text-orange-600" />
-                      }
-                      <CardTitle className="text-lg text-gray-800">{case_.name}</CardTitle>
-                    </div>
-                    <Badge className={`${getStatusColor(case_.status)} flex items-center space-x-1`}>
-                      {getStatusIcon(case_.status)}
-                      <span className="capitalize">{case_.status}</span>
-                    </Badge>
-                  </div>
-                  <div className="text-sm text-muted-foreground">Case ID: {case_.id}</div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-sm text-muted-foreground">{case_.description}</p>
-                  
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-orange-600" />
-                      <span>Last seen: {case_.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Clock className="h-4 w-4 text-orange-600" />
-                      <span>{case_.lastSeen}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Phone className="h-4 w-4 text-green-600" />
-                      <span>{case_.contact}</span>
-                    </div>
-                  </div>
-
-                  {case_.status === "active" && (
-                    <div className="pt-3 space-y-2">
-                      <Button 
-                        variant="outline" 
-                        className="w-full text-sm border-orange-500 text-orange-600 hover:bg-orange-50" 
-                        data-testid={`contact-${case_.id}`}
-                        onClick={() => handleContactReporter(case_.contact)}
-                      >
-                        <Phone className="h-4 w-4 mr-2" />
-                        Contact Reporter
-                      </Button>
-                      <Button 
-                        className="w-full text-sm bg-green-600 text-white hover:bg-green-700" 
-                        data-testid={`found-${case_.id}`}
-                        onClick={() => handleMarkAsFound(case_.id)}
-                      >
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Mark as Found
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Active Cases</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Browse through current missing person and lost item cases. Help reunite families and recover belongings.</p>
           </div>
+          
+          {filteredCases.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+              {filteredCases.map((case_) => (
+                <Card key={case_.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                  <CardHeader className="p-8">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${case_.type === "person" ? "bg-red-100" : "bg-orange-100"}`}>
+                          {case_.type === "person" ? 
+                            <User className="h-6 w-6 text-red-600" /> : 
+                            <Package className="h-6 w-6 text-orange-600" />
+                          }
+                        </div>
+                        <div>
+                          <CardTitle className="text-2xl text-gray-800 mb-1">{case_.name}</CardTitle>
+                          <div className="text-sm text-gray-500">Case ID: {case_.id}</div>
+                        </div>
+                      </div>
+                      <Badge className={`${getStatusColor(case_.status)} flex items-center space-x-2 px-3 py-2 rounded-2xl text-sm font-semibold`}>
+                        {getStatusIcon(case_.status)}
+                        <span className="capitalize">{case_.status}</span>
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="p-8 pt-0 space-y-6">
+                    <p className="text-base text-gray-600 leading-relaxed">{case_.description}</p>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-orange-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <MapPin className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Last seen location</div>
+                          <div className="text-base text-gray-800 font-semibold">{case_.location}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <Clock className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Time since report</div>
+                          <div className="text-base text-gray-800 font-semibold">{case_.lastSeen}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <Phone className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Contact information</div>
+                          <div className="text-base text-gray-800 font-semibold">{case_.contact}</div>
+                        </div>
+                      </div>
+                    </div>
 
-          {filteredCases.length === 0 && (
-            <div className="text-center py-12">
-              <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-muted-foreground">No cases found</h3>
-              <p className="text-muted-foreground">Try adjusting your search criteria</p>
+                    {case_.status === "active" && (
+                      <div className="pt-6 space-y-3">
+                        <Button 
+                          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold rounded-2xl shadow-lg"
+                          data-testid={`found-${case_.id}`}
+                          onClick={() => handleMarkAsFound(case_.id)}
+                        >
+                          <CheckCircle className="h-5 w-5 mr-3" />
+                          Mark as Found
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 text-lg font-semibold rounded-2xl"
+                          data-testid={`contact-${case_.id}`}
+                          onClick={() => handleContactReporter(case_.contact)}
+                        >
+                          <Phone className="h-5 w-5 mr-3" />
+                          Contact Reporter
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <div className="mx-auto w-32 h-32 bg-white rounded-full flex items-center justify-center mb-8 shadow-lg">
+                <Search className="h-16 w-16 text-gray-400" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-4">No cases found</h3>
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                No cases match your current search criteria. Try adjusting your search terms or filters, or check back later for new reports.
+              </p>
+              <Button 
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg"
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterType("all");
+                  setFilterStatus("all");
+                }}
+              >
+                Clear All Filters
+              </Button>
             </div>
           )}
         </div>
