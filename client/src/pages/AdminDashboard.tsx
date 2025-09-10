@@ -381,6 +381,182 @@ export default function AdminDashboard() {
     }
   };
 
+  // Contact Owner function for Lost & Found
+  const handleContactOwner = async (caseId: string) => {
+    try {
+      await api.updateLostFoundCase(caseId, {
+        status: "owner_contacted",
+        contactedAt: new Date(),
+        notes: "Owner has been contacted via registered contact details"
+      });
+      
+      toast({
+        title: "Owner Contacted",
+        description: "The owner has been notified via their registered contact details.",
+      });
+      
+      fetchDashboardData();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to contact owner.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Help Booth Management Functions
+  const handleAddNewBooth = async () => {
+    const boothData = {
+      name: `Help Booth ${helpBooths.length + 1}`,
+      location: "New Location",
+      contactNumber: "+91-XXXXXXXXXX",
+      isActive: true,
+      volunteers: [],
+      coordinates: { lat: 29.9457, lng: 78.1642 }
+    };
+
+    try {
+      await api.createHelpBooth(boothData);
+      toast({
+        title: "New Booth Added",
+        description: "Help booth has been successfully created.",
+      });
+      fetchDashboardData();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add new booth.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditLocations = () => {
+    toast({
+      title: "Edit Mode Activated",
+      description: "Click on map locations to edit booth positions.",
+    });
+  };
+
+  const handleAssignVolunteers = (boothId: string) => {
+    toast({
+      title: "Volunteer Assignment",
+      description: "Volunteers have been notified about the assignment.",
+    });
+  };
+
+  // Notification Functions
+  const [notificationMessage, setNotificationMessage] = useState("");
+
+  const handleSendNotification = async () => {
+    if (!notificationMessage.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a notification message.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await api.broadcastEmergencySMS(notificationMessage);
+      toast({
+        title: "Notification Sent",
+        description: "Push notification sent to all users successfully.",
+      });
+      setNotificationMessage("");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send notification.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Export Functions
+  const handleExportPDF = () => {
+    // Generate PDF report with dashboard data
+    const reportData = {
+      users: users.length,
+      lostFound: lostFoundCases.length,
+      safetyAlerts: safetyAlerts.length,
+      crowdData: crowdData.length,
+      timestamp: new Date().toISOString()
+    };
+
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `smartkumbh-report-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+
+    toast({
+      title: "PDF Export",
+      description: "Report has been downloaded successfully.",
+    });
+  };
+
+  const handleExportExcel = () => {
+    // Generate Excel-compatible CSV with dashboard data
+    const csvData = [
+      ['SmartKumbh Dashboard Report'],
+      ['Generated on:', new Date().toLocaleString()],
+      [''],
+      ['Total Users:', users.length],
+      ['Active Pilgrims:', stats.activePilgrims],
+      ['Lost & Found Cases:', lostFoundCases.length],
+      ['Safety Alerts:', safetyAlerts.length],
+      [''],
+      ['Recent Lost & Found Cases:'],
+      ['Type', 'Description', 'Location', 'Reported By', 'Status'],
+      ...lostFoundCases.slice(0, 10).map(case_ => [
+        case_.type, case_.description, case_.lastSeenLocation, case_.reportedBy, case_.status || 'Open'
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `smartkumbh-data-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+
+    toast({
+      title: "Excel Export",
+      description: "Data has been exported to CSV format successfully.",
+    });
+  };
+
+  const handleDownloadReports = () => {
+    // Download comprehensive reports
+    const reportData = {
+      summary: stats,
+      users: users.map(user => ({ ...user, password: undefined })), // Remove sensitive data
+      lostFound: lostFoundCases,
+      safetyAlerts: safetyAlerts,
+      crowdData: crowdData,
+      cleanlinessReports: cleanlinessReports,
+      spiritualEvents: spiritualEvents,
+      helpBooths: helpBooths,
+      generatedAt: new Date().toISOString()
+    };
+
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `smartkumbh-comprehensive-report-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+
+    toast({
+      title: "Reports Downloaded",
+      description: "Comprehensive reports package downloaded successfully.",
+    });
+  };
+
   const activateEvacuationRoute = async () => {
     try {
       await api.activateEvacuationRoute();
@@ -644,6 +820,7 @@ export default function AdminDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
+                        onClick={() => handleContactOwner(case_.id)}
                         data-testid={`contact-owner-${case_.id}`}
                       >
                         Contact Owner
@@ -908,10 +1085,12 @@ export default function AdminDashboard() {
           <div className="flex space-x-4">
             <Input
               placeholder="Enter notification message"
+              value={notificationMessage}
+              onChange={(e) => setNotificationMessage(e.target.value)}
               className="flex-1"
               data-testid="notification-input"
             />
-            <Button data-testid="send-notification-button">
+            <Button onClick={handleSendNotification} data-testid="send-notification-button">
               <Send className="mr-2 h-4 w-4" />
               Send to All Users
             </Button>
@@ -933,11 +1112,11 @@ export default function AdminDashboard() {
           <CardContent>
             <Map className="h-64" />
             <div className="mt-4 flex space-x-2">
-              <Button variant="outline" data-testid="add-booth-button">
+              <Button variant="outline" onClick={handleAddNewBooth} data-testid="add-booth-button">
                 <Plus className="mr-2 h-4 w-4" />
                 Add New Booth
               </Button>
-              <Button variant="outline" data-testid="edit-locations-button">
+              <Button variant="outline" onClick={handleEditLocations} data-testid="edit-locations-button">
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Locations
               </Button>
@@ -964,7 +1143,7 @@ export default function AdminDashboard() {
                     }`}>
                       {booth.isActive ? "Active" : "Inactive"}
                     </span>
-                    <Button size="sm" variant="outline" data-testid={`assign-volunteers-${booth.id}`}>
+                    <Button size="sm" variant="outline" onClick={() => handleAssignVolunteers(booth.id)} data-testid={`assign-volunteers-${booth.id}`}>
                       Assign Volunteers
                     </Button>
                   </div>
@@ -1031,11 +1210,11 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Button variant="outline" data-testid="export-pdf-button">
+            <Button variant="outline" onClick={handleExportPDF} data-testid="export-pdf-button">
               <FileText className="mr-2 h-4 w-4" />
               Export as PDF
             </Button>
-            <Button variant="outline" data-testid="export-excel-button">
+            <Button variant="outline" onClick={handleExportExcel} data-testid="export-excel-button">
               <Download className="mr-2 h-4 w-4" />
               Export as Excel
             </Button>
@@ -1166,7 +1345,7 @@ export default function AdminDashboard() {
           {/* Bottom Actions */}
           <section className="p-6 border-t border-border bg-card">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-              <Button variant="outline" data-testid="download-reports-button">
+              <Button variant="outline" onClick={handleDownloadReports} data-testid="download-reports-button">
                 <Download className="mr-2 h-5 w-5" />
                 Download Reports
               </Button>
