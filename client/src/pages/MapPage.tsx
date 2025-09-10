@@ -1068,13 +1068,13 @@ export default function MapPage() {
                       key={idx}
                       variant="outline"
                       size="sm"
-                      className="h-auto flex flex-col items-center p-6 border-red-200 hover:bg-red-50 hover:border-red-300 rounded-2xl"
+                      className="h-auto flex flex-col items-center p-6 border-orange-200 hover:bg-orange-50 hover:border-orange-300 bg-gradient-to-br from-orange-50 to-orange-100 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl"
                       onClick={() => makeEmergencyCall(service.name, service.number)}
                       data-testid={`emergency-${service.name.toLowerCase().replace(' ', '-')}`}
                     >
-                      <div className="font-semibold text-red-600 mb-2">{service.name}</div>
+                      <div className="font-semibold text-orange-600 mb-2">{service.name}</div>
                       <div className="text-2xl font-bold text-gray-900">{service.number}</div>
-                      <div className="text-xs text-gray-500 mt-1">Tap to call</div>
+                      <div className="text-xs text-orange-500 mt-1">Tap to call</div>
                     </Button>
                   ))}
                 </div>
