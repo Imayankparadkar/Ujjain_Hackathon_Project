@@ -75,8 +75,8 @@ export class MemStorage implements IStorage {
   }
 
   private initializeWithDummyData() {
-    // Initialize with some dummy data for demonstration
-    const dummyUser: User = {
+    // Initialize with comprehensive dummy data for full admin demo
+    const adminUser: User = {
       id: randomUUID(),
       email: "admin@smartkumbh.com",
       password: "admin123",
@@ -93,63 +93,398 @@ export class MemStorage implements IStorage {
       language: "en",
       createdAt: new Date(),
     };
-    this.users.set(dummyUser.id, dummyUser);
+    this.users.set(adminUser.id, adminUser);
 
-    // Add sample safety alerts
-    const alert1: SafetyAlert = {
-      id: randomUUID(),
-      title: "High Crowd Alert",
-      message: "Har Ki Pauri experiencing high crowd density. Please use alternate routes.",
-      alertType: "crowd",
-      priority: "high",
-      location: "Har Ki Pauri",
-      isActive: true,
-      createdBy: "System",
-      createdAt: new Date(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    };
-    this.safetyAlerts.set(alert1.id, alert1);
+    // Add multiple sample users for management demo
+    const sampleUsers = [
+      {
+        name: "Rajesh Kumar",
+        email: "rajesh.kumar@gmail.com",
+        phone: "+91-9876543211",
+        aadhaarNumber: "2345-6789-0123",
+        emergencyContact: "+91-9876543212",
+        currentLocation: "Har Ki Pauri",
+        isVerified: true,
+        isBlocked: false
+      },
+      {
+        name: "Priya Sharma",
+        email: "priya.sharma@gmail.com",
+        phone: "+91-9876543213",
+        aadhaarNumber: "3456-7890-1234",
+        emergencyContact: "+91-9876543214",
+        currentLocation: "Triveni Sangam",
+        isVerified: false,
+        isBlocked: false
+      },
+      {
+        name: "Amit Gupta",
+        email: "amit.gupta@gmail.com",
+        phone: "+91-9876543215",
+        aadhaarNumber: "4567-8901-2345",
+        emergencyContact: "+91-9876543216",
+        currentLocation: "Dashashwamedh Ghat",
+        isVerified: true,
+        isBlocked: true
+      },
+      {
+        name: "Sunita Devi",
+        email: "sunita.devi@gmail.com",
+        phone: "+91-9876543217",
+        aadhaarNumber: "5678-9012-3456",
+        emergencyContact: "+91-9876543218",
+        currentLocation: "Assi Ghat",
+        isVerified: false,
+        isBlocked: false
+      },
+      {
+        name: "Rohit Singh",
+        email: "rohit.singh@gmail.com",
+        phone: "+91-9876543219",
+        aadhaarNumber: "6789-0123-4567",
+        emergencyContact: "+91-9876543220",
+        currentLocation: "Manikarnika Ghat",
+        isVerified: true,
+        isBlocked: false
+      }
+    ];
 
-    // Add sample spiritual events
-    const event1: SpiritualEvent = {
-      id: randomUUID(),
-      name: "Maha Aarti",
-      description: "Grand evening aarti ceremony at the holy ghats",
-      location: "Har Ki Pauri",
-      dateTime: new Date(Date.now() + 2 * 60 * 60 * 1000),
-      duration: 60,
-      isLive: false,
-      liveStreamUrl: "",
-      reminderUserIds: [],
-      createdAt: new Date(),
-    };
-    this.spiritualEvents.set(event1.id, event1);
+    sampleUsers.forEach(userData => {
+      const userId = randomUUID();
+      const user: User = {
+        id: userId,
+        email: userData.email,
+        password: "user123",
+        name: userData.name,
+        phone: userData.phone,
+        aadhaarNumber: userData.aadhaarNumber,
+        emergencyContact: userData.emergencyContact,
+        qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        isVerified: userData.isVerified,
+        isBlocked: userData.isBlocked,
+        role: "user",
+        currentLocation: userData.currentLocation,
+        savedRoutes: [],
+        language: "en",
+        createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+      };
+      this.users.set(userId, user);
+    });
 
-    // Add sample crowd data
-    const crowdData1: CrowdData = {
-      id: randomUUID(),
-      location: "Har Ki Pauri",
-      latitude: "29.9457",
-      longitude: "78.1642",
-      crowdCount: 8500,
-      densityLevel: "high",
-      timestamp: new Date(),
-    };
-    this.crowdData.set(crowdData1.id, crowdData1);
+    // Add multiple sample safety alerts
+    const alerts = [
+      {
+        title: "High Crowd Alert",
+        message: "Har Ki Pauri experiencing high crowd density. Please use alternate routes.",
+        alertType: "crowd",
+        priority: "high",
+        location: "Har Ki Pauri",
+        isActive: true
+      },
+      {
+        title: "Weather Advisory",
+        message: "Heavy rain expected after 6 PM. Carry umbrellas and use covered areas.",
+        alertType: "weather",
+        priority: "medium",
+        location: "All Areas",
+        isActive: true
+      },
+      {
+        title: "Route Closure",
+        message: "Main road to Dashashwamedh Ghat temporarily closed for maintenance.",
+        alertType: "route",
+        priority: "high",
+        location: "Dashashwamedh Ghat",
+        isActive: true
+      },
+      {
+        title: "Emergency Drill",
+        message: "Emergency evacuation drill completed successfully. All routes operational.",
+        alertType: "emergency",
+        priority: "low",
+        location: "Control Center",
+        isActive: false
+      }
+    ];
 
-    // Add sample help booth
-    const booth1: HelpBooth = {
-      id: randomUUID(),
-      name: "Main Help Center",
-      location: "Har Ki Pauri Gate 1",
-      latitude: "29.9457",
-      longitude: "78.1642",
-      volunteers: ["Volunteer A", "Volunteer B"],
-      isActive: true,
-      contactNumber: "+91-1800-KUMBH",
-      services: ["Information", "First Aid", "Lost & Found"],
-    };
-    this.helpBooths.set(booth1.id, booth1);
+    alerts.forEach(alertData => {
+      const alert: SafetyAlert = {
+        ...alertData,
+        id: randomUUID(),
+        createdBy: alertData.alertType === "emergency" ? "Emergency Team" : "System",
+        createdAt: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        location: alertData.location,
+        isActive: alertData.isActive,
+      };
+      this.safetyAlerts.set(alert.id, alert);
+    });
+
+    // Add multiple sample spiritual events
+    const events = [
+      {
+        name: "Maha Aarti",
+        description: "Grand evening aarti ceremony at the holy ghats",
+        location: "Har Ki Pauri",
+        dateTime: new Date(Date.now() + 2 * 60 * 60 * 1000),
+        duration: 60,
+        isLive: false,
+        liveStreamUrl: "https://stream.example.com/maha-aarti"
+      },
+      {
+        name: "Morning Bhajan",
+        description: "Devotional songs and prayers to start the day",
+        location: "Dashashwamedh Ghat",
+        dateTime: new Date(Date.now() + 14 * 60 * 60 * 1000),
+        duration: 45,
+        isLive: true,
+        liveStreamUrl: "https://stream.example.com/morning-bhajan"
+      },
+      {
+        name: "Ganga Aarti",
+        description: "Sacred evening prayers to River Ganga",
+        location: "Assi Ghat",
+        dateTime: new Date(Date.now() + 6 * 60 * 60 * 1000),
+        duration: 90,
+        isLive: false,
+        liveStreamUrl: "https://stream.example.com/ganga-aarti"
+      },
+      {
+        name: "Satsang",
+        description: "Spiritual discourse by renowned saints",
+        location: "Triveni Sangam",
+        dateTime: new Date(Date.now() + 26 * 60 * 60 * 1000),
+        duration: 120,
+        isLive: false,
+        liveStreamUrl: ""
+      }
+    ];
+
+    events.forEach(eventData => {
+      const event: SpiritualEvent = {
+        ...eventData,
+        id: randomUUID(),
+        reminderUserIds: [],
+        createdAt: new Date(),
+      };
+      this.spiritualEvents.set(event.id, event);
+    });
+
+    // Add comprehensive sample crowd data
+    const crowdDataPoints = [
+      {
+        location: "Har Ki Pauri",
+        latitude: "29.9457",
+        longitude: "78.1642",
+        crowdCount: 8500,
+        densityLevel: "high"
+      },
+      {
+        location: "Dashashwamedh Ghat",
+        latitude: "25.3176",
+        longitude: "82.9739",
+        crowdCount: 12000,
+        densityLevel: "critical"
+      },
+      {
+        location: "Triveni Sangam",
+        latitude: "25.4358",
+        longitude: "81.8463",
+        crowdCount: 6500,
+        densityLevel: "medium"
+      },
+      {
+        location: "Assi Ghat",
+        latitude: "25.2677",
+        longitude: "82.9910",
+        crowdCount: 3200,
+        densityLevel: "low"
+      },
+      {
+        location: "Manikarnika Ghat",
+        latitude: "25.3072",
+        longitude: "82.9731",
+        crowdCount: 4800,
+        densityLevel: "medium"
+      },
+      {
+        location: "Ram Ghat",
+        latitude: "25.3190",
+        longitude: "82.9650",
+        crowdCount: 2100,
+        densityLevel: "low"
+      }
+    ];
+
+    crowdDataPoints.forEach(crowdPoint => {
+      const crowdData: CrowdData = {
+        ...crowdPoint,
+        id: randomUUID(),
+        timestamp: new Date(Date.now() - Math.random() * 60 * 60 * 1000),
+      };
+      this.crowdData.set(crowdData.id, crowdData);
+    });
+
+    // Add multiple help booths
+    const helpBooths = [
+      {
+        name: "Main Help Center",
+        location: "Har Ki Pauri Gate 1",
+        latitude: "29.9457",
+        longitude: "78.1642",
+        volunteers: ["Rajesh Volunteer", "Priya Volunteer"],
+        isActive: true,
+        contactNumber: "+91-1800-KUMBH",
+        services: ["Information", "First Aid", "Lost & Found"]
+      },
+      {
+        name: "Medical Aid Station",
+        location: "Dashashwamedh Ghat",
+        latitude: "25.3176",
+        longitude: "82.9739",
+        volunteers: ["Dr. Kumar", "Nurse Sharma"],
+        isActive: true,
+        contactNumber: "+91-1800-MEDICAL",
+        services: ["Medical Aid", "Emergency Response", "Ambulance"]
+      },
+      {
+        name: "Information Kiosk",
+        location: "Triveni Sangam",
+        latitude: "25.4358",
+        longitude: "81.8463",
+        volunteers: ["Guide Singh", "Helper Devi"],
+        isActive: true,
+        contactNumber: "+91-1800-INFO",
+        services: ["Tourist Information", "Route Guidance", "Language Support"]
+      },
+      {
+        name: "Security Post",
+        location: "Assi Ghat",
+        latitude: "25.2677",
+        longitude: "82.9910",
+        volunteers: ["Officer Yadav", "Constable Mishra"],
+        isActive: true,
+        contactNumber: "+91-100",
+        services: ["Security", "Crowd Control", "Emergency Response"]
+      }
+    ];
+
+    helpBooths.forEach(boothData => {
+      const booth: HelpBooth = {
+        ...boothData,
+        id: randomUUID(),
+      };
+      this.helpBooths.set(booth.id, booth);
+    });
+
+    // Add sample lost & found cases
+    const lostFoundCases = [
+      {
+        type: "missing_person",
+        reportedBy: "Rajesh Kumar",
+        contactPhone: "+91-9876543211",
+        description: "Missing: 8-year-old boy, Arjun Kumar. Last seen wearing blue shirt and khaki shorts.",
+        lastSeenLocation: "Har Ki Pauri",
+        status: "active",
+        isApproved: false,
+        assignedOfficer: null
+      },
+      {
+        type: "missing_item",
+        reportedBy: "Priya Sharma",
+        contactPhone: "+91-9876543213",
+        description: "Lost mobile phone - Samsung Galaxy S21, black color with floral phone case.",
+        lastSeenLocation: "Dashashwamedh Ghat",
+        status: "active",
+        isApproved: true,
+        assignedOfficer: "Officer Yadav"
+      },
+      {
+        type: "found_item",
+        reportedBy: "Volunteer Team",
+        contactPhone: "+91-1800-KUMBH",
+        description: "Found: Gold bracelet with initials 'SK' engraved. Found near prayer area.",
+        lastSeenLocation: "Triveni Sangam",
+        status: "active",
+        isApproved: true,
+        assignedOfficer: null
+      },
+      {
+        type: "missing_person",
+        reportedBy: "Sunita Devi",
+        contactPhone: "+91-9876543217",
+        description: "Missing: Elderly man, 70 years old, wearing white dhoti and orange shawl.",
+        lastSeenLocation: "Manikarnika Ghat",
+        status: "resolved",
+        isApproved: true,
+        assignedOfficer: "Officer Mishra"
+      }
+    ];
+
+    lostFoundCases.forEach(caseData => {
+      const lostFoundCase: LostAndFound = {
+        ...caseData,
+        id: randomUUID(),
+        createdAt: new Date(Date.now() - Math.random() * 48 * 60 * 60 * 1000),
+        resolvedAt: caseData.status === "resolved" ? new Date() : null,
+        status: caseData.status,
+        lastSeenLocation: caseData.lastSeenLocation,
+        isApproved: caseData.isApproved,
+        assignedOfficer: caseData.assignedOfficer,
+      };
+      this.lostFoundCases.set(lostFoundCase.id, lostFoundCase);
+    });
+
+    // Add sample cleanliness reports
+    const cleanlinessReports = [
+      {
+        location: "Har Ki Pauri Toilets",
+        facilityType: "toilet",
+        rating: 2,
+        feedback: "Toilets need immediate cleaning and maintenance. Water supply is irregular.",
+        reportedBy: "Rajesh Kumar",
+        isResolved: false,
+        assignedStaff: null
+      },
+      {
+        location: "Dashashwamedh Ghat",
+        facilityType: "ghat",
+        rating: 4,
+        feedback: "Ghat is generally clean but could use more waste bins.",
+        reportedBy: "Priya Sharma",
+        isResolved: true,
+        assignedStaff: "Cleaning Team A"
+      },
+      {
+        location: "Triveni Sangam Area",
+        facilityType: "general",
+        rating: 3,
+        feedback: "Area is moderately clean but has some plastic waste near the shore.",
+        reportedBy: "Amit Gupta",
+        isResolved: false,
+        assignedStaff: "Cleaning Team B"
+      },
+      {
+        location: "Assi Ghat Facilities",
+        facilityType: "toilet",
+        rating: 5,
+        feedback: "Excellent maintenance and cleanliness. Very satisfied.",
+        reportedBy: "Sunita Devi",
+        isResolved: true,
+        assignedStaff: "Cleaning Team C"
+      }
+    ];
+
+    cleanlinessReports.forEach(reportData => {
+      const report: CleanlinessReport = {
+        ...reportData,
+        id: randomUUID(),
+        createdAt: new Date(Date.now() - Math.random() * 72 * 60 * 60 * 1000),
+        resolvedAt: reportData.isResolved ? new Date() : null,
+        assignedStaff: reportData.assignedStaff,
+      };
+      this.cleanlinessReports.set(report.id, report);
+    });
   }
 
   // User methods
