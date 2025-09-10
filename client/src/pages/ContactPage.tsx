@@ -360,34 +360,37 @@ Submitted: ${new Date().toLocaleString()}`,
   return (
     <Layout>
       {/* Header */}
-      <section className="py-8 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Contact & Support</h1>
-          <p className="text-primary-foreground/90">24/7 assistance for all your needs during Kumbh Mela</p>
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">Contact & Support</h1>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">24/7 assistance for all your needs during the sacred Kumbh Mela journey</p>
         </div>
       </section>
 
       {/* Emergency Contacts */}
-      <section className="py-8 bg-card">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-6 text-center">Emergency Contacts</h2>
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Emergency Contacts</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Immediate assistance available 24/7 for all emergency situations during your pilgrimage</p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {emergencyContacts.map((contact, index) => (
-              <Card key={index} className={`${contact.color} border-2 hover:shadow-lg transition-all group cursor-pointer`}>
-                <CardContent className="p-6 text-center">
-                  <div className="mb-4 flex justify-center group-hover:scale-110 transition-transform">
+              <Card key={index} className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden group cursor-pointer">
+                <CardContent className="p-10 text-center">
+                  <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
                     {contact.icon}
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{contact.title}</h3>
-                  <div className="text-3xl font-bold mb-2 text-primary">{contact.number}</div>
-                  <p className="text-sm text-muted-foreground">{contact.description}</p>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">{contact.title}</h3>
+                  <div className="text-4xl font-bold mb-4 text-orange-600">{contact.number}</div>
+                  <p className="text-base text-gray-600 mb-6 leading-relaxed">{contact.description}</p>
                   <Button 
-                    className="w-full mt-4" 
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg" 
                     onClick={() => handleEmergencyCall(contact.number, contact.title)}
                     data-testid={`call-${contact.number}`}
                   >
-                    <Phone className="h-4 w-4 mr-2" />
+                    <Phone className="h-5 w-5 mr-3" />
                     Call Now
                   </Button>
                 </CardContent>
@@ -395,44 +398,53 @@ Submitted: ${new Date().toLocaleString()}`,
             ))}
           </div>
 
-          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 text-center">
-            <AlertTriangle className="h-6 w-6 text-destructive mx-auto mb-2" />
-            <p className="text-destructive font-medium">
-              For life-threatening emergencies, immediately call 100 (Police) or 108 (Medical)
+          <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-8 text-center max-w-4xl mx-auto">
+            <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle className="h-8 w-8 text-red-600" />
+            </div>
+            <p className="text-red-700 font-semibold text-lg">
+              For life-threatening emergencies, immediately call 100 (Police) or 108 (Medical Emergency)
             </p>
           </div>
         </div>
       </section>
 
       {/* Helpline Numbers */}
-      <section className="py-8 bg-muted">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-6 text-center">Helpline Numbers</h2>
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Helpline Numbers</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Dedicated support lines for specific assistance during your pilgrimage journey</p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {helplineContacts.map((helpline, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center">
-                    <Phone className="h-5 w-5 mr-2 text-primary" />
+              <Card key={index} className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="p-8">
+                  <CardTitle className="text-2xl flex items-center text-gray-800">
+                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                      <Phone className="h-6 w-6 text-blue-600" />
+                    </div>
                     {helpline.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl font-bold text-primary">{helpline.number}</span>
+                <CardContent className="p-8 pt-0 space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl font-bold text-orange-600">{helpline.number}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm">
-                    <Clock className="h-4 w-4 text-accent" />
-                    <span>{helpline.timings}</span>
+                  <div className="flex items-center space-x-3 text-base">
+                    <div className="bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center">
+                      <Clock className="h-4 w-4 text-gray-600" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{helpline.timings}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{helpline.description}</p>
+                  <p className="text-base text-gray-600 leading-relaxed">{helpline.description}</p>
                   <Button 
-                    className="w-full mt-3" 
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold rounded-2xl shadow-lg mt-6" 
                     onClick={() => handleHelplineCall(helpline.number, helpline.title)}
                     data-testid={`call-helpline-${index}`}
                   >
-                    <Phone className="h-4 w-4 mr-2" />
+                    <Phone className="h-5 w-5 mr-3" />
                     Call Helpline
                   </Button>
                 </CardContent>
@@ -443,55 +455,62 @@ Submitted: ${new Date().toLocaleString()}`,
       </section>
 
       {/* Contact Form */}
-      <section className="py-8 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Send us a Message</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Have questions or need assistance? We're here to help 24/7 during your spiritual journey</p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Form */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+            <div className="bg-white p-12 rounded-3xl shadow-2xl border-0">
+              <h3 className="text-3xl font-bold text-gray-800 mb-8">Get in Touch</h3>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="name">Full Name *</Label>
+                    <Label htmlFor="name" className="text-lg font-semibold text-gray-700 mb-3 block">Full Name *</Label>
                     <Input
                       id="name"
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
                       placeholder="Your full name"
                       required
+                      className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500"
                       data-testid="contact-name"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label htmlFor="email" className="text-lg font-semibold text-gray-700 mb-3 block">Email Address</Label>
                     <Input
                       id="email"
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       placeholder="your.email@example.com"
+                      className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500"
                       data-testid="contact-email"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Label htmlFor="phone" className="text-lg font-semibold text-gray-700 mb-3 block">Phone Number *</Label>
                     <Input
                       id="phone"
                       value={formData.phone}
                       onChange={(e) => handleInputChange("phone", e.target.value)}
                       placeholder="+91 9876543210"
                       required
+                      className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500"
                       data-testid="contact-phone"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="category">Category</Label>
+                    <Label htmlFor="category" className="text-lg font-semibold text-gray-700 mb-3 block">Category</Label>
                     <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                      <SelectTrigger data-testid="contact-category">
+                      <SelectTrigger className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500" data-testid="contact-category">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
@@ -509,26 +528,28 @@ Submitted: ${new Date().toLocaleString()}`,
                 </div>
 
                 <div>
-                  <Label htmlFor="subject">Subject *</Label>
+                  <Label htmlFor="subject" className="text-lg font-semibold text-gray-700 mb-3 block">Subject *</Label>
                   <Input
                     id="subject"
                     value={formData.subject}
                     onChange={(e) => handleInputChange("subject", e.target.value)}
                     placeholder="Brief subject of your message"
                     required
+                    className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500"
                     data-testid="contact-subject"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="message">Message *</Label>
+                  <Label htmlFor="message" className="text-lg font-semibold text-gray-700 mb-3 block">Message *</Label>
                   <Textarea
                     id="message"
-                    rows={5}
+                    rows={6}
                     value={formData.message}
                     onChange={(e) => handleInputChange("message", e.target.value)}
                     placeholder="Please describe your query or concern in detail..."
                     required
+                    className="px-4 py-3 text-base rounded-2xl border-2 border-gray-200 focus:border-orange-500 min-h-[140px]"
                     data-testid="contact-message"
                   />
                 </div>
@@ -536,17 +557,17 @@ Submitted: ${new Date().toLocaleString()}`,
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full bg-primary text-primary-foreground hover:bg-secondary disabled:opacity-50"
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-xl font-semibold rounded-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   data-testid="submit-contact-form"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Sending...
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
+                      Sending Message...
                     </>
                   ) : (
                     <>
-                      <Send className="h-4 w-4 mr-2" />
+                      <Send className="h-6 w-6 mr-3" />
                       Send Message
                     </>
                   )}
@@ -555,27 +576,38 @@ Submitted: ${new Date().toLocaleString()}`,
             </div>
 
             {/* Office Locations */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Office Locations</h2>
+            <div className="bg-white p-12 rounded-3xl shadow-2xl border-0">
+              <h3 className="text-3xl font-bold text-gray-800 mb-8">Office Locations</h3>
               
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {officeLocations.map((office, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-all">
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center">
-                        <MapPin className="h-5 w-5 mr-2 text-primary" />
+                  <Card key={index} className="hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gray-50 border-0 rounded-3xl overflow-hidden">
+                    <CardHeader className="p-8">
+                      <CardTitle className="text-2xl flex items-center text-gray-800">
+                        <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                          <MapPin className="h-6 w-6 text-green-600" />
+                        </div>
                         {office.name}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="flex items-start space-x-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
-                        <span className="text-sm">{office.address}</span>
+                    <CardContent className="p-8 pt-0 space-y-6">
+                      <div className="flex items-start space-x-4">
+                        <div className="bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center mt-1">
+                          <MapPin className="h-4 w-4 text-gray-600" />
+                        </div>
+                        <span className="text-base text-gray-700 leading-relaxed font-medium">{office.address}</span>
+                      </div>
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center">
+                          <Clock className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <span className="text-base text-gray-700 font-medium">{office.timings}</span>
+                      </div>
+                      <div className="text-base text-gray-600 leading-relaxed">
+                        <strong className="text-gray-800">Services:</strong> {office.services}
                       </div>
                       <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="mt-2"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold rounded-2xl shadow-lg"
                         onClick={() => {
                           const address = encodeURIComponent(office.address);
                           const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${address}`;
@@ -587,63 +619,53 @@ Submitted: ${new Date().toLocaleString()}`,
                         }}
                         data-testid={`get-directions-${index}`}
                       >
-                        <MapPin className="h-3 w-3 mr-1" />
+                        <MapPin className="h-5 w-5 mr-3" />
                         Get Directions
                       </Button>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-accent" />
-                        <span className="text-sm">{office.timings}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <strong>Services:</strong> {office.services}
-                      </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
 
               {/* SMS Support */}
-              <Card className="mt-6 bg-accent/10 border-accent/20">
-                <CardHeader>
-                  <CardTitle className="text-lg">SMS Support (Offline)</CardTitle>
+              <Card className="mt-12 bg-blue-50 border-2 border-blue-200 rounded-3xl shadow-xl">
+                <CardHeader className="p-8">
+                  <CardTitle className="text-2xl text-blue-800 flex items-center">
+                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                      <Mail className="h-6 w-6 text-blue-600" />
+                    </div>
+                    SMS Support (Offline)
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    No internet? Send an SMS for assistance:
+                <CardContent className="p-8 pt-0">
+                  <p className="text-lg text-blue-700 mb-6 leading-relaxed">
+                    No internet connection? Send an SMS for immediate assistance:
                   </p>
-                  <div className="space-y-2">
-                    <div className="font-medium">SMS "HELP" to <span className="text-primary">12345</span></div>
-                    <div className="font-medium">Or dial <span className="text-primary">*123#</span></div>
+                  <div className="space-y-4 mb-8">
+                    <div className="bg-white p-4 rounded-2xl shadow-lg">
+                      <div className="text-lg font-bold text-gray-800">SMS "HELP" to <span className="text-orange-600">12345</span></div>
+                    </div>
+                    <div className="bg-white p-4 rounded-2xl shadow-lg">
+                      <div className="text-lg font-bold text-gray-800">Or dial <span className="text-orange-600">*123#</span></div>
+                    </div>
                   </div>
-                  <div className="mt-4 space-y-2">
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => {
-                        if (typeof window !== 'undefined') {
-                          window.location.href = 'sms:12345?body=HELP';
-                          toast({
-                            title: "Opening SMS App",
-                            description: "SMS app should open with pre-filled message. Send to get instant help!",
-                          });
-                        }
-                      }}
-                      data-testid="sms-help"
-                    >
-                      <Mail className="h-4 w-4 mr-2" />
-                      Send SMS Help
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => handleEmergencyCall('*123#', 'USSD Help Service')}
-                      data-testid="ussd-help"
-                    >
-                      <Phone className="h-4 w-4 mr-2" />
-                      Dial *123#
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        window.location.href = 'sms:12345?body=HELP';
+                        toast({
+                          title: "Opening SMS App",
+                          description: "SMS app should open with pre-filled message. Send to get instant help!",
+                        });
+                      }
+                    }}
+                    data-testid="sms-help"
+                  >
+                    <Mail className="h-6 w-6 mr-3" />
+                    Send SMS Help Request
+                  </Button>
+                  <p className="text-base text-blue-600 mt-6 text-center leading-relaxed">
                     Available in Hindi, English, and regional languages
                   </p>
                 </CardContent>
