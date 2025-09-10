@@ -72,8 +72,7 @@ function Router() {
   const [dummyDataGenerated, setDummyDataGenerated] = useState(false);
 
   useEffect(() => {
-    // Initialize comprehensive data and start real-time updates for hackathon demo
-    // Add additional checks to prevent excessive calls
+    // Initialize data more efficiently to avoid Firebase quota issues
     const isAlreadySeeded = localStorage.getItem('smartkumbh_seeded') === 'true';
     const isAlreadyInitialized = localStorage.getItem('smartkumbh_initialized') === 'true';
     
@@ -81,15 +80,14 @@ function Router() {
       // Mark as being initialized to prevent duplicate calls
       localStorage.setItem('smartkumbh_initialized', 'true');
       
-      Promise.all([
-        generateDummyData(),
-        initializeData()
-      ]).then(() => {
+      // Only initialize the most critical data to avoid quota issues
+      initializeData().then(() => {
         setDummyDataGenerated(true);
         // Start real-time data updates for impressive hackathon demo
         startRealTimeUpdates();
       }).catch((error) => {
         console.log("Data initialization completed with local storage fallback:", error);
+        // Even if Firebase fails, mark as initialized and use local storage
         setDummyDataGenerated(true);
         startRealTimeUpdates();
       });
