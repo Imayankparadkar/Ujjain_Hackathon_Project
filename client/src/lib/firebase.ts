@@ -220,9 +220,13 @@ export const addDocument = async (collectionName: string, data: any) => {
       ...data,
       createdAt: new Date(),
     });
-  } catch (error) {
-    console.error('Firebase addDocument error:', error);
-    // Fallback to local storage
+  } catch (error: any) {
+    // Check if it's a quota exceeded error and switch to local storage permanently
+    if (error?.code === 'resource-exhausted' || error?.message?.includes('Quota exceeded')) {
+      console.log('🏠 Firebase quota exceeded - switching to local storage for better performance');
+      useFirebase = false; // Switch to local storage permanently for this session
+    }
+    // Always fallback to local storage on any error
     const id = localDB.add(collectionName, data);
     return { id };
   }
