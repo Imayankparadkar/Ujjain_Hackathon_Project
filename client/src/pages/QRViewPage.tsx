@@ -34,7 +34,7 @@ export default function QRViewPage() {
     if (match && params?.qrId) {
       fetchUserProfile(params.qrId);
     }
-  }, [match, params]);
+  }, [match, params?.qrId]);
 
   const fetchUserProfile = async (qrId: string) => {
     try {
