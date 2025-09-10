@@ -870,12 +870,12 @@ export default function MapPage() {
 
       {/* Spiritual Journey Steps */}
       {arrivalMethod && (
-        <section className="py-6 bg-secondary/10 border-b">
-          <div className="container mx-auto px-4">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Compass className="h-5 w-5 mr-2" />
-              {t.spiritualJourney}
-            </h2>
+        <section className="py-24 bg-gray-50">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Spiritual Journey Path</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Follow the sacred steps of your spiritual journey with guided navigation</p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {spiritualJourneySteps.map((step, index) => (
                 <Card key={step.id} className={`transition-all duration-200 ${
@@ -937,36 +937,36 @@ export default function MapPage() {
                 <Card key={zone.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
                   <CardContent className="p-8">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold">{zone.name}</h3>
+                      <h3 className="font-semibold text-gray-900">{zone.name}</h3>
                       <Badge variant={occupancyRate > 80 ? 'destructive' : occupancyRate > 60 ? 'secondary' : 'default'}>
                         {zone.crowdLevel}
                       </Badge>
                     </div>
-                    <div className="space-y-2 text-sm">
+                    <div className="space-y-2 text-sm text-gray-800">
                       <div className="flex justify-between">
-                        <span>Capacity:</span>
-                        <span>{zone.currentOccupancy}/{zone.capacity}</span>
+                        <span className="text-gray-700">Capacity:</span>
+                        <span className="font-medium text-gray-900">{zone.currentOccupancy}/{zone.capacity}</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
                           className={`h-2 rounded-full ${
                             occupancyRate > 80 ? 'bg-red-500' : 
-                            occupancyRate > 60 ? 'bg-yellow-500' : 'bg-green-500'
+                            occupancyRate > 60 ? 'bg-orange-500' : 'bg-green-500'
                           }`}
                           style={{ width: `${occupancyRate}%` }}
                         ></div>
                       </div>
-                      <div><strong>Timings:</strong> {zone.timings}</div>
+                      <div className="text-gray-700"><strong className="text-gray-900">Timings:</strong> {zone.timings}</div>
                       <div className="border-t pt-2">
-                        <strong>Facilities:</strong>
+                        <strong className="text-gray-900">Facilities:</strong>
                         <div className="mt-1 flex flex-wrap gap-1">
                           {zone.facilities.slice(0, 3).map((facility, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
+                            <Badge key={idx} variant="outline" className="text-xs text-gray-700">
                               {facility}
                             </Badge>
                           ))}
                           {zone.facilities.length > 3 && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-xs text-gray-700">
                               +{zone.facilities.length - 3} more
                             </Badge>
                           )}
@@ -1052,29 +1052,29 @@ export default function MapPage() {
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">24/7 emergency assistance and safety support for your pilgrimage</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             {/* Emergency Services */}
-            <Card className="border-red-200">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
-                  <Phone className="h-5 w-5 mr-2 text-red-600" />
+            <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-2xl font-bold flex items-center text-gray-900">
+                  <Phone className="h-6 w-6 mr-3 text-red-600" />
                   Emergency Contacts
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-3">
+              <CardContent className="px-8 pb-8">
+                <div className="grid grid-cols-2 gap-4">
                   {emergencyServices.map((service, idx) => (
                     <Button
                       key={idx}
                       variant="outline"
                       size="sm"
-                      className="h-auto flex flex-col items-center p-4 border-red-200 hover:bg-red-50"
+                      className="h-auto flex flex-col items-center p-6 border-red-200 hover:bg-red-50 hover:border-red-300 rounded-2xl"
                       onClick={() => makeEmergencyCall(service.name, service.number)}
                       data-testid={`emergency-${service.name.toLowerCase().replace(' ', '-')}`}
                     >
-                      <div className="font-semibold text-red-600">{service.name}</div>
-                      <div className="text-2xl font-bold">{service.number}</div>
-                      <div className="text-xs text-muted-foreground">Tap to call</div>
+                      <div className="font-semibold text-red-600 mb-2">{service.name}</div>
+                      <div className="text-2xl font-bold text-gray-900">{service.number}</div>
+                      <div className="text-xs text-gray-500 mt-1">Tap to call</div>
                     </Button>
                   ))}
                 </div>
@@ -1082,31 +1082,31 @@ export default function MapPage() {
             </Card>
 
             {/* Safety Points */}
-            <Card className="border-blue-200">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
-                  <Heart className="h-5 w-5 mr-2 text-blue-600" />
+            <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-2xl font-bold flex items-center text-gray-900">
+                  <Heart className="h-6 w-6 mr-3 text-blue-600" />
                   Safety Points
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="px-8 pb-8">
+                <div className="space-y-4">
                   {safetyPoints.map((point, idx) => (
-                    <div key={idx} className="flex items-start justify-between p-3 border rounded-lg">
+                    <div key={idx} className="flex items-start justify-between p-4 border border-gray-200 rounded-2xl hover:bg-gray-50 transition-colors">
                       <div className="flex-1">
-                        <div className="font-medium">{point.name}</div>
+                        <div className="font-medium text-gray-900">{point.name}</div>
                         {point.contact && (
-                          <div className="text-sm text-blue-600">{point.contact}</div>
+                          <div className="text-sm text-blue-600 mt-1">{point.contact}</div>
                         )}
                         {point.services && (
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-xs text-gray-600 mt-1">
                             {point.services.join(', ')}
                           </div>
                         )}
                       </div>
                       <Button
                         size="sm"
-                        variant="outline"
+                        className="bg-orange-600 hover:bg-orange-700 text-white rounded-lg"
                         onClick={() => getDirections(point.coords[0], point.coords[1], point.name)}
                         data-testid={`safety-navigate-${idx}`}
                       >
@@ -1120,16 +1120,16 @@ export default function MapPage() {
           </div>
 
           {/* Safety Guidelines */}
-          <Card className="border-yellow-200 bg-yellow-50">
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-3 flex items-center">
-                <AlertTriangle className="h-4 w-4 mr-2 text-yellow-600" />
+          <Card className="rounded-3xl border-0 shadow-2xl bg-white max-w-4xl mx-auto">
+            <CardContent className="p-10">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 mr-3 text-orange-600" />
                 Important Safety Guidelines
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-base">
                 <div>
-                  <strong>During Your Visit:</strong>
-                  <ul className="list-disc list-inside mt-1 space-y-1">
+                  <strong className="text-lg text-gray-900 block mb-4">During Your Visit:</strong>
+                  <ul className="list-disc list-inside space-y-3 text-gray-700">
                     <li>Stay hydrated and carry water</li>
                     <li>Follow crowd management instructions</li>
                     <li>Keep emergency contacts handy</li>
@@ -1137,8 +1137,8 @@ export default function MapPage() {
                   </ul>
                 </div>
                 <div>
-                  <strong>In Case of Emergency:</strong>
-                  <ul className="list-disc list-inside mt-1 space-y-1">
+                  <strong className="text-lg text-gray-900 block mb-4">In Case of Emergency:</strong>
+                  <ul className="list-disc list-inside space-y-3 text-gray-700">
                     <li>Contact nearest security personnel</li>
                     <li>Use emergency exit routes</li>
                     <li>Call emergency services immediately</li>
@@ -1252,12 +1252,12 @@ export default function MapPage() {
               </Card>
 
               {/* Map Legend */}
-              <Card className="mt-4">
-                <CardHeader>
-                  <CardTitle className="text-lg">Map Legend</CardTitle>
+              <Card className="mt-6 rounded-3xl border-0 shadow-xl bg-white">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold text-gray-900">Map Legend</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <CardContent className="px-6 pb-6">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-700">
                     {/* Crowd Density */}
                     <div className="flex items-center space-x-2">
                       <div className="w-3 h-3 bg-red-600 rounded-full"></div>
@@ -1268,7 +1268,7 @@ export default function MapPage() {
                       <span>High Crowd</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
                       <span>Medium Crowd</span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -1323,21 +1323,21 @@ export default function MapPage() {
             {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
               {/* Live Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center">
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></div>
+              <Card className="rounded-3xl border-0 shadow-xl bg-white">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold flex items-center text-gray-900">
+                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3"></div>
                     Live Status
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="px-6 pb-6 space-y-4">
                   {crowdData.slice(0, 3).map((point, index) => (
-                    <div key={index} className="flex items-center justify-between text-sm">
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl">
                       <div>
-                        <div className="font-medium">{point.location}</div>
-                        <div className="text-muted-foreground">Wait: {point.waitTime}</div>
+                        <div className="font-medium text-gray-900">{point.location}</div>
+                        <div className="text-gray-600 text-sm">Wait: {point.waitTime}</div>
                       </div>
-                      <Badge className={getCrowdColor(point.densityLevel)}>
+                      <Badge className={`${getCrowdColor(point.densityLevel)} text-white`}>
                         {point.crowdCount}
                       </Badge>
                     </div>
@@ -1346,13 +1346,13 @@ export default function MapPage() {
               </Card>
 
               {/* Ghat Status */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center">
+              <Card className="rounded-3xl border-0 shadow-xl bg-white">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold flex items-center text-gray-900">
                     🛁 Bathing Ghats Status
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="px-6 pb-6 space-y-4">
                   {ghatData.map((ghat, index) => {
                     const occupancyRate = (ghat.currentOccupancy / ghat.capacity) * 100;
                     let statusColor = "text-green-600";
@@ -1360,14 +1360,14 @@ export default function MapPage() {
                     else if (occupancyRate > 60) statusColor = "text-orange-600";
                     
                     return (
-                      <div key={index} className="p-3 bg-muted rounded-lg">
+                      <div key={index} className="p-4 bg-gray-50 rounded-2xl">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="font-medium text-sm">{ghat.name}</div>
+                          <div className="font-medium text-sm text-gray-900">{ghat.name}</div>
                           <Badge variant="outline" className={statusColor}>
                             {occupancyRate.toFixed(0)}%
                           </Badge>
                         </div>
-                        <div className="text-xs text-muted-foreground mb-2">
+                        <div className="text-xs text-gray-600 mb-2">
                           {ghat.currentOccupancy}/{ghat.capacity} people
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
@@ -1379,7 +1379,7 @@ export default function MapPage() {
                             style={{ width: `${occupancyRate}%` }}
                           />
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-600">
                           Type: {ghat.type} • {ghat.facilities.slice(0, 2).join(', ')}
                         </div>
                       </div>
