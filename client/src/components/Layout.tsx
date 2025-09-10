@@ -34,32 +34,32 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       {showNavigation && (
-        <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-50">
-          <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3" data-testid="logo-link">
+        <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-50 backdrop-blur-sm">
+          <nav className="container mx-auto px-6 py-5 flex items-center justify-between">
+            <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity" data-testid="logo-link">
               <div className="text-3xl">🕉️</div>
               <span className="text-2xl font-bold text-gray-800">SmartKumbh</span>
             </Link>
 
             {/* Navigation Links */}
             <div className="hidden lg:flex items-center space-x-8">
-              <Link href="/" className={location === "/" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-home">Home</Link>
-              <Link href="/features" className={location === "/features" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-features">Features</Link>
-              <Link href="/map" className={location === "/map" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-map">Map</Link>
-              <Link href="/lost-found" className={location === "/lost-found" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-lost-found">Lost & Found</Link>
-              <Link href="/spiritual" className={location === "/spiritual" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-spiritual">Spiritual Live</Link>
-              <Link href="/attractions" className={location === "/attractions" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-attractions">Attractions</Link>
-              <Link href="/contact" className={location === "/contact" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-contact">Contact</Link>
+              <Link href="/" className={location === "/" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-home">Home</Link>
+              <Link href="/features" className={location === "/features" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-features">Features</Link>
+              <Link href="/map" className={location === "/map" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-map">Map</Link>
+              <Link href="/lost-found" className={location === "/lost-found" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-lost-found">Lost & Found</Link>
+              <Link href="/spiritual" className={location === "/spiritual" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-spiritual">Spiritual Live</Link>
+              <Link href="/attractions" className={location === "/attractions" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-attractions">Attractions</Link>
+              <Link href="/contact" className={location === "/contact" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-contact">Contact</Link>
               
               {user && (
                 <>
                   <div className="h-6 w-px bg-gray-300 mx-4"></div>
-                  <Link href="/dashboard" className={location === "/dashboard" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-dashboard">Dashboard</Link>
+                  <Link href="/dashboard" className={location === "/dashboard" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-dashboard">Dashboard</Link>
                   {isAdmin && (
                     <>
-                      <Link href="/admin" className={location === "/admin" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-admin">Admin</Link>
+                      <Link href="/admin" className={location === "/admin" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1 transition-all" : "text-gray-700 hover:text-orange-600 transition-colors font-medium hover:scale-105"} data-testid="nav-admin">Admin</Link>
                       {location === "/admin" && (
-                        <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors flex items-center font-medium" data-testid="back-to-user-dashboard">
+                        <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors flex items-center font-medium hover:scale-105" data-testid="back-to-user-dashboard">
                           <ArrowLeft className="h-4 w-4 mr-1" />
                           User View
                         </Link>
@@ -71,9 +71,9 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
             </div>
 
             {/* Right Side Controls */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               {/* Elderly Mode Toggle */}
-              <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full">
+              <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors">
                 <Eye className="h-4 w-4 text-gray-600" />
                 <Switch
                   checked={elderlyMode}
@@ -85,21 +85,23 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
 
               {/* Notification Bell Icon - Only for logged in users */}
               {user && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="relative hover:bg-orange-50 p-2 rounded-full border border-gray-200"
-                  data-testid="notification-button"
-                >
-                  <Bell className="h-5 w-5 text-orange-600" />
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-semibold">3</span>
-                </Button>
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative hover:bg-orange-50 p-3 rounded-full border border-gray-200 hover:border-orange-200 transition-all hover:scale-105 bg-white"
+                    data-testid="notification-button"
+                  >
+                    <Bell className="h-5 w-5 text-orange-600" />
+                    <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-[11px] text-white flex items-center justify-center font-bold shadow-md">3</span>
+                  </Button>
+                </div>
               )}
 
               {/* User Controls */}
               {user ? (
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full">
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors">
                     <User className="h-4 w-4 text-gray-600" />
                     <span className="text-sm hidden sm:inline font-medium text-gray-700" data-testid="user-name">
                       {userProfile?.name || user.email}
@@ -109,7 +111,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                     variant="ghost"
                     size="sm"
                     onClick={handleLogout}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-full font-medium"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-full font-medium border border-red-200 hover:border-red-300 transition-all hover:scale-105"
                     data-testid="logout-button"
                   >
                     <LogOut className="h-4 w-4 sm:mr-2" />
@@ -118,7 +120,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                 </div>
               ) : (
                 <Link href="/login">
-                  <Button className="bg-orange-600 text-white hover:bg-orange-700 px-6 py-2 rounded-full font-semibold shadow-md" data-testid="login-button">
+                  <Button className="bg-orange-600 text-white hover:bg-orange-700 px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105" data-testid="login-button">
                     Login/Register
                   </Button>
                 </Link>
