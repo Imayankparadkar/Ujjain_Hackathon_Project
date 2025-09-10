@@ -167,11 +167,11 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
               <div>
                 <h3 className="font-bold text-xl mb-6 text-orange-400">Policies & Information</h3>
                 <div className="space-y-3 text-sm">
-                  <a href="#" className="block hover:text-orange-300 transition-colors">Privacy Policy</a>
-                  <a href="#" className="block hover:text-orange-300 transition-colors">Terms of Service</a>
-                  <a href="#" className="block hover:text-orange-300 transition-colors">Government Guidelines</a>
-                  <a href="#" className="block hover:text-orange-300 transition-colors">Accessibility Statement</a>
-                  <a href="#" className="block hover:text-orange-300 transition-colors">Data Protection</a>
+                  <Link href="/privacy-policy" className="block hover:text-orange-300 transition-colors">Privacy Policy</Link>
+                  <Link href="/terms-of-service" className="block hover:text-orange-300 transition-colors">Terms of Service</Link>
+                  <Link href="/government-guidelines" className="block hover:text-orange-300 transition-colors">Government Guidelines</Link>
+                  <Link href="/accessibility-statement" className="block hover:text-orange-300 transition-colors">Accessibility Statement</Link>
+                  <Link href="/data-protection" className="block hover:text-orange-300 transition-colors">Data Protection</Link>
                 </div>
               </div>
 

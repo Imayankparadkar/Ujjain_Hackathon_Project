@@ -17,6 +17,11 @@ import UserDashboard from "@/pages/UserDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AttractionsPage from "@/pages/AttractionsPage";
 import NotFound from "@/pages/not-found";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import TermsOfServicePage from "@/pages/TermsOfServicePage";
+import GovernmentGuidelinesPage from "@/pages/GovernmentGuidelinesPage";
+import AccessibilityStatementPage from "@/pages/AccessibilityStatementPage";
+import DataProtectionPage from "@/pages/DataProtectionPage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
@@ -130,6 +135,11 @@ function Router() {
       <Route path="/spiritual" component={SpiritualPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/attractions" component={AttractionsPage} />
+      <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+      <Route path="/terms-of-service" component={TermsOfServicePage} />
+      <Route path="/government-guidelines" component={GovernmentGuidelinesPage} />
+      <Route path="/accessibility-statement" component={AccessibilityStatementPage} />
+      <Route path="/data-protection" component={DataProtectionPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       
