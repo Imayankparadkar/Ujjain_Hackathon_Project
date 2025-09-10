@@ -31,35 +31,35 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
   const isAdminDashboard = user && isAdmin;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       {showNavigation && (
-        <header className="fixed top-0 left-0 right-0 bg-card border-b border-border shadow-sm z-50">
-          <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2" data-testid="logo-link">
-              <div className="text-2xl">🕉️</div>
-              <span className="text-xl font-bold text-foreground">SmartKumbh</span>
+        <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-50">
+          <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="flex items-center space-x-3" data-testid="logo-link">
+              <div className="text-3xl">🕉️</div>
+              <span className="text-2xl font-bold text-gray-800">SmartKumbh</span>
             </Link>
 
             {/* Navigation Links */}
-            <div className="hidden md:flex items-center space-x-6">
-              <Link href="/" className={location === "/" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-home">Home</Link>
-              <Link href="/features" className={location === "/features" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-features">Features</Link>
-              <Link href="/map" className={location === "/map" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-map">Map</Link>
-              <Link href="/lost-found" className={location === "/lost-found" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-lost-found">Lost & Found</Link>
-              <Link href="/spiritual" className={location === "/spiritual" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-spiritual">Spiritual Live</Link>
-              <Link href="/attractions" className={location === "/attractions" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-attractions">Attractions</Link>
-              <Link href="/contact" className={location === "/contact" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-contact">Contact</Link>
+            <div className="hidden lg:flex items-center space-x-8">
+              <Link href="/" className={location === "/" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-home">Home</Link>
+              <Link href="/features" className={location === "/features" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-features">Features</Link>
+              <Link href="/map" className={location === "/map" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-map">Map</Link>
+              <Link href="/lost-found" className={location === "/lost-found" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-lost-found">Lost & Found</Link>
+              <Link href="/spiritual" className={location === "/spiritual" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-spiritual">Spiritual Live</Link>
+              <Link href="/attractions" className={location === "/attractions" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-attractions">Attractions</Link>
+              <Link href="/contact" className={location === "/contact" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-contact">Contact</Link>
               
               {user && (
                 <>
-                  <span className="text-muted-foreground">|</span>
-                  <Link href="/dashboard" className={location === "/dashboard" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-dashboard">Dashboard</Link>
+                  <div className="h-6 w-px bg-gray-300 mx-4"></div>
+                  <Link href="/dashboard" className={location === "/dashboard" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-dashboard">Dashboard</Link>
                   {isAdmin && (
                     <>
-                      <Link href="/admin" className={location === "/admin" ? "text-primary font-medium" : "text-muted-foreground hover:text-primary transition-colors"} data-testid="nav-admin">Admin</Link>
+                      <Link href="/admin" className={location === "/admin" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-admin">Admin</Link>
                       {location === "/admin" && (
-                        <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors flex items-center" data-testid="back-to-user-dashboard">
+                        <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 transition-colors flex items-center font-medium" data-testid="back-to-user-dashboard">
                           <ArrowLeft className="h-4 w-4 mr-1" />
                           User View
                         </Link>
@@ -71,16 +71,16 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
             </div>
 
             {/* Right Side Controls */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               {/* Elderly Mode Toggle */}
-              <div className="flex items-center space-x-2">
-                <Eye className="h-4 w-4 text-muted-foreground" />
+              <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full">
+                <Eye className="h-4 w-4 text-gray-600" />
                 <Switch
                   checked={elderlyMode}
                   onCheckedChange={toggleElderlyMode}
                   data-testid="elderly-mode-toggle"
                 />
-                <span className="text-sm text-muted-foreground hidden sm:inline">Elder</span>
+                <span className="text-sm text-gray-600 hidden sm:inline font-medium">Elder</span>
               </div>
 
               {/* Notification icon */}
@@ -88,20 +88,20 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="relative"
+                  className="relative hover:bg-gray-100 p-3 rounded-full"
                   data-testid="notification-button"
                 >
-                  <Bell className="h-4 w-4" />
-                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">3</span>
+                  <Bell className="h-5 w-5 text-gray-700" />
+                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-semibold">3</span>
                 </Button>
               )}
 
               {/* User Controls */}
               {user ? (
-                <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
-                    <span className="text-sm hidden sm:inline" data-testid="user-name">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full">
+                    <User className="h-4 w-4 text-gray-600" />
+                    <span className="text-sm hidden sm:inline font-medium text-gray-700" data-testid="user-name">
                       {userProfile?.name || user.email}
                     </span>
                   </div>
@@ -109,16 +109,16 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                     variant="ghost"
                     size="sm"
                     onClick={handleLogout}
-                    className="text-destructive hover:text-destructive/80"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-full font-medium"
                     data-testid="logout-button"
                   >
-                    <LogOut className="h-4 w-4 sm:mr-1" />
+                    <LogOut className="h-4 w-4 sm:mr-2" />
                     <span className="hidden sm:inline">Logout</span>
                   </Button>
                 </div>
               ) : (
                 <Link href="/login">
-                  <Button className="bg-primary text-primary-foreground hover:bg-secondary" data-testid="login-button">
+                  <Button className="bg-orange-600 text-white hover:bg-orange-700 px-6 py-2 rounded-full font-semibold shadow-md" data-testid="login-button">
                     Login/Register
                   </Button>
                 </Link>
@@ -129,64 +129,66 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
       )}
 
       {/* Main Content */}
-      <main className={showNavigation ? "pt-16" : ""}>
-        {children}
+      <main className={showNavigation ? "pt-20" : ""}>
+        <div className="bg-white min-h-screen">
+          {children}
+        </div>
       </main>
 
       {/* Footer for public pages */}
       {isPublicPage && (
-        <footer className="bg-foreground text-background py-12">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <footer className="bg-gray-900 text-white py-16">
+          <div className="container mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               <div>
-                <h3 className="font-semibold mb-4 text-accent">Emergency Helplines</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <span>📞</span>
+                <h3 className="font-bold text-xl mb-6 text-orange-400">Emergency Helplines</h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-center space-x-3 hover:text-orange-300 transition-colors">
+                    <span className="text-xl">📞</span>
                     <span>Police: 100</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span>🚒</span>
+                  <div className="flex items-center space-x-3 hover:text-orange-300 transition-colors">
+                    <span className="text-xl">🚒</span>
                     <span>Fire: 101</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span>🚑</span>
+                  <div className="flex items-center space-x-3 hover:text-orange-300 transition-colors">
+                    <span className="text-xl">🚑</span>
                     <span>Health: 108</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span>📱</span>
+                  <div className="flex items-center space-x-3 hover:text-orange-300 transition-colors">
+                    <span className="text-xl">📱</span>
                     <span>SmartKumbh Help: 1800-KUMBH</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="font-semibold mb-4 text-accent">Policies & Information</h3>
-                <div className="space-y-2 text-sm">
-                  <a href="#" className="block hover:text-accent transition-colors">Privacy Policy</a>
-                  <a href="#" className="block hover:text-accent transition-colors">Terms of Service</a>
-                  <a href="#" className="block hover:text-accent transition-colors">Government Guidelines</a>
-                  <a href="#" className="block hover:text-accent transition-colors">Accessibility Statement</a>
-                  <a href="#" className="block hover:text-accent transition-colors">Data Protection</a>
+                <h3 className="font-bold text-xl mb-6 text-orange-400">Policies & Information</h3>
+                <div className="space-y-3 text-sm">
+                  <a href="#" className="block hover:text-orange-300 transition-colors">Privacy Policy</a>
+                  <a href="#" className="block hover:text-orange-300 transition-colors">Terms of Service</a>
+                  <a href="#" className="block hover:text-orange-300 transition-colors">Government Guidelines</a>
+                  <a href="#" className="block hover:text-orange-300 transition-colors">Accessibility Statement</a>
+                  <a href="#" className="block hover:text-orange-300 transition-colors">Data Protection</a>
                 </div>
               </div>
 
               <div>
-                <h3 className="font-semibold mb-4 text-accent">Digital India Initiative</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-background/10 p-3 rounded text-center">
-                    <div className="text-accent text-2xl mb-1">🏆</div>
-                    <div className="text-xs">Certified</div>
+                <h3 className="font-bold text-xl mb-6 text-orange-400">Digital India Initiative</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-800 p-4 rounded-lg text-center hover:bg-gray-700 transition-colors">
+                    <div className="text-orange-400 text-3xl mb-2">🏆</div>
+                    <div className="text-sm font-medium">Certified</div>
                   </div>
-                  <div className="bg-background/10 p-3 rounded text-center">
-                    <div className="text-green-400 text-2xl mb-1">🔒</div>
-                    <div className="text-xs">Secure</div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-center hover:bg-gray-700 transition-colors">
+                    <div className="text-green-400 text-3xl mb-2">🔒</div>
+                    <div className="text-sm font-medium">Secure</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/60">
+            <div className="border-t border-gray-700 mt-12 pt-8 text-center text-sm text-gray-400">
               <p>&copy; 2024 SmartKumbh. A Digital India Initiative. All rights reserved.</p>
             </div>
           </div>
