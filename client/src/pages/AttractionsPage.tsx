@@ -716,81 +716,106 @@ export default function AttractionsPage() {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Search and Filter Section */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search attractions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-                data-testid="search-attractions"
-              />
-            </div>
-            <Button
-              onClick={() => setShowMap(!showMap)}
-              variant="outline"
-              className="flex items-center space-x-2"
-              data-testid="toggle-map-view"
-            >
-              <MapPin className="h-4 w-4" />
-              <span>{showMap ? "Hide Map" : "Show Map"}</span>
-            </Button>
+      {/* Search and Filter Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Explore Sacred Attractions</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Find temples, ghats, museums, and spiritual sites that resonate with your journey</p>
           </div>
+          
+          <div className="max-w-4xl mx-auto">
+            {/* Search Bar */}
+            <div className="bg-white rounded-3xl shadow-lg p-6 mb-12">
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search temples, ghats, museums..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 py-4 text-lg border-0 focus:ring-2 focus:ring-orange-500 rounded-2xl bg-gray-50"
+                    data-testid="search-attractions"
+                  />
+                </div>
+                <Button
+                  onClick={() => setShowMap(!showMap)}
+                  variant="outline"
+                  className="px-8 py-4 text-lg font-semibold rounded-2xl border-2 border-orange-600 text-orange-600 hover:bg-orange-50 transition-all"
+                  data-testid="toggle-map-view"
+                >
+                  <MapPin className="h-5 w-5 mr-2" />
+                  {showMap ? "Hide Map" : "Show Map"}
+                </Button>
+              </div>
+            </div>
 
-          {/* Category Filters */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {categories.map((category) => (
-              <Button
-                key={category.value}
-                variant={selectedCategory === category.value ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category.value)}
-                className="flex items-center space-x-1"
-                data-testid={`filter-${category.value}`}
-              >
-                <Filter className="h-3 w-3" />
-                <span>{category.label}</span>
-                <Badge variant="secondary" className="ml-1 text-xs">
-                  {category.count}
-                </Badge>
-              </Button>
-            ))}
+            {/* Category Filters */}
+            <div className="bg-white rounded-3xl shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Filter by Category</h3>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {categories.map((category) => (
+                  <Button
+                    key={category.value}
+                    variant={selectedCategory === category.value ? "default" : "outline"}
+                    onClick={() => setSelectedCategory(category.value)}
+                    className={`px-6 py-3 rounded-2xl font-semibold transition-all ${
+                      selectedCategory === category.value
+                        ? "bg-orange-600 text-white shadow-lg hover:bg-orange-700"
+                        : "border-2 border-gray-300 text-gray-700 hover:border-orange-600 hover:text-orange-600"
+                    }`}
+                    data-testid={`filter-${category.value}`}
+                  >
+                    <Filter className="h-4 w-4 mr-2" />
+                    <span>{category.label}</span>
+                    <Badge 
+                      variant="secondary" 
+                      className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                        selectedCategory === category.value ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {category.count}
+                    </Badge>
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+      </section>
+
+      <div className="container mx-auto px-6 py-12">
 
         {/* Map Section */}
         {showMap && selectedAttraction && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MapPin className="h-5 w-5" />
+          <Card className="mb-12 border-0 rounded-3xl shadow-2xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-orange-600 to-red-600 text-white p-8">
+              <CardTitle className="flex items-center space-x-3 text-2xl">
+                <div className="bg-white/20 p-3 rounded-full">
+                  <MapPin className="h-6 w-6" />
+                </div>
                 <span>{selectedAttraction.name}</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="h-96 rounded-lg overflow-hidden border">
+            <CardContent className="p-8">
+              <div className="h-96 rounded-2xl overflow-hidden border shadow-inner">
                 <Map 
                   center={selectedAttraction.location.coordinates as [number, number]}
                   zoom={15}
                   className="h-full w-full"
                 />
               </div>
-              <div className="mt-4 text-sm text-gray-600">
-                <p className="font-medium">{selectedAttraction.location.address}</p>
-                <p className="text-xs text-gray-400 mt-1">
+              <div className="mt-6 p-6 bg-gray-50 rounded-2xl">
+                <p className="font-semibold text-gray-900 text-lg">{selectedAttraction.location.address}</p>
+                <p className="text-sm text-gray-500 mt-2">
                   Coordinates: {selectedAttraction.location.coordinates.join(", ")}
                 </p>
                 <Button 
                   variant="outline" 
-                  size="sm" 
-                  className="mt-2"
+                  className="mt-4 px-6 py-3 rounded-2xl border-2 border-orange-600 text-orange-600 hover:bg-orange-50 font-semibold"
                   onClick={() => setShowMap(false)}
                 >
-                  Close Map
+                  Close Map View
                 </Button>
               </div>
             </CardContent>
@@ -798,123 +823,142 @@ export default function AttractionsPage() {
         )}
 
         {/* Attractions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredAttractions.map((attraction) => (
-            <Card key={attraction.id} className="hover:shadow-lg transition-shadow" data-testid={`attraction-card-${attraction.id}`}>
+            <Card key={attraction.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden" data-testid={`attraction-card-${attraction.id}`}>
               <div className="relative">
                 <img
                   src={attraction.image}
                   alt={attraction.name}
-                  className="w-full h-48 object-cover rounded-t-lg"
+                  className="w-full h-64 object-cover"
                 />
-                <Badge className={`absolute top-3 left-3 ${getCategoryColor(attraction.category)}`}>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <Badge className={`absolute top-4 left-4 px-3 py-1 rounded-2xl text-sm font-semibold ${getCategoryColor(attraction.category)}`}>
                   {attraction.category}
                 </Badge>
-                <div className="absolute top-3 right-3 bg-white rounded-full p-1">
-                  <div className="flex items-center space-x-1 px-2 py-1">
-                    <Star className="h-3 w-3 text-yellow-500 fill-current" />
-                    <span className="text-xs font-medium">{attraction.rating}</span>
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur rounded-2xl px-3 py-2">
+                  <div className="flex items-center space-x-2">
+                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                    <span className="text-sm font-bold">{attraction.rating}</span>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 left-4 text-white">
+                  <h3 className="font-bold text-2xl mb-1" data-testid={`attraction-name-${attraction.id}`}>
+                    {attraction.name}
+                  </h3>
+                  <div className="flex items-center space-x-2 text-white/90">
+                    <Users className="h-4 w-4" />
+                    <span className="text-sm font-medium">{attraction.reviews.toLocaleString()} reviews</span>
                   </div>
                 </div>
               </div>
 
-              <CardContent className="p-4">
-                <h3 className="font-bold text-lg mb-2" data-testid={`attraction-name-${attraction.id}`}>
-                  {attraction.name}
-                </h3>
-                
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+              <CardContent className="p-8">
+                <p className="text-gray-600 text-base mb-6 leading-relaxed line-clamp-3">
                   {attraction.description}
                 </p>
 
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600 truncate">{attraction.location.address}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Clock className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">{attraction.timings}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <span className="text-gray-400">💸</span>
-                    <span className="text-gray-600">{attraction.entryFee}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 mt-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4 text-gray-400" />
-                      <span className="text-xs text-gray-500">{attraction.reviews} reviews</span>
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-500 font-medium">Location</div>
+                      <div className="text-base text-gray-800 font-semibold truncate">{attraction.location.address}</div>
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-1 gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => handleViewDetails(attraction)}
-                      className="flex items-center space-x-1 bg-primary text-primary-foreground hover:bg-primary/90"
-                      data-testid={`view-details-${attraction.id}`}
-                    >
-                      <Info className="h-3 w-3" />
-                      <span>View Details & Pricing</span>
-                    </Button>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleViewOnMap(attraction)}
-                        className="flex items-center space-x-1"
-                        data-testid={`view-map-${attraction.id}`}
-                      >
-                        <MapPin className="h-3 w-3" />
-                        <span>Map</span>
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleGetDirections(attraction)}
-                        className="flex items-center space-x-1"
-                        data-testid={`get-directions-${attraction.id}`}
-                      >
-                        <Navigation className="h-3 w-3" />
-                        <span>Directions</span>
-                      </Button>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-500 font-medium">Timings</div>
+                      <div className="text-base text-gray-800 font-semibold">{attraction.timings}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-orange-100 w-10 h-10 rounded-full flex items-center justify-center">
+                      <span className="text-lg">💸</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-500 font-medium">Entry Fee</div>
+                      <div className="text-base text-gray-800 font-semibold">{attraction.entryFee}</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Highlights */}
-                <div className="mt-3">
-                  <div className="flex flex-wrap gap-1">
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Highlights</h4>
+                  <div className="flex flex-wrap gap-2">
                     {attraction.highlights.slice(0, 3).map((highlight, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
+                      <Badge key={index} variant="outline" className="px-3 py-1 text-xs font-medium rounded-2xl border-gray-300">
                         {highlight}
                       </Badge>
                     ))}
                     {attraction.highlights.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="px-3 py-1 text-xs font-medium rounded-2xl border-gray-300 text-orange-600">
                         +{attraction.highlights.length - 3} more
                       </Badge>
                     )}
                   </div>
                 </div>
 
+                {/* Action Buttons */}
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => handleViewDetails(attraction)}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
+                    data-testid={`view-details-${attraction.id}`}
+                  >
+                    <Info className="h-5 w-5 mr-3" />
+                    View Details & Pricing
+                  </Button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleViewOnMap(attraction)}
+                      className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 rounded-2xl font-semibold"
+                      data-testid={`view-map-${attraction.id}`}
+                    >
+                      <MapPin className="h-4 w-4 mr-2" />
+                      Map
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleGetDirections(attraction)}
+                      className="border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 rounded-2xl font-semibold"
+                      data-testid={`get-directions-${attraction.id}`}
+                    >
+                      <Navigation className="h-4 w-4 mr-2" />
+                      Directions
+                    </Button>
+                  </div>
+                </div>
+
                 {/* Contact Info */}
                 {(attraction.contact || attraction.website) && (
-                  <div className="mt-3 pt-3 border-t">
-                    <div className="flex space-x-3">
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <div className="flex space-x-3 justify-center">
                       {attraction.contact && (
-                        <Button variant="ghost" size="sm" className="p-1">
-                          <Phone className="h-3 w-3" />
+                        <Button 
+                          variant="ghost" 
+                          className="text-gray-600 hover:text-orange-600 p-3 rounded-2xl"
+                          onClick={() => window.open(`tel:${attraction.contact}`, '_self')}
+                        >
+                          <Phone className="h-5 w-5" />
                         </Button>
                       )}
                       {attraction.website && (
-                        <Button variant="ghost" size="sm" className="p-1">
-                          <Globe className="h-3 w-3" />
+                        <Button 
+                          variant="ghost" 
+                          className="text-gray-600 hover:text-orange-600 p-3 rounded-2xl"
+                          onClick={() => window.open(`https://${attraction.website}`, '_blank')}
+                        >
+                          <Globe className="h-5 w-5" />
                         </Button>
                       )}
                     </div>
@@ -926,10 +970,23 @@ export default function AttractionsPage() {
         </div>
 
         {filteredAttractions.length === 0 && (
-          <div className="text-center py-12">
-            <MapPin className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No attractions found</h3>
-            <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+          <div className="text-center py-24">
+            <div className="bg-white rounded-3xl shadow-lg p-16 max-w-2xl mx-auto">
+              <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
+                <MapPin className="h-12 w-12 text-gray-400" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">No attractions found</h3>
+              <p className="text-xl text-gray-500 mb-8">Try adjusting your search or filter criteria to discover more sacred places</p>
+              <Button 
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("all");
+                }}
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 text-lg font-semibold rounded-2xl"
+              >
+                Clear Filters
+              </Button>
+            </div>
           </div>
         )}
       </div>
