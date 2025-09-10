@@ -496,8 +496,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Message is required" });
       }
 
-      // Use Gemini API key from environment
-      const apiKey = process.env.VITE_GEMINI_API_KEY;
+      // Use Gemini API key - backend access
+      const apiKey = 'AIzaSyDyVkm3-FSuaeh-TUXmjGZusxCUZB6U9aM';
+      console.log('API Key check:', apiKey ? 'Found' : 'Not found');
       if (!apiKey) {
         // Fallback to smart responses if no API key
         const smartResponses = {
@@ -575,7 +576,10 @@ Provide accurate, helpful information about ANY aspect of SmartKumbh. Be respect
       });
 
       if (!geminiResponse.ok) {
-        throw new Error(`Gemini API error: ${geminiResponse.status}`);
+        const errorText = await geminiResponse.text();
+        console.error(`Gemini API error: ${geminiResponse.status} - ${errorText}`);
+        console.error(`API URL: ${geminiUrl}`);
+        throw new Error(`Gemini API error: ${geminiResponse.status} - ${errorText}`);
       }
 
       const geminiData = await geminiResponse.json();
