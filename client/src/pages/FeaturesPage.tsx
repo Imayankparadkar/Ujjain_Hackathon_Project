@@ -168,7 +168,7 @@ export default function FeaturesPage() {
               </Button>
             </Link>
             <Link href="/map">
-              <Button variant="outline" className="border-2 border-orange-600 text-orange-600 hover:bg-orange-50 px-8 py-4 text-xl font-semibold rounded-2xl" data-testid="explore-map-button">
+              <Button variant="outline" className="border-2 border-orange-600 text-white hover:bg-orange-50 px-8 py-4 text-xl font-semibold rounded-2xl" data-testid="explore-map-button">
                 <MapPin className="mr-3 h-6 w-6" />
                 Explore Interactive Map
               </Button>

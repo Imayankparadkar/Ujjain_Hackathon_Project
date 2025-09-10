@@ -73,7 +73,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
             {/* Right Side Controls */}
             <div className="flex items-center space-x-3">
               {/* Elderly Mode Toggle */}
-              <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors">
+              {/* <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors">
                 <Eye className="h-4 w-4 text-gray-600" />
                 <Switch
                   checked={elderlyMode}
@@ -81,7 +81,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                   data-testid="elderly-mode-toggle"
                 />
                 <span className="text-sm text-gray-600 hidden sm:inline font-medium">Elder</span>
-              </div>
+              </div> */}
 
               {/* Notification Bell Icon - Only for logged in users */}
               {user && (
@@ -125,6 +125,9 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                   </Button>
                 </Link>
               )}
+              <div className="fixed top-20 right-1 z-50">
+                <NotificationSystem />
+              </div>
             </div>
           </nav>
         </header>
@@ -197,8 +200,8 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
         </footer>
       )}
 
-      {/* Notification System */}
-      <NotificationSystem />
+      
+
       
       {/* ChatBot */}
       <ChatBot />

@@ -130,14 +130,14 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-orange-900/40 via-transparent to-orange-900/60" />
         
         {/* Elderly Mode Toggle - Top Right Corner */}
-        <div className="absolute top-8 right-8 z-20 bg-white/20 backdrop-blur-sm rounded-full p-3 border border-white/30">
+        {/* <div className="absolute top-8 right-8 z-20 bg-white/20 backdrop-blur-sm rounded-full p-3 border border-white/30">
           <div className="flex items-center space-x-2 text-white">
             <span className="text-sm font-medium">Elderly Mode</span>
             <div className="w-12 h-6 bg-white/30 rounded-full relative cursor-pointer hover:bg-white/40 transition-colors">
               <div className="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform shadow-md"></div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Center Content */}
         <div className="relative z-10 container mx-auto px-4 py-16 flex items-center justify-center min-h-screen">
@@ -280,7 +280,7 @@ export default function HomePage() {
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Route Planner</h3>
                   <p className="text-gray-600 mb-6 text-lg leading-relaxed">AI-powered personalized navigation system with real-time optimization</p>
                   <Link href="/map">
-                    <Button variant="outline" className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-4 text-lg font-semibold rounded-2xl shadow-lg">
+                    <Button variant="outline" className="w-full border-2 border-blue-600 text-white hover:bg-blue-50 py-4 text-lg font-semibold rounded-2xl shadow-lg">
                       Plan My Route
                     </Button>
                   </Link>
@@ -376,7 +376,7 @@ export default function HomePage() {
                         <Button 
                           size="sm" 
                           variant="outline" 
-                          className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-colors px-4 py-2 rounded-2xl font-medium"
+                          className="border-2 border-orange-500 text-white hover:bg-orange-500 hover:text-white transition-colors px-4 py-2 rounded-2xl font-medium"
                           onClick={() => {
                             window.location.href = '/spiritual';
                           }}
