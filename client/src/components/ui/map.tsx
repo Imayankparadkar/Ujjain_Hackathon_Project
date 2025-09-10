@@ -30,6 +30,7 @@ interface MapProps {
   showHeatmap?: boolean;
   showPaths?: boolean;
   selectedRoute?: string;
+  userLocation?: {lat: number, lng: number} | null;
   facilityData?: Array<{
     type: string;
     name: string;
@@ -58,6 +59,7 @@ export function Map({
   showHeatmap = false,
   showPaths = false,
   selectedRoute = "all",
+  userLocation = null,
   facilityData = [],
   ghatData = [],
   onLocationClick
@@ -367,6 +369,39 @@ export function Map({
       }
     });
 
+    // Add user location marker if available
+    if (userLocation) {
+      const userIcon = L.divIcon({
+        html: `<div style="background: linear-gradient(45deg, #4285F4, #34A853); color: white; width: 40px; height: 40px; border-radius: 50%; border: 4px solid white; box-shadow: 0 0 20px rgba(66, 133, 244, 0.6); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; animation: userPulse 2s infinite;">
+          📍
+        </div>`,
+        className: 'user-location-marker',
+        iconSize: [40, 40],
+        iconAnchor: [20, 20]
+      });
+
+      L.marker([userLocation.lat, userLocation.lng], { icon: userIcon })
+        .addTo(map)
+        .bindPopup(`
+          <div style="padding: 12px; font-family: sans-serif;">
+            <h4 style="color: #4285F4; margin: 0 0 8px 0;">📍 Your Current Location</h4>
+            <div style="margin-bottom: 5px;"><strong>Latitude:</strong> ${userLocation.lat.toFixed(6)}</div>
+            <div style="margin-bottom: 8px;"><strong>Longitude:</strong> ${userLocation.lng.toFixed(6)}</div>
+            <button onclick="alert('This is your current location')" style="background: #4285F4; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Your Location</button>
+          </div>
+        `);
+        
+      // Add accuracy circle if available
+      const accuracyCircle = L.circle([userLocation.lat, userLocation.lng], {
+        radius: 50, // 50 meter accuracy circle
+        fillColor: '#4285F4',
+        fillOpacity: 0.1,
+        color: '#4285F4',
+        weight: 2,
+        opacity: 0.5
+      }).addTo(map);
+    }
+
     // Enhanced CSS animations for better interactivity
     const style = document.createElement('style');
     style.textContent = `
@@ -379,6 +414,11 @@ export function Map({
         0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
         70% { box-shadow: 0 0 0 20px rgba(33, 150, 243, 0); }
         100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+      }
+      @keyframes userPulse {
+        0% { transform: scale(1); box-shadow: 0 0 20px rgba(66, 133, 244, 0.6); }
+        50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(66, 133, 244, 0.8); }
+        100% { transform: scale(1); box-shadow: 0 0 20px rgba(66, 133, 244, 0.6); }
       }
       .crowd-marker {
         animation: pulse 2s infinite;
@@ -430,7 +470,7 @@ export function Map({
         mapInstanceRef.current = null;
       }
     };
-  }, [center, zoom, showPaths, showHeatmap, selectedRoute, JSON.stringify(crowdData), JSON.stringify(facilityData), JSON.stringify(ghatData)]);
+  }, [center, zoom, showPaths, showHeatmap, selectedRoute, userLocation, JSON.stringify(crowdData), JSON.stringify(facilityData), JSON.stringify(ghatData)]);
 
   return <div ref={mapRef} className={className} style={{ minHeight: '400px', width: '100%', zIndex: 1 }} data-testid="interactive-map" />;
 }

@@ -419,6 +419,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Emergency call logging endpoint
+  app.post("/api/emergency/log-call", async (req, res) => {
+    try {
+      const { service, number, timestamp, userLocation } = req.body;
+      
+      // In production, this would log to database and alert admin
+      console.log(`🚨 Emergency Call Logged: ${service} (${number}) at ${timestamp}`);
+      if (userLocation) {
+        console.log(`📍 Caller Location: ${userLocation.lat}, ${userLocation.lng}`);
+      }
+      
+      res.json({ success: true, message: "Emergency call logged successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to log emergency call" });
+    }
+  });
+
+  // Crowd reports endpoint
+  app.post("/api/crowd-reports", async (req, res) => {
+    try {
+      const reportData = req.body;
+      
+      // Store crowd report (would go to database in production)
+      console.log(`📊 Crowd Report: ${reportData.reportType} at ${reportData.location}`);
+      
+      // Create a safety alert for overcrowding
+      if (reportData.reportType === 'overcrowding') {
+        await storage.createSafetyAlert({
+          title: "CROWD ALERT",
+          message: `Overcrowding reported at ${reportData.location}. Please use alternate routes.`,
+          alertType: "crowd",
+          priority: reportData.severity === 'high' ? "high" : "medium",
+          location: reportData.location,
+          isActive: true,
+          createdBy: "crowd_report_system",
+        });
+      }
+      
+      res.status(201).json({ success: true, message: "Crowd report submitted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to submit crowd report" });
+    }
+  });
+
+  // Assistance requests endpoint
+  app.post("/api/assistance-requests", async (req, res) => {
+    try {
+      const requestData = req.body;
+      
+      // Store assistance request (would go to database and dispatch system in production)
+      console.log(`🆘 Assistance Request: ${requestData.requestType} at ${requestData.location}`);
+      
+      // In production, this would:
+      // 1. Store in database
+      // 2. Notify nearest volunteers/staff
+      // 3. Create tracking ticket
+      
+      res.status(201).json({ 
+        success: true, 
+        message: "Assistance request submitted successfully",
+        ticketId: `HELP-${Date.now()}`,
+        estimatedResponse: "5-10 minutes"
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to submit assistance request" });
+    }
+  });
+
   // Gemini AI Chatbot endpoint
   app.post("/api/chat/ask", async (req, res) => {
     try {
