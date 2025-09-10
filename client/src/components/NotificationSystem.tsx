@@ -15,9 +15,14 @@ interface Notification {
   actionUrl?: string;
 }
 
-export function NotificationSystem() {
+interface NotificationSystemProps {
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onUnreadCountChange?: (count: number) => void;
+}
+
+export function NotificationSystem({ isOpen = false, onOpenChange, onUnreadCountChange }: NotificationSystemProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -35,7 +40,8 @@ export function NotificationSystem() {
   useEffect(() => {
     const count = notifications.filter(n => !n.isRead).length;
     setUnreadCount(count);
-  }, [notifications]);
+    onUnreadCountChange?.(count);
+  }, [notifications, onUnreadCountChange]);
 
   const generateDummyNotifications = () => {
     const dummyNotifications: Notification[] = [
@@ -174,25 +180,7 @@ export function NotificationSystem() {
 
   return (
     <>
-      {/* Notification Bell Button */}
-      <div className="fixed top-4 right-20 z-50">
-        <Button
-          onClick={() => setIsOpen(!isOpen)}
-          variant="outline"
-          size="sm"
-          className="bg-white/90 backdrop-blur-sm border-primary/20 hover:bg-primary hover:text-primary-foreground shadow-lg"
-          data-testid="notification-toggle"
-        >
-          <Bell className="h-4 w-4" />
-          {unreadCount > 0 && (
-            <Badge className="ml-2 bg-red-500 text-white text-xs px-1.5 py-0.5 min-w-[1.25rem] h-5 rounded-full">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </Badge>
-          )}
-        </Button>
-      </div>
-
-      {/* Notification Panel */}
+      {/* Notification Panel - Positioned under header */}
       {isOpen && (
         <div className="fixed top-16 right-4 w-80 max-h-96 z-50">
           <Card className="shadow-2xl border-2">
@@ -218,7 +206,7 @@ export function NotificationSystem() {
                   </Button>
                 )}
                 <Button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => onOpenChange?.(false)}
                   variant="ghost"
                   size="sm"
                   className="p-1"

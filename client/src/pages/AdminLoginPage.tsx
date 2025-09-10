@@ -137,20 +137,20 @@ export default function AdminLoginPage() {
         <CardHeader className="text-center pb-2">
           <div className="text-4xl mb-4">🔐</div>
           <CardTitle className="text-2xl text-orange-600">Admin Portal</CardTitle>
-          <p className="text-muted-foreground">SmartKumbh Administrative Access</p>
+          <p className="text-black">SmartKumbh Administrative Access</p>
           <Badge variant="secondary" className="mx-auto mt-2">🔒 Secure 2FA Login</Badge>
         </CardHeader>
 
         <CardContent>
           {!showOTP ? (
             <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
-              <div className="space-y-2">
+              <div className="space-y-2 text-black">
                 <Label htmlFor="admin-email">Admin Email</Label>
                 <Input
                   id="admin-email"
                   type="email"
                   placeholder="Enter admin email"
-                  className="border-orange-200 focus:border-orange-400"
+                  className="border-orange-200 focus:border-orange-400 text-white"
                   {...loginForm.register("email")}
                 />
                 {loginForm.formState.errors.email && (
@@ -158,13 +158,13 @@ export default function AdminLoginPage() {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 text-black">
                 <Label htmlFor="admin-password">Admin Password</Label>
                 <Input
                   id="admin-password"
                   type="password"
                   placeholder="Enter admin password"
-                  className="border-orange-200 focus:border-orange-400"
+                  className="border-orange-200 focus:border-orange-400 text-white"
                   {...loginForm.register("password")}
                 />
                 {loginForm.formState.errors.password && (
@@ -180,7 +180,7 @@ export default function AdminLoginPage() {
                 {isLoading ? "Verifying..." : "Continue to 2FA"}
               </Button>
 
-              <div className="text-center text-sm text-muted-foreground bg-orange-50 p-3 rounded">
+              <div className="text-center text-sm text-black bg-orange-50 p-3 rounded">
                 <strong>Demo Credentials:</strong><br />
                 Email: admin@smartkumbh.com<br />
                 Password: admin123
@@ -190,19 +190,19 @@ export default function AdminLoginPage() {
             <form onSubmit={otpForm.handleSubmit(onOTPVerify)} className="space-y-4">
               <div className="text-center mb-4">
                 <div className="text-green-600 text-2xl mb-2">✅</div>
-                <h3 className="font-semibold">2FA Verification Required</h3>
+                <h3 className="font-semibold text-black">2FA Verification Required</h3>
                 <p className="text-sm text-muted-foreground">
                   Enter the 6-digit OTP shown in the notification
                 </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 text-black">
                 <Label htmlFor="otp">One-Time Password</Label>
                 <Input
                   id="otp"
                   type="text"
                   placeholder="Enter 6-digit OTP"
-                  className="border-green-200 focus:border-green-400 text-center text-lg tracking-widest"
+                  className="border-green-200 focus:border-green-400 text-white text-center text-lg tracking-widest"
                   maxLength={6}
                   {...otpForm.register("otp")}
                 />

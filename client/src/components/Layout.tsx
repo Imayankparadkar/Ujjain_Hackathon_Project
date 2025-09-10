@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Link, useLocation } from "wouter";
 import { User, Eye, LogOut, Bell, ArrowLeft } from "lucide-react";
+import { useState } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
   const { user, userProfile, isAdmin, logout } = useAuth();
   const { elderlyMode, toggleElderlyMode } = useElderlyMode();
   const [location] = useLocation();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const handleLogout = async () => {
     try {
@@ -81,11 +84,16 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={() => setShowNotifications(!showNotifications)}
                     className="relative hover:bg-orange-50 p-2 rounded-full border border-gray-200 hover:border-orange-200 transition-all bg-white"
                     data-testid="notification-button"
                   >
                     <Bell className="h-4 w-4 text-orange-600" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold shadow-md">3</span>
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold shadow-md">
+                        {unreadCount > 9 ? '9+' : unreadCount}
+                      </span>
+                    )}
                   </Button>
                 </div>
               )}
@@ -192,10 +200,14 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
         </footer>
       )}
 
-      {/* Notification System - Fixed positioning */}
-      <div className="fixed top-16 right-4 z-40">
-        <NotificationSystem />
-      </div>
+      {/* Notification System - Controlled by header bell */}
+      {user && (
+        <NotificationSystem 
+          isOpen={showNotifications} 
+          onOpenChange={setShowNotifications}
+          onUnreadCountChange={setUnreadCount}
+        />
+      )}
       
       {/* ChatBot */}
       <ChatBot />
