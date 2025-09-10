@@ -432,14 +432,14 @@ export default function MapPage() {
       name: "Ujjain Junction Railway Station",
       coordinates: [23.1794, 75.7849] as [number, number],
       routes: [
-        { coords: [[23.1794, 75.7849], [23.1810, 75.7820], [23.1815, 75.7682]], type: "walking", time: "25 min" }
+        { coords: [[23.1794, 75.7849], [23.1810, 75.7820], [23.1825, 75.7692]], type: "walking", time: "25 min" }
       ]
     },
     bus: {
       name: "Ujjain Bus Stand",
       coordinates: [23.1765, 75.7880] as [number, number],
       routes: [
-        { coords: [[23.1765, 75.7880], [23.1785, 75.7790], [23.1815, 75.7682]], type: "walking", time: "30 min" }
+        { coords: [[23.1765, 75.7880], [23.1785, 75.7790], [23.1825, 75.7692]], type: "walking", time: "30 min" }
       ]
     },
     car: {
@@ -451,7 +451,7 @@ export default function MapPage() {
         { name: "VIP Parking", coords: [23.1840, 75.7640], capacity: 100, available: 45 }
       ],
       routes: [
-        { coords: [[23.1850, 75.7650], [23.1825, 75.7670], [23.1815, 75.7682]], type: "walking", time: "15 min" }
+        { coords: [[23.1850, 75.7650], [23.1825, 75.7670], [23.1825, 75.7692]], type: "walking", time: "15 min" }
       ]
     }
   };
@@ -463,7 +463,7 @@ export default function MapPage() {
       name: selectedLanguage === "hi" ? "आगमन और शुद्धीकरण" : "Arrival & Purification", 
       location: "Entrance Gates", 
       description: selectedLanguage === "hi" ? "सुरक्षा जाँच, हाथ साफ करना और प्रवेश प्रक्रिया" : "Security check, hand sanitization, and entry procedures",
-      coords: [23.1820, 75.7685],
+      coords: [23.1820, 75.7695],
       estimatedTime: "10 min",
       priority: "high"
     },
@@ -472,7 +472,7 @@ export default function MapPage() {
       name: selectedLanguage === "hi" ? "कतार प्रबंधन" : "Queue Management",
       location: "Organized Queue Area",
       description: selectedLanguage === "hi" ? "मार्ग चयन के आधार पर निर्धारित कतार में शामिल हों" : "Join designated queue based on route selection",
-      coords: [23.1818, 75.7688],
+      coords: [23.1818, 75.7698],
       estimatedTime: "20-45 min",
       priority: "high"
     },
@@ -481,7 +481,7 @@ export default function MapPage() {
       name: selectedLanguage === "hi" ? "मंदिर दर्शन" : "Temple Darshan",
       location: "Mahakaleshwar Sanctum",
       description: selectedLanguage === "hi" ? "भगवान महाकालेश्वर के पवित्र दर्शन" : "Sacred darshan of Lord Mahakaleshwar",
-      coords: [23.1815, 75.7678],
+      coords: [23.1825, 75.7688],
       estimatedTime: "15 min",
       priority: "critical"
     },
@@ -490,7 +490,7 @@ export default function MapPage() {
       name: selectedLanguage === "hi" ? "प्रसाद और भेंट" : "Prasad & Offerings",
       location: "Prasad Counter",
       description: selectedLanguage === "hi" ? "प्रसाद लें और भेंट चढ़ाएं" : "Collect prasad and make offerings",
-      coords: [23.1812, 75.7680],
+      coords: [23.1822, 75.7690],
       estimatedTime: "10 min",
       priority: "medium"
     },
@@ -499,7 +499,7 @@ export default function MapPage() {
       name: selectedLanguage === "hi" ? "पवित्र स्नान" : "Sacred Bath",
       location: "Shipra Ghat",
       description: selectedLanguage === "hi" ? "निर्धारित घाट पर शिप्रा नदी में पवित्र स्नान" : "Holy dip in river Shipra at designated ghat",
-      coords: [23.1800, 75.7670],
+      coords: [23.1810, 75.7680],
       estimatedTime: "30 min",
       priority: "critical"
     },
@@ -508,7 +508,7 @@ export default function MapPage() {
       name: selectedLanguage === "hi" ? "आरती में भागीदारी" : "Aarti Participation",
       location: "Ghat Aarti Area",
       description: selectedLanguage === "hi" ? "सायंकालीन आरती समारोह में भाग लें" : "Participate in evening aarti ceremony",
-      coords: [23.1795, 75.7675],
+      coords: [23.1805, 75.7685],
       estimatedTime: "20 min",
       priority: "medium"
     }
@@ -519,7 +519,7 @@ export default function MapPage() {
     {
       id: "male-bathing",
       name: selectedLanguage === "hi" ? "पुरुष स्नान क्षेत्र" : "Men's Bathing Area",
-      coords: [23.1800, 75.7670],
+      coords: [23.1810, 75.7680],
       capacity: 500,
       currentOccupancy: 320,
       facilities: ["Changing Rooms", "Lockers", "Fresh Water", "Security", "Medical Aid"],
@@ -530,7 +530,7 @@ export default function MapPage() {
     {
       id: "female-bathing", 
       name: selectedLanguage === "hi" ? "महिला स्नान क्षेत्र" : "Women's Bathing Area",
-      coords: [23.1795, 75.7675],
+      coords: [23.1805, 75.7685],
       capacity: 300,
       currentOccupancy: 180,
       facilities: ["Private Changing", "Female Security", "Fresh Water", "Child Care", "First Aid"],
@@ -541,7 +541,7 @@ export default function MapPage() {
     {
       id: "family-bathing",
       name: selectedLanguage === "hi" ? "पारिवारिक स्नान क्षेत्र" : "Family Bathing Area",
-      coords: [23.1798, 75.7672],
+      coords: [23.1808, 75.7682],
       capacity: 400,
       currentOccupancy: 220,
       facilities: ["Family Rooms", "Child Safety", "Lockers", "Fresh Water", "Food Counter"],
@@ -552,7 +552,7 @@ export default function MapPage() {
     {
       id: "senior-bathing",
       name: selectedLanguage === "hi" ? "वरिष्ठ नागरिक क्षेत्र" : "Senior Citizens Area",
-      coords: [23.1805, 75.7665],
+      coords: [23.1815, 75.7675],
       capacity: 200,
       currentOccupancy: 85,
       facilities: ["Wheelchair Access", "Assisted Bathing", "Medical Support", "Rest Areas"],
@@ -795,6 +795,16 @@ export default function MapPage() {
                           <div className="text-green-600">{zone.available}/{zone.capacity} spots</div>
                         </div>
                       ))}
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                      <Button 
+                        onClick={() => window.open('https://iit-indore-project.onrender.com/services', '_blank')}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        data-testid="parking-assistant-btn"
+                      >
+                        <Car className="h-4 w-4 mr-2" />
+                        Parking Assistant Services
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -1099,7 +1109,7 @@ export default function MapPage() {
                     showPaths={true}
                     selectedRoute={selectedRoute}
                     userLocation={userLocation}
-                    center={[23.1815, 75.7682]} // Mahakal Temple coordinates
+                    center={[23.1825, 75.7688]} // Mahakal Temple at riverbank
                     zoom={17}
                     onLocationClick={(location) => {
                       console.log('Location clicked:', location);
@@ -1151,7 +1161,7 @@ export default function MapPage() {
                           }
                         } else {
                           // Default to temple location
-                          getDirections(23.1815, 75.7682, 'Mahakaleshwar Temple');
+                          getDirections(23.1825, 75.7688, 'Mahakaleshwar Temple');
                         }
                       }}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
