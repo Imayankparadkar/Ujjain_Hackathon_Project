@@ -17,9 +17,12 @@ import { queryClient } from "@/lib/queryClient";
 import { 
   Users, Search, BarChart3, Leaf, Heart, HelpCircle, FileText, Download, 
   MessageSquare, AlertTriangle, CheckCircle, X, Edit, Plus, MapPin, 
-  Calendar, Settings, Bell, Send, ArrowLeft, Home, LogOut
+  Calendar, Settings, Bell, Send, ArrowLeft, Home, LogOut, Clock, Timer, 
+  Globe, Radio, Phone, Shield, Package, Zap, Wrench, Star
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { apiRequest } from "@/lib/queryClient";
 
 interface User {
   id: string;
@@ -400,9 +403,58 @@ export default function AdminDashboard() {
     localStorage.removeItem('mockUser');
     setLocation('/admin/login');
     toast({
-      title: "Logged Out",
+      title: "Logged Out", 
       description: "You have been successfully logged out.",
     });
+  };
+
+  // Enhanced functionality for full admin operations
+  const assignStaffToReport = async (reportId: string, staffName: string) => {
+    try {
+      await apiRequest(`/api/cleanliness-reports/${reportId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assignedStaff: staffName,
+          isResolved: false
+        })
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/cleanliness-reports'] });
+      toast({
+        title: "Staff Assigned",
+        description: `${staffName} has been assigned to this cleanliness report.`
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to assign staff to report.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const assignOfficerToCase = async (caseId: string, officerName: string) => {
+    try {
+      await apiRequest(`/api/lost-found/${caseId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assignedOfficer: officerName,
+          isApproved: true
+        })
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/lost-found'] });
+      toast({
+        title: "Officer Assigned",
+        description: `${officerName} has been assigned to this case.`
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to assign officer to case.",
+        variant: "destructive"
+      });
+    }
   };
 
   const renderUserManagement = () => (
