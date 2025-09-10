@@ -186,31 +186,35 @@ export default function HomePage() {
       </section>
 
       {/* Quick Stats Section */}
-      <section className="py-20 bg-white border-b border-gray-200">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Live Statistics</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real-time data from the SmartKumbh ecosystem across the sacred grounds</p>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
+            <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
               <CardContent className="p-0">
-                <div className="text-4xl font-bold text-orange-600 mb-3">{stats.liveVisitors.toLocaleString()}</div>
-                <div className="text-base text-gray-700 font-semibold">Live Visitors</div>
+                <div className="text-4xl font-bold text-orange-600 mb-4">{stats.liveVisitors.toLocaleString()}</div>
+                <div className="text-lg text-gray-700 font-semibold">Live Visitors</div>
               </CardContent>
             </Card>
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
+            <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
               <CardContent className="p-0">
-                <div className="text-4xl font-bold text-red-600 mb-3">{stats.safetyAlerts}</div>
-                <div className="text-base text-gray-700 font-semibold">Safety Alerts</div>
+                <div className="text-4xl font-bold text-red-600 mb-4">{stats.safetyAlerts}</div>
+                <div className="text-lg text-gray-700 font-semibold">Safety Alerts</div>
               </CardContent>
             </Card>
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
+            <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
               <CardContent className="p-0">
-                <div className="text-4xl font-bold text-green-600 mb-3">{stats.activeRoutes}</div>
-                <div className="text-base text-gray-700 font-semibold">Active Routes</div>
+                <div className="text-4xl font-bold text-green-600 mb-4">{stats.activeRoutes}</div>
+                <div className="text-lg text-gray-700 font-semibold">Active Routes</div>
               </CardContent>
             </Card>
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
+            <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
               <CardContent className="p-0">
-                <div className="text-4xl font-bold text-blue-600 mb-3">{stats.languages}</div>
-                <div className="text-base text-gray-700 font-semibold">Supported Languages</div>
+                <div className="text-4xl font-bold text-blue-600 mb-4">{stats.languages}</div>
+                <div className="text-lg text-gray-700 font-semibold">Supported Languages</div>
               </CardContent>
             </Card>
           </div>
@@ -218,7 +222,7 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Map Section */}
-      <section id="map" className="py-24 bg-gray-50">
+      <section id="map" className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Interactive Navigation</h2>
@@ -227,22 +231,22 @@ export default function HomePage() {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
-              <Card className="bg-white rounded-3xl shadow-2xl overflow-hidden border-0">
+              <Card className="bg-white rounded-3xl shadow-2xl overflow-hidden border-0 hover:shadow-3xl transition-all duration-300">
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-12 h-[500px] flex items-center justify-center">
                   <div className="text-center">
                     <MapPin className="h-20 w-20 text-blue-600 mx-auto mb-6" />
                     <h3 className="text-3xl font-bold text-gray-800 mb-4">Ujjain Mahakal Lok Interactive Map</h3>
-                    <p className="text-lg text-gray-600 mb-8">3D path visualization with real-time crowd density</p>
+                    <p className="text-lg text-gray-600 mb-8 leading-relaxed">3D path visualization with real-time crowd density monitoring</p>
                     <div className="grid grid-cols-3 gap-6">
-                      <div className="bg-white p-6 rounded-2xl shadow-lg">
+                      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
                         <div className="font-bold text-blue-800 text-lg">Male Path</div>
                         <div className="text-blue-600 text-sm mt-1">45 min wait</div>
                       </div>
-                      <div className="bg-white p-6 rounded-2xl shadow-lg">
+                      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
                         <div className="font-bold text-pink-800 text-lg">Female Path</div>
                         <div className="text-pink-600 text-sm mt-1">35 min wait</div>
                       </div>
-                      <div className="bg-white p-6 rounded-2xl shadow-lg">
+                      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
                         <div className="font-bold text-green-800 text-lg">Senior Path</div>
                         <div className="text-green-600 text-sm mt-1">25 min wait</div>
                       </div>
@@ -252,13 +256,13 @@ export default function HomePage() {
               </Card>
             </div>
             <div className="space-y-8">
-              <Card className="p-8 bg-white rounded-3xl shadow-xl border-0 hover:shadow-2xl transition-all duration-300">
+              <Card className="p-10 bg-white rounded-3xl shadow-2xl border-0 hover:shadow-3xl transition-all duration-300 group">
                 <div className="text-center">
-                  <div className="bg-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="bg-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-orange-200 transition-colors">
                     <QrCode className="h-10 w-10 text-orange-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Generate My QR ID</h3>
-                  <p className="text-gray-600 mb-6 text-lg">Get your unique pilgrim identification for easy access</p>
+                  <p className="text-gray-600 mb-6 text-lg leading-relaxed">Get your unique pilgrim identification for easy access and enhanced safety</p>
                   <Button 
                     onClick={() => user ? setShowQRModal(true) : setLocation('/login')}
                     className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
@@ -268,15 +272,15 @@ export default function HomePage() {
                 </div>
               </Card>
               
-              <Card className="p-8 bg-white rounded-3xl shadow-xl border-0 hover:shadow-2xl transition-all duration-300">
+              <Card className="p-10 bg-white rounded-3xl shadow-2xl border-0 hover:shadow-3xl transition-all duration-300 group">
                 <div className="text-center">
-                  <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors">
                     <Navigation className="h-10 w-10 text-blue-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Route Planner</h3>
-                  <p className="text-gray-600 mb-6 text-lg">AI-powered personalized navigation system</p>
+                  <p className="text-gray-600 mb-6 text-lg leading-relaxed">AI-powered personalized navigation system with real-time optimization</p>
                   <Link href="/map">
-                    <Button variant="outline" className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-4 text-lg font-semibold rounded-2xl">
+                    <Button variant="outline" className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-4 text-lg font-semibold rounded-2xl shadow-lg">
                       Plan My Route
                     </Button>
                   </Link>
@@ -288,31 +292,31 @@ export default function HomePage() {
       </section>
 
       {/* Lost & Found Section */}
-      <section id="lost-found" className="py-24 bg-white">
+      <section id="lost-found" className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Lost & Found Service</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">Digital registry for missing persons and items with real-time updates and AI-powered matching system</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl">
-              <div className="bg-red-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group">
+              <div className="bg-red-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-red-200 transition-colors">
                 <Search className="h-12 w-12 text-red-600" />
               </div>
               <h3 className="text-3xl font-bold text-gray-800 mb-6">Search Found Items</h3>
-              <p className="text-lg text-gray-600 mb-8">Search our comprehensive database of found items and persons with advanced filters</p>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">Search our comprehensive database of found items and persons with advanced filters and real-time updates</p>
               <Link href="/lost-found">
                 <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg">
                   Search Database
                 </Button>
               </Link>
             </Card>
-            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl">
-              <div className="bg-orange-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group">
+              <div className="bg-orange-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-orange-200 transition-colors">
                 <AlertTriangle className="h-12 w-12 text-orange-600" />
               </div>
               <h3 className="text-3xl font-bold text-gray-800 mb-6">Report Missing</h3>
-              <p className="text-lg text-gray-600 mb-8">Report missing persons or items immediately with detailed information and photos</p>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">Report missing persons or items immediately with detailed information, photos, and GPS location</p>
               <Link href="/lost-found">
                 <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg">
                   Report Missing
@@ -324,17 +328,17 @@ export default function HomePage() {
       </section>
 
       {/* Spiritual Engagement Section */}
-      <section id="spiritual" className="py-24 bg-gray-50">
+      <section id="spiritual" className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Spiritual Engagement</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Live streaming of sacred ceremonies and comprehensive spiritual event management</p>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Live streaming of sacred ceremonies and comprehensive spiritual event management for your divine journey</p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <Card className="bg-white rounded-3xl shadow-2xl overflow-hidden border-0 hover:shadow-3xl transition-all duration-300">
+            <Card className="bg-white rounded-3xl shadow-2xl overflow-hidden border-0 hover:shadow-3xl transition-all duration-300 group">
               <div className="bg-gradient-to-br from-purple-100 to-indigo-100 p-12">
                 <div className="text-center mb-8">
-                  <div className="w-full h-80 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+                  <div className="w-full h-80 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-lg group-hover:shadow-xl transition-shadow">
                     <div className="text-center">
                       <div className="text-8xl mb-6">📺</div>
                       <div className="text-purple-800 font-bold text-2xl">Live Stream</div>
@@ -351,11 +355,11 @@ export default function HomePage() {
               </div>
             </Card>
             <div className="space-y-6">
-              <div className="bg-white p-8 rounded-3xl shadow-xl">
+              <Card className="bg-white p-10 rounded-3xl shadow-2xl border-0">
                 <h3 className="text-3xl font-bold text-gray-800 mb-8">Upcoming Rituals & Events</h3>
                 <div className="space-y-6">
                   {spiritualEvents.map((event, index) => (
-                    <Card key={event.id} className="p-6 border-l-4 border-l-orange-500 hover:shadow-lg transition-all duration-300 bg-orange-50 border border-orange-200 rounded-2xl">
+                    <Card key={event.id} className="p-6 border-l-4 border-l-orange-500 hover:shadow-lg transition-all duration-300 bg-orange-50 border-0 rounded-2xl">
                       <div className="flex justify-between items-center">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
@@ -384,42 +388,42 @@ export default function HomePage() {
                     </Card>
                   ))}
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
       {/* Four Pillars Section */}
-      <section id="features" className="py-24 bg-white">
+      <section id="features" className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Four Pillars of SmartKumbh</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">Comprehensive AI-powered solutions designed for the ultimate pilgrimage experience with cutting-edge technology</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group">
               <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors">
                 <Navigation className="h-10 w-10 text-blue-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Navigation</h3>
               <p className="text-gray-600 text-base leading-relaxed">AI-powered route optimization with real-time crowd analysis and personalized path recommendations for safe navigation</p>
             </Card>
-            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group">
               <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-200 transition-colors">
                 <Shield className="h-10 w-10 text-green-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Safety</h3>
               <p className="text-gray-600 text-base leading-relaxed">24/7 emergency response system, real-time safety alerts, and comprehensive monitoring for pilgrim protection</p>
             </Card>
-            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group">
               <div className="bg-emerald-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-emerald-200 transition-colors">
                 <Leaf className="h-10 w-10 text-emerald-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Sanitation</h3>
               <p className="text-gray-600 text-base leading-relaxed">Smart cleanliness monitoring, facility tracking, and hygiene maintenance across all pilgrimage areas</p>
             </Card>
-            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group">
               <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-200 transition-colors">
                 <Microchip className="h-10 w-10 text-purple-600" />
               </div>
