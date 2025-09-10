@@ -186,31 +186,31 @@ export default function HomePage() {
       </section>
 
       {/* Quick Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-orange-50 to-amber-50 border-b">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow bg-white/80 backdrop-blur-sm border-orange-200">
+      <section className="py-20 bg-white border-b border-gray-200">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
               <CardContent className="p-0">
-                <div className="text-3xl font-bold text-orange-600 mb-2">{stats.liveVisitors.toLocaleString()}</div>
-                <div className="text-sm text-gray-600 font-medium">Live Visitors</div>
+                <div className="text-4xl font-bold text-orange-600 mb-3">{stats.liveVisitors.toLocaleString()}</div>
+                <div className="text-base text-gray-700 font-semibold">Live Visitors</div>
               </CardContent>
             </Card>
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow bg-white/80 backdrop-blur-sm border-orange-200">
+            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
               <CardContent className="p-0">
-                <div className="text-3xl font-bold text-red-600 mb-2">{stats.safetyAlerts}</div>
-                <div className="text-sm text-gray-600 font-medium">Safety Alerts</div>
+                <div className="text-4xl font-bold text-red-600 mb-3">{stats.safetyAlerts}</div>
+                <div className="text-base text-gray-700 font-semibold">Safety Alerts</div>
               </CardContent>
             </Card>
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow bg-white/80 backdrop-blur-sm border-orange-200">
+            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
               <CardContent className="p-0">
-                <div className="text-3xl font-bold text-green-600 mb-2">{stats.activeRoutes}</div>
-                <div className="text-sm text-gray-600 font-medium">Active Routes</div>
+                <div className="text-4xl font-bold text-green-600 mb-3">{stats.activeRoutes}</div>
+                <div className="text-base text-gray-700 font-semibold">Active Routes</div>
               </CardContent>
             </Card>
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow bg-white/80 backdrop-blur-sm border-orange-200">
+            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-2xl">
               <CardContent className="p-0">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{stats.languages}</div>
-                <div className="text-sm text-gray-600 font-medium">Supported Languages</div>
+                <div className="text-4xl font-bold text-blue-600 mb-3">{stats.languages}</div>
+                <div className="text-base text-gray-700 font-semibold">Supported Languages</div>
               </CardContent>
             </Card>
           </div>
@@ -218,54 +218,65 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Map Section */}
-      <section id="map" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <section id="map" className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Interactive Navigation</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Experience real-time crowd monitoring and AI-powered route optimization for the perfect pilgrimage journey</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 h-96 flex items-center justify-center border border-blue-200">
-                <div className="text-center">
-                  <MapPin className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">Ujjain Mahakal Lok Interactive Map</h3>
-                  <p className="text-gray-600 mb-4">3D path visualization with real-time crowd density</p>
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div className="bg-blue-100 p-3 rounded-lg">
-                      <div className="font-semibold text-blue-800">Male Path</div>
-                      <div className="text-blue-600">45 min wait</div>
-                    </div>
-                    <div className="bg-pink-100 p-3 rounded-lg">
-                      <div className="font-semibold text-pink-800">Female Path</div>
-                      <div className="text-pink-600">35 min wait</div>
-                    </div>
-                    <div className="bg-green-100 p-3 rounded-lg">
-                      <div className="font-semibold text-green-800">Senior Path</div>
-                      <div className="text-green-600">25 min wait</div>
+              <Card className="bg-white rounded-3xl shadow-2xl overflow-hidden border-0">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-12 h-[500px] flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="h-20 w-20 text-blue-600 mx-auto mb-6" />
+                    <h3 className="text-3xl font-bold text-gray-800 mb-4">Ujjain Mahakal Lok Interactive Map</h3>
+                    <p className="text-lg text-gray-600 mb-8">3D path visualization with real-time crowd density</p>
+                    <div className="grid grid-cols-3 gap-6">
+                      <div className="bg-white p-6 rounded-2xl shadow-lg">
+                        <div className="font-bold text-blue-800 text-lg">Male Path</div>
+                        <div className="text-blue-600 text-sm mt-1">45 min wait</div>
+                      </div>
+                      <div className="bg-white p-6 rounded-2xl shadow-lg">
+                        <div className="font-bold text-pink-800 text-lg">Female Path</div>
+                        <div className="text-pink-600 text-sm mt-1">35 min wait</div>
+                      </div>
+                      <div className="bg-white p-6 rounded-2xl shadow-lg">
+                        <div className="font-bold text-green-800 text-lg">Senior Path</div>
+                        <div className="text-green-600 text-sm mt-1">25 min wait</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
-            <div className="space-y-6">
-              <Card className="p-6 border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50">
+            <div className="space-y-8">
+              <Card className="p-8 bg-white rounded-3xl shadow-xl border-0 hover:shadow-2xl transition-all duration-300">
                 <div className="text-center">
-                  <QrCode className="h-12 w-12 text-orange-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Generate My QR ID</h3>
-                  <p className="text-gray-600 mb-4">Get your unique pilgrim identification</p>
+                  <div className="bg-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <QrCode className="h-10 w-10 text-orange-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">Generate My QR ID</h3>
+                  <p className="text-gray-600 mb-6 text-lg">Get your unique pilgrim identification for easy access</p>
                   <Button 
                     onClick={() => user ? setShowQRModal(true) : setLocation('/login')}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
                   >
                     {user ? 'Generate QR Code' : 'Login to Generate QR'}
                   </Button>
                 </div>
               </Card>
               
-              <Card className="p-6 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+              <Card className="p-8 bg-white rounded-3xl shadow-xl border-0 hover:shadow-2xl transition-all duration-300">
                 <div className="text-center">
-                  <Navigation className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Route Planner</h3>
-                  <p className="text-gray-600 mb-4">AI-powered personalized navigation</p>
+                  <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Navigation className="h-10 w-10 text-blue-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">Route Planner</h3>
+                  <p className="text-gray-600 mb-6 text-lg">AI-powered personalized navigation system</p>
                   <Link href="/map">
-                    <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
+                    <Button variant="outline" className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-4 text-lg font-semibold rounded-2xl">
                       Plan My Route
                     </Button>
                   </Link>
@@ -277,29 +288,33 @@ export default function HomePage() {
       </section>
 
       {/* Lost & Found Section */}
-      <section id="lost-found" className="py-20 bg-gradient-to-r from-red-50 to-pink-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Lost & Found</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Digital registry for missing persons and items with real-time updates and AI-powered matching</p>
+      <section id="lost-found" className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Lost & Found Service</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Digital registry for missing persons and items with real-time updates and AI-powered matching system</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="p-8 text-center hover:shadow-xl transition-shadow border-red-200 bg-white/80 backdrop-blur-sm">
-              <Search className="h-16 w-16 text-red-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Search Found</h3>
-              <p className="text-gray-600 mb-6">Search our database of found items and persons</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl">
+              <div className="bg-red-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
+                <Search className="h-12 w-12 text-red-600" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">Search Found Items</h3>
+              <p className="text-lg text-gray-600 mb-8">Search our comprehensive database of found items and persons with advanced filters</p>
               <Link href="/lost-found">
-                <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+                <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg">
                   Search Database
                 </Button>
               </Link>
             </Card>
-            <Card className="p-8 text-center hover:shadow-xl transition-shadow border-orange-200 bg-white/80 backdrop-blur-sm">
-              <AlertTriangle className="h-16 w-16 text-orange-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Report Missing</h3>
-              <p className="text-gray-600 mb-6">Report missing persons or items immediately</p>
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl">
+              <div className="bg-orange-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
+                <AlertTriangle className="h-12 w-12 text-orange-600" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">Report Missing</h3>
+              <p className="text-lg text-gray-600 mb-8">Report missing persons or items immediately with detailed information and photos</p>
               <Link href="/lost-found">
-                <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+                <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg">
                   Report Missing
                 </Button>
               </Link>
@@ -309,93 +324,107 @@ export default function HomePage() {
       </section>
 
       {/* Spiritual Engagement Section */}
-      <section id="spiritual" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Spiritual Engagement</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Live streaming of sacred ceremonies and upcoming spiritual events</p>
+      <section id="spiritual" className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Spiritual Engagement</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Live streaming of sacred ceremonies and comprehensive spiritual event management</p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-gradient-to-br from-purple-100 to-indigo-100 rounded-2xl p-8 border border-purple-200">
-              <div className="text-center mb-6">
-                <div className="w-full h-64 bg-purple-200 rounded-lg flex items-center justify-center mb-4">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">📺</div>
-                    <div className="text-purple-800 font-semibold">Live Stream</div>
-                    <div className="text-purple-600">Mahakal Bhasma Aarti</div>
-                  </div>
-                </div>
-                <Link href="/spiritual">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
-                    Watch Live Stream
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Upcoming Rituals/Events</h3>
-              {spiritualEvents.map((event, index) => (
-                <Card key={event.id} className="p-4 border-l-4 border-l-orange-500 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-semibold text-gray-800">{event.name}</h4>
-                        {event.isLive && (
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">LIVE</span>
-                        )}
-                      </div>
-                      <p className="text-gray-600 text-sm">{event.location}</p>
-                      <p className="text-gray-500 text-xs">
-                        {event.dateTime.toDate().toLocaleDateString()} at {event.dateTime.toDate().toLocaleTimeString()}
-                      </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <Card className="bg-white rounded-3xl shadow-2xl overflow-hidden border-0 hover:shadow-3xl transition-all duration-300">
+              <div className="bg-gradient-to-br from-purple-100 to-indigo-100 p-12">
+                <div className="text-center mb-8">
+                  <div className="w-full h-80 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+                    <div className="text-center">
+                      <div className="text-8xl mb-6">📺</div>
+                      <div className="text-purple-800 font-bold text-2xl">Live Stream</div>
+                      <div className="text-purple-600 text-lg mt-2">Mahakal Bhasma Aarti</div>
+                      <div className="bg-red-500 text-white text-sm px-4 py-2 rounded-full mt-4 inline-block animate-pulse">• LIVE NOW</div>
                     </div>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-colors"
-                      onClick={() => {
-                        // Navigate to spiritual page with focus on this event
-                        window.location.href = '/spiritual';
-                      }}
-                    >
-                      <Bell className="h-4 w-4 mr-1" />
-                      Set Reminder
-                    </Button>
                   </div>
-                </Card>
-              ))}
+                  <Link href="/spiritual">
+                    <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg">
+                      Watch Live Stream
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+            <div className="space-y-6">
+              <div className="bg-white p-8 rounded-3xl shadow-xl">
+                <h3 className="text-3xl font-bold text-gray-800 mb-8">Upcoming Rituals & Events</h3>
+                <div className="space-y-6">
+                  {spiritualEvents.map((event, index) => (
+                    <Card key={event.id} className="p-6 border-l-4 border-l-orange-500 hover:shadow-lg transition-all duration-300 bg-orange-50 border border-orange-200 rounded-2xl">
+                      <div className="flex justify-between items-center">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h4 className="font-bold text-gray-800 text-lg">{event.name}</h4>
+                            {event.isLive && (
+                              <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full animate-pulse font-semibold">LIVE</span>
+                            )}
+                          </div>
+                          <p className="text-gray-700 text-base font-medium">{event.location}</p>
+                          <p className="text-gray-600 text-sm mt-1">
+                            {event.dateTime.toDate().toLocaleDateString()} at {event.dateTime.toDate().toLocaleTimeString()}
+                          </p>
+                        </div>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-colors px-4 py-2 rounded-2xl font-medium"
+                          onClick={() => {
+                            window.location.href = '/spiritual';
+                          }}
+                        >
+                          <Bell className="h-4 w-4 mr-2" />
+                          Set Reminder
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Four Pillars Section */}
-      <section id="features" className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Four Pillars of SmartKumbh</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Comprehensive AI-powered solutions for the ultimate pilgrimage experience</p>
+      <section id="features" className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Four Pillars of SmartKumbh</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Comprehensive AI-powered solutions designed for the ultimate pilgrimage experience with cutting-edge technology</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="p-8 text-center hover:shadow-xl transition-all hover:scale-105 border-blue-200 bg-white/80 backdrop-blur-sm">
-              <Navigation className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Navigation</h3>
-              <p className="text-gray-600 text-sm">AI-powered route optimization with real-time crowd analysis and personalized path recommendations</p>
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+              <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors">
+                <Navigation className="h-10 w-10 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Navigation</h3>
+              <p className="text-gray-600 text-base leading-relaxed">AI-powered route optimization with real-time crowd analysis and personalized path recommendations for safe navigation</p>
             </Card>
-            <Card className="p-8 text-center hover:shadow-xl transition-all hover:scale-105 border-green-200 bg-white/80 backdrop-blur-sm">
-              <Shield className="h-16 w-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Safety</h3>
-              <p className="text-gray-600 text-sm">24/7 emergency response, real-time alerts, and comprehensive safety monitoring systems</p>
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+              <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-200 transition-colors">
+                <Shield className="h-10 w-10 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Safety</h3>
+              <p className="text-gray-600 text-base leading-relaxed">24/7 emergency response system, real-time safety alerts, and comprehensive monitoring for pilgrim protection</p>
             </Card>
-            <Card className="p-8 text-center hover:shadow-xl transition-all hover:scale-105 border-emerald-200 bg-white/80 backdrop-blur-sm">
-              <Leaf className="h-16 w-16 text-emerald-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Sanitation</h3>
-              <p className="text-gray-600 text-sm">Smart cleanliness monitoring, facility tracking, and hygiene maintenance across all areas</p>
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+              <div className="bg-emerald-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-emerald-200 transition-colors">
+                <Leaf className="h-10 w-10 text-emerald-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Sanitation</h3>
+              <p className="text-gray-600 text-base leading-relaxed">Smart cleanliness monitoring, facility tracking, and hygiene maintenance across all pilgrimage areas</p>
             </Card>
-            <Card className="p-8 text-center hover:shadow-xl transition-all hover:scale-105 border-purple-200 bg-white/80 backdrop-blur-sm">
-              <Microchip className="h-16 w-16 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Digital Ecosystem</h3>
-              <p className="text-gray-600 text-sm">Integrated digital services, smart connectivity, and seamless technology integration</p>
+            <Card className="p-10 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border border-gray-200 rounded-3xl group">
+              <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-200 transition-colors">
+                <Microchip className="h-10 w-10 text-purple-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Digital Ecosystem</h3>
+              <p className="text-gray-600 text-base leading-relaxed">Integrated digital services, smart connectivity, and seamless technology integration for modern pilgrimage</p>
             </Card>
           </div>
         </div>
