@@ -335,17 +335,19 @@ export default function MapPage() {
 
   // Handle quick actions
   const handleReportCrowd = () => {
+    console.log('Report crowd button clicked', { userLocation });
+    
     if (!userLocation) {
       toast({
         title: "📍 Location Required",
-        description: "Please allow location access to report overcrowding.",
+        description: "Getting your location to report overcrowding...",
         variant: "destructive"
       });
       getUserLocation();
       return;
     }
 
-    reportCrowdMutation.mutate({
+    const reportData = {
       location: `${userLocation.lat}, ${userLocation.lng}`,
       latitude: userLocation.lat.toString(),
       longitude: userLocation.lng.toString(),
@@ -354,21 +356,26 @@ export default function MapPage() {
       description: 'User reported overcrowding via map interface',
       timestamp: new Date().toISOString(),
       reportedBy: 'mobile_user'
-    });
+    };
+    
+    console.log('Submitting crowd report:', reportData);
+    reportCrowdMutation.mutate(reportData);
   };
 
   const handleRequestAssistance = () => {
+    console.log('Request assistance button clicked', { userLocation });
+    
     if (!userLocation) {
       toast({
-        title: "📍 Location Required",
-        description: "Please allow location access to request assistance.",
+        title: "📍 Location Required", 
+        description: "Getting your location to request assistance...",
         variant: "destructive"
       });
       getUserLocation();
       return;
     }
 
-    requestAssistanceMutation.mutate({
+    const assistanceData = {
       location: `${userLocation.lat}, ${userLocation.lng}`,
       latitude: userLocation.lat.toString(),
       longitude: userLocation.lng.toString(),
@@ -377,7 +384,10 @@ export default function MapPage() {
       description: 'User requested assistance via map interface',
       timestamp: new Date().toISOString(),
       requestedBy: 'mobile_user'
-    });
+    };
+    
+    console.log('Submitting assistance request:', assistanceData);
+    requestAssistanceMutation.mutate(assistanceData);
   };
 
   const routes = [

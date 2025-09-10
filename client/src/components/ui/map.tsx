@@ -186,49 +186,130 @@ export function Map({
         ghatLocations.familyGhat  // Family Ghat (Bathing Area)
       ];
 
-      // Show paths based on selected route
+      // Show paths based on selected route with enhanced 3D effects
       if (selectedRoute === 'all' || selectedRoute === 'male') {
         const malePolyline = L.polyline(malePath, {
           color: '#FF6B35',
-          weight: 8,
+          weight: 10,
           opacity: 0.9,
-          dashArray: '10, 5'
+          dashArray: '15, 8',
+          className: 'route-3d-effect male-route'
         }).addTo(map);
         
-        malePolyline.bindPopup('<div style="padding: 10px;"><strong>👨 Male Devotees Path to Main Ghat</strong><br/>⏱️ Total Time: 55 min (Temple: 45 min + Ghat: 10 min)<br/>👥 Current Wait: High<br/>🛁 Ends at: Main Bathing Ghat<br/><button onclick="alert(\'Navigate to Male Route\')" style="background: #FF6B35; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Select This Route</button></div>');
+        // Add 3D shadow effect for the route
+        const maleShadow = L.polyline(malePath, {
+          color: '#000000',
+          weight: 12,
+          opacity: 0.3,
+          offset: 2,
+          className: 'route-shadow'
+        }).addTo(map);
+        
+        malePolyline.bindPopup('<div style="padding: 15px; font-family: sans-serif;"><strong style="color: #FF6B35;">👨 Male Devotees Path to Main Ghat</strong><br/>⏱️ Total Time: 55 min (Temple: 45 min + Ghat: 10 min)<br/>👥 Current Wait: High<br/>🛁 Ends at: Main Bathing Ghat<br/><br/><button id="navigate-male" style="background: #FF6B35; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">🗺️ Get Directions</button></div>');
+        
+        malePolyline.on('click', () => {
+          if (onLocationClick) {
+            onLocationClick({
+              lat: 23.1820,
+              lng: 75.7685,
+              name: 'Male Devotees Path Starting Point',
+              type: 'route'
+            });
+          }
+        });
       }
 
       if (selectedRoute === 'all' || selectedRoute === 'female') {
-        const femalePolyline = L.polyline(femalePath, {
-          color: '#FFB74D',
-          weight: 8,
-          opacity: 0.9,
-          dashArray: '15, 5'
+        // Add 3D shadow effect for the route
+        const femaleShadow = L.polyline(femalePath, {
+          color: '#000000',
+          weight: 12,
+          opacity: 0.3,
+          className: 'route-shadow'
         }).addTo(map);
         
-        femalePolyline.bindPopup('<div style="padding: 10px;"><strong>👩 Female Devotees Path to Female Ghat</strong><br/>⏱️ Total Time: 45 min (Temple: 35 min + Ghat: 10 min)<br/>👥 Current Wait: Medium<br/>🛁 Ends at: Female-Only Bathing Ghat<br/>👮‍♀️ Female Security Present<br/><button onclick="alert(\'Navigate to Female Route\')" style="background: #FFB74D; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Select This Route</button></div>');
+        const femalePolyline = L.polyline(femalePath, {
+          color: '#FFB74D',
+          weight: 10,
+          opacity: 0.9,
+          dashArray: '15, 8',
+          className: 'route-3d-effect female-route'
+        }).addTo(map);
+        
+        femalePolyline.bindPopup('<div style="padding: 15px; font-family: sans-serif;"><strong style="color: #FFB74D;">👩 Female Devotees Path to Female Ghat</strong><br/>⏱️ Total Time: 45 min (Temple: 35 min + Ghat: 10 min)<br/>👥 Current Wait: Medium<br/>🛁 Ends at: Female-Only Bathing Ghat<br/>👮‍♀️ Female Security Present<br/><br/><button style="background: #FFB74D; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">🗺️ Get Directions</button></div>');
+        
+        femalePolyline.on('click', () => {
+          if (onLocationClick) {
+            onLocationClick({
+              lat: 23.1810,
+              lng: 75.7685,
+              name: 'Female Devotees Path Starting Point',
+              type: 'route'
+            });
+          }
+        });
       }
 
       if (selectedRoute === 'all' || selectedRoute === 'elderly') {
-        const seniorPolyline = L.polyline(seniorPath, {
-          color: '#4CAF50',
-          weight: 6,
-          opacity: 0.9,
-          dashArray: '5, 10'
+        // Add 3D shadow effect for the route
+        const seniorShadow = L.polyline(seniorPath, {
+          color: '#000000',
+          weight: 10,
+          opacity: 0.3,
+          className: 'route-shadow'
         }).addTo(map);
         
-        seniorPolyline.bindPopup('<div style="padding: 10px;"><strong>🧓 Senior Citizens Path to Senior Ghat</strong><br/>⏱️ Total Time: 35 min (Temple: 25 min + Ghat: 10 min)<br/>🚀 Priority Access Available<br/>🛁 Ends at: Senior Citizens Ghat<br/>♿ Wheelchair Accessible<br/>🏥 Medical Support Available<br/><button onclick="alert(\'Navigate to Senior Route\')" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Select This Route</button></div>');
+        const seniorPolyline = L.polyline(seniorPath, {
+          color: '#4CAF50',
+          weight: 8,
+          opacity: 0.9,
+          dashArray: '12, 6',
+          className: 'route-3d-effect senior-route'
+        }).addTo(map);
+        
+        seniorPolyline.bindPopup('<div style="padding: 15px; font-family: sans-serif;"><strong style="color: #4CAF50;">🧓 Senior Citizens Path to Senior Ghat</strong><br/>⏱️ Total Time: 35 min (Temple: 25 min + Ghat: 10 min)<br/>🚀 Priority Access Available<br/>🛁 Ends at: Senior Citizens Ghat<br/>♿ Wheelchair Accessible<br/>🏥 Medical Support Available<br/><br/><button style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">🗺️ Get Directions</button></div>');
+        
+        seniorPolyline.on('click', () => {
+          if (onLocationClick) {
+            onLocationClick({
+              lat: 23.1825,
+              lng: 75.7680,
+              name: 'Senior Citizens Path Starting Point',
+              type: 'route'
+            });
+          }
+        });
       }
 
       if (selectedRoute === 'all' || selectedRoute === 'family') {
-        const familyPolyline = L.polyline(familyPath, {
-          color: '#9C27B0',
-          weight: 7,
-          opacity: 0.9,
-          dashArray: '20, 5'
+        // Add 3D shadow effect for the route
+        const familyShadow = L.polyline(familyPath, {
+          color: '#000000',
+          weight: 11,
+          opacity: 0.3,
+          className: 'route-shadow'
         }).addTo(map);
         
-        familyPolyline.bindPopup('<div style="padding: 10px;"><strong>👨‍👩‍👧‍👦 Family Path to Family Ghat</strong><br/>⏱️ Total Time: 50 min (Temple: 40 min + Ghat: 10 min)<br/>👥 Current Wait: Medium<br/>🛁 Ends at: Family Bathing Ghat<br/>👶 Child-Friendly Facilities<br/><button onclick="alert(\'Navigate to Family Route\')" style="background: #9C27B0; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Select This Route</button></div>');
+        const familyPolyline = L.polyline(familyPath, {
+          color: '#9C27B0',
+          weight: 9,
+          opacity: 0.9,
+          dashArray: '18, 6',
+          className: 'route-3d-effect family-route'
+        }).addTo(map);
+        
+        familyPolyline.bindPopup('<div style="padding: 15px; font-family: sans-serif;"><strong style="color: #9C27B0;">👨‍👩‍👧‍👦 Family Path to Family Ghat</strong><br/>⏱️ Total Time: 50 min (Temple: 40 min + Ghat: 10 min)<br/>👥 Current Wait: Medium<br/>🛁 Ends at: Family Bathing Ghat<br/>👶 Child-Friendly Facilities<br/><br/><button style="background: #9C27B0; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">🗺️ Get Directions</button></div>');
+        
+        familyPolyline.on('click', () => {
+          if (onLocationClick) {
+            onLocationClick({
+              lat: 23.1815,
+              lng: 75.7690,
+              name: 'Family Path Starting Point',
+              type: 'route'
+            });
+          }
+        });
       }
     }
 
@@ -431,6 +512,52 @@ export function Map({
       }
       .facility-marker:hover {
         z-index: 1000 !important;
+      }
+      
+      /* 3D Route Effects */
+      .route-3d-effect {
+        filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4));
+        transition: all 0.3s ease;
+      }
+      .route-3d-effect:hover {
+        filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.6));
+        transform: translateY(-2px);
+      }
+      .route-shadow {
+        transform: translate(3px, 3px);
+        z-index: -1;
+      }
+      
+      /* Enhanced 3D marker effects */
+      .leaflet-marker-icon {
+        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+      .leaflet-marker-icon:hover {
+        transform: scale(1.1) translateY(-2px);
+        filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.5));
+      }
+      
+      /* 3D elevation effect for all map elements */
+      .leaflet-popup-content-wrapper {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      }
+      
+      /* Animated gradient backgrounds for routes */
+      .male-route {
+        background: linear-gradient(45deg, #FF6B35, #FF8A65);
+      }
+      .female-route {
+        background: linear-gradient(45deg, #FFB74D, #FFCC80);
+      }
+      .senior-route {
+        background: linear-gradient(45deg, #4CAF50, #66BB6A);
+      }
+      .family-route {
+        background: linear-gradient(45deg, #9C27B0, #BA68C8);
       }
     `;
     document.head.appendChild(style);
