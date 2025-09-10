@@ -254,7 +254,7 @@ export default function LoginPage() {
                     <Label htmlFor="register-blood" className="text-amber-700 font-semibold">Select Blood Group</Label>
                     <select
                       id="register-blood"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full px-3 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 bg-amber-50"
                       {...registerForm.register("bloodGroup")}
                     >
                       <option value="">Select Blood Group</option>
