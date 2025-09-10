@@ -73,7 +73,14 @@ function Router() {
 
   useEffect(() => {
     // Initialize comprehensive data and start real-time updates for hackathon demo
-    if (!dummyDataGenerated && !loading) {
+    // Add additional checks to prevent excessive calls
+    const isAlreadySeeded = localStorage.getItem('smartkumbh_seeded') === 'true';
+    const isAlreadyInitialized = localStorage.getItem('smartkumbh_initialized') === 'true';
+    
+    if (!dummyDataGenerated && !loading && !isAlreadySeeded && !isAlreadyInitialized) {
+      // Mark as being initialized to prevent duplicate calls
+      localStorage.setItem('smartkumbh_initialized', 'true');
+      
       Promise.all([
         generateDummyData(),
         initializeData()
@@ -86,6 +93,10 @@ function Router() {
         setDummyDataGenerated(true);
         startRealTimeUpdates();
       });
+    } else if (isAlreadySeeded || isAlreadyInitialized) {
+      // Data already exists, just start real-time updates
+      setDummyDataGenerated(true);
+      startRealTimeUpdates();
     }
   }, [loading, dummyDataGenerated]);
 
