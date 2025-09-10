@@ -104,7 +104,7 @@ export default function SpiritualPage() {
         viewers: 45000,
         location: "Main Sanctum",
         thumbnail: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450",
-        streamUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        streamUrl: "https://www.youtube.com/live/_RoV-sueMWs?si=I9EJgUTYzO0_Ox4l"
       },
       {
         id: "LS002", 
@@ -113,7 +113,7 @@ export default function SpiritualPage() {
         viewers: 12000,
         location: "Shipra River",
         thumbnail: "https://images.unsplash.com/photo-1544913580-877b069acc7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450",
-        streamUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        streamUrl: "https://www.youtube.com/live/y90qP3MTG3c?si=m4uGmUhozUUAbL_M"
       }
     ]);
   }, []);
