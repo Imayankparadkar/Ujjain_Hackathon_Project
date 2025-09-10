@@ -160,6 +160,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // QR Code lookup endpoint
+  app.get("/api/qr/:qrId", async (req, res) => {
+    try {
+      const { qrId } = req.params;
+      const user = await storage.getUserByQrId(qrId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User profile not found" });
+      }
+
+      // Format user data for QR display (hide sensitive info)
+      const qrProfile = {
+        id: user.qrId,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        emergencyContact: user.emergencyContact || '',
+        age: (user as any).age || undefined,
+        bloodGroup: (user as any).bloodGroup || '',
+        guardianContact: (user as any).guardianContact || '',
+        homeAddress: (user as any).homeAddress || '',
+        medicalConditions: (user as any).medicalConditions || '',
+        generated: user.createdAt?.toISOString() || new Date().toISOString(),
+        platform: 'SmartKumbh'
+      };
+
+      res.json(qrProfile);
+    } catch (error) {
+      console.error('QR lookup error:', error);
+      res.status(500).json({ message: "Failed to fetch user profile" });
+    }
+  });
+
   // Safety Alerts endpoints
   app.get("/api/safety-alerts", async (req, res) => {
     try {

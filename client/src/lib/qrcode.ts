@@ -16,27 +16,15 @@ export interface UserProfile {
 
 export const generateQRCode = async (userProfile: UserProfile): Promise<string> => {
   try {
-    const qrData = {
-      id: userProfile.qrId,
-      name: userProfile.name,
-      email: userProfile.email,
-      phone: userProfile.phone,
-      emergency: userProfile.emergencyContact,
-      age: userProfile.age,
-      bloodGroup: userProfile.bloodGroup,
-      medical: userProfile.medicalConditions,
-      guardian: userProfile.guardianContact,
-      address: userProfile.homeAddress,
-      generated: new Date().toISOString(),
-      platform: 'SmartKumbh'
-    };
+    // Create URL that points to the user's profile page
+    const baseUrl = window.location.origin;
+    const qrUrl = `${baseUrl}/qr/${userProfile.qrId}`;
 
-    const qrString = JSON.stringify(qrData);
-    const qrCodeDataURL = await QRCode.toDataURL(qrString, {
+    const qrCodeDataURL = await QRCode.toDataURL(qrUrl, {
       width: 400,
       margin: 2,
       color: {
-        dark: '#000000',
+        dark: '#FF6B35', // SmartKumbh orange color
         light: '#FFFFFF'
       },
       errorCorrectionLevel: 'M'

@@ -17,6 +17,7 @@ import UserDashboard from "@/pages/UserDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AttractionsPage from "@/pages/AttractionsPage";
 import NotFound from "@/pages/not-found";
+import QRViewPage from "@/pages/QRViewPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import TermsOfServicePage from "@/pages/TermsOfServicePage";
 import GovernmentGuidelinesPage from "@/pages/GovernmentGuidelinesPage";
@@ -149,6 +150,7 @@ function Router() {
       <Route path="/government-guidelines" component={GovernmentGuidelinesPage} />
       <Route path="/accessibility-statement" component={AccessibilityStatementPage} />
       <Route path="/data-protection" component={DataProtectionPage} />
+      <Route path="/qr/:qrId" component={QRViewPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       
