@@ -1321,276 +1321,229 @@ export default function MapPage() {
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-6">
-              {/* Live Stats */}
-              <Card className="rounded-3xl border-0 shadow-xl bg-white">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-xl font-bold flex items-center text-gray-900">
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3"></div>
-                    Live Status
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="px-6 pb-6 space-y-4">
-                  {crowdData.slice(0, 3).map((point, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl">
-                      <div>
-                        <div className="font-medium text-gray-900">{point.location}</div>
-                        <div className="text-gray-600 text-sm">Wait: {point.waitTime}</div>
+            <div className="lg:col-span-1 space-y-4">
+              {/* Top Row - Live Stats and Ghat Status Side by Side */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                {/* Live Stats */}
+                <Card className="rounded-2xl border-0 shadow-lg bg-white">
+                  <CardHeader className="pb-3 px-4 pt-4">
+                    <CardTitle className="text-lg font-bold flex items-center text-gray-900">
+                      <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
+                      Live Status
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4 space-y-3">
+                    {crowdData.slice(0, 3).map((point, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-xl">
+                        <div>
+                          <div className="font-medium text-sm text-gray-900">{point.location}</div>
+                          <div className="text-gray-600 text-xs">Wait: {point.waitTime}</div>
+                        </div>
+                        <Badge className={`${getCrowdColor(point.densityLevel)} text-white text-xs`}>
+                          {point.crowdCount}
+                        </Badge>
                       </div>
-                      <Badge className={`${getCrowdColor(point.densityLevel)} text-white`}>
-                        {point.crowdCount}
-                      </Badge>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+                    ))}
+                  </CardContent>
+                </Card>
 
-              {/* Ghat Status */}
-              <Card className="rounded-3xl border-0 shadow-xl bg-white">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-xl font-bold flex items-center text-gray-900">
-                    🛁 Bathing Ghats Status
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="px-6 pb-6 space-y-4">
-                  {ghatData.map((ghat, index) => {
-                    const occupancyRate = (ghat.currentOccupancy / ghat.capacity) * 100;
-                    let statusColor = "text-green-600";
-                    if (occupancyRate > 80) statusColor = "text-red-600";
-                    else if (occupancyRate > 60) statusColor = "text-orange-600";
-                    
-                    return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-2xl">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-medium text-sm text-gray-900">{ghat.name}</div>
-                          <Badge variant="outline" className={statusColor}>
-                            {occupancyRate.toFixed(0)}%
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-gray-600 mb-2">
-                          {ghat.currentOccupancy}/{ghat.capacity} people
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                          <div 
-                            className={`h-2 rounded-full ${
-                              occupancyRate > 80 ? 'bg-red-500' : 
-                              occupancyRate > 60 ? 'bg-orange-500' : 'bg-green-500'
-                            }`}
-                            style={{ width: `${occupancyRate}%` }}
-                          />
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          Type: {ghat.type} • {ghat.facilities.slice(0, 2).join(', ')}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </CardContent>
-              </Card>
-
-              {/* Emergency Contacts */}
-              <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
-                <CardHeader className="p-8 pb-6">
-                  <CardTitle className="text-2xl font-bold flex items-center text-gray-900">
-                    <div className="bg-red-100 w-12 h-12 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                      <Phone className="h-6 w-6 text-red-600" />
-                    </div>
-                    Emergency Contacts
-                  </CardTitle>
-                  <p className="text-base text-gray-600 mt-3">24/7 immediate assistance available</p>
-                </CardHeader>
-                <CardContent className="p-8 pt-0 space-y-4">
-                  <Card className="hover:shadow-lg transition-all duration-300 bg-red-50 border-red-200 rounded-2xl overflow-hidden">
-                    <CardContent className="p-6 text-center">
-                      <div className="bg-red-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Shield className="h-6 w-6 text-red-600" />
-                      </div>
-                      <h3 className="text-lg font-bold text-gray-800 mb-2">Police Emergency</h3>
-                      <div className="text-3xl font-bold mb-3 text-red-600">100</div>
-                      <p className="text-sm text-gray-600 mb-4">Immediate police assistance</p>
-                      <Button 
-                        className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-base font-semibold rounded-xl shadow-lg" 
-                        data-testid="emergency-police"
-                        onClick={() => makeEmergencyCall("Police", "100")}
-                        disabled={isCallingEmergency === "Police"}
-                      >
-                        {isCallingEmergency === "Police" ? (
-                          <>
-                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-                            Calling...
-                          </>
-                        ) : (
-                          <>
-                            <Phone className="h-5 w-5 mr-3" />
-                            Call Now
-                          </>
-                        )}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-all duration-300 bg-pink-50 border-pink-200 rounded-2xl overflow-hidden">
-                    <CardContent className="p-6 text-center">
-                      <div className="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Heart className="h-6 w-6 text-pink-600" />
-                      </div>
-                      <h3 className="text-lg font-bold text-gray-800 mb-2">Medical Emergency</h3>
-                      <div className="text-3xl font-bold mb-3 text-pink-600">108</div>
-                      <p className="text-sm text-gray-600 mb-4">Ambulance & medical help</p>
-                      <Button 
-                        className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 text-base font-semibold rounded-xl shadow-lg" 
-                        data-testid="emergency-medical"
-                        onClick={() => makeEmergencyCall("Medical", "108")}
-                        disabled={isCallingEmergency === "Medical"}
-                      >
-                        {isCallingEmergency === "Medical" ? (
-                          <>
-                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-                            Calling...
-                          </>
-                        ) : (
-                          <>
-                            <Phone className="h-5 w-5 mr-3" />
-                            Call Now
-                          </>
-                        )}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-all duration-300 bg-orange-50 border-orange-200 rounded-2xl overflow-hidden">
-                    <CardContent className="p-6 text-center">
-                      <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Home className="h-6 w-6 text-orange-600" />
-                      </div>
-                      <h3 className="text-lg font-bold text-gray-800 mb-2">Kumbh Control Room</h3>
-                      <div className="text-3xl font-bold mb-3 text-orange-600">1950</div>
-                      <p className="text-sm text-gray-600 mb-4">24/7 coordination center</p>
-                      <Button 
-                        className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 text-base font-semibold rounded-xl shadow-lg" 
-                        data-testid="emergency-control-room"
-                        onClick={() => makeEmergencyCall("Control Room", "1950")}
-                        disabled={isCallingEmergency === "Control Room"}
-                      >
-                        {isCallingEmergency === "Control Room" ? (
-                          <>
-                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-                            Calling...
-                          </>
-                        ) : (
-                          <>
-                            <Phone className="h-5 w-5 mr-3" />
-                            Call Now
-                          </>
-                        )}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </CardContent>
-              </Card>
-
-              {/* Nearby Facilities */}
-              <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
-                <CardHeader className="p-8 pb-6">
-                  <CardTitle className="text-2xl font-bold flex items-center text-gray-900">
-                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                      <MapPin className="h-6 w-6 text-blue-600" />
-                    </div>
-                    Nearby Facilities
-                  </CardTitle>
-                  <p className="text-base text-gray-600 mt-3">Essential services within walking distance</p>
-                </CardHeader>
-                <CardContent className="p-8 pt-0">
-                  <div className="space-y-4">
-                    {facilityData.slice(0, 5).map((facility, index) => {
-                      const facilityColors = {
-                        toilet: { bg: 'bg-blue-50', border: 'border-blue-200', icon: 'text-blue-600', button: 'bg-blue-600 hover:bg-blue-700' },
-                        medical: { bg: 'bg-red-50', border: 'border-red-200', icon: 'text-red-600', button: 'bg-red-600 hover:bg-red-700' },
-                        shop: { bg: 'bg-green-50', border: 'border-green-200', icon: 'text-green-600', button: 'bg-green-600 hover:bg-green-700' },
-                        food: { bg: 'bg-orange-50', border: 'border-orange-200', icon: 'text-orange-600', button: 'bg-orange-600 hover:bg-orange-700' },
-                        security: { bg: 'bg-purple-50', border: 'border-purple-200', icon: 'text-purple-600', button: 'bg-purple-600 hover:bg-purple-700' },
-                        emergency: { bg: 'bg-red-50', border: 'border-red-200', icon: 'text-red-600', button: 'bg-red-600 hover:bg-red-700' },
-                        arrival: { bg: 'bg-gray-50', border: 'border-gray-200', icon: 'text-gray-600', button: 'bg-gray-600 hover:bg-gray-700' },
-                        parking: { bg: 'bg-yellow-50', border: 'border-yellow-200', icon: 'text-yellow-600', button: 'bg-yellow-600 hover:bg-yellow-700' }
-                      };
-                      const colors = facilityColors[facility.type as keyof typeof facilityColors] || facilityColors.shop;
+                {/* Ghat Status */}
+                <Card className="rounded-2xl border-0 shadow-lg bg-white">
+                  <CardHeader className="pb-3 px-4 pt-4">
+                    <CardTitle className="text-lg font-bold flex items-center text-gray-900">
+                      🛁 Bathing Ghats Status
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4 space-y-3">
+                    {ghatData.map((ghat, index) => {
+                      const occupancyRate = (ghat.currentOccupancy / ghat.capacity) * 100;
+                      let statusColor = "text-green-600";
+                      if (occupancyRate > 80) statusColor = "text-red-600";
+                      else if (occupancyRate > 60) statusColor = "text-orange-600";
                       
                       return (
-                        <Card key={index} className={`hover:shadow-lg transition-all duration-300 ${colors.bg} ${colors.border} rounded-2xl overflow-hidden group`}>
-                          <CardContent className="p-6">
-                            <div className="flex items-start space-x-4">
-                              <div className={`bg-white w-12 h-12 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300`}>
-                                <div className={`text-2xl ${colors.icon}`}>{getFacilityIcon(facility.type)}</div>
-                              </div>
-                              <div className="flex-1">
-                                <h3 className="text-lg font-bold text-gray-800 mb-2">{facility.name}</h3>
-                                <div className="flex items-center space-x-3 mb-3">
-                                  <div className="flex items-center space-x-2">
-                                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                    <span className="text-sm text-gray-700 font-medium">{facility.status}</span>
-                                  </div>
-                                  {facility.cleanlinessScore && (
-                                    <div className="flex items-center space-x-2">
-                                      <div className="text-sm text-gray-600">Rating:</div>
-                                      <div className="text-sm font-bold text-green-600">{facility.cleanlinessScore}%</div>
-                                    </div>
-                                  )}
-                                </div>
-                                
-                                {facility.items && (
-                                  <p className="text-sm text-gray-600 mb-3">{facility.items}</p>
-                                )}
-                                {facility.services && (
-                                  <p className="text-sm text-gray-600 mb-3">{facility.services}</p>
-                                )}
-                                {facility.staff && (
-                                  <p className="text-sm text-gray-600 mb-3">{facility.staff}</p>
-                                )}
-                                {facility.capacity && (
-                                  <p className="text-sm text-gray-600 mb-3">Capacity: {facility.capacity}</p>
-                                )}
-                                {facility.contact && (
-                                  <p className="text-sm text-blue-600 mb-3 font-medium">{facility.contact}</p>
-                                )}
-                                
-                                <Button
-                                  className={`w-full ${colors.button} text-white py-2 text-sm font-semibold rounded-xl shadow-lg`}
-                                  onClick={() => getDirections(
-                                    parseFloat(facility.latitude), 
-                                    parseFloat(facility.longitude), 
-                                    facility.name
-                                  )}
-                                  data-testid={`facility-navigate-${index}`}
-                                >
-                                  <Navigation className="h-4 w-4 mr-2" />
-                                  Get Directions
-                                </Button>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
+                        <div key={index} className="p-2 bg-gray-50 rounded-xl">
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="font-medium text-xs text-gray-900">{ghat.name}</div>
+                            <Badge variant="outline" className={`${statusColor} text-xs`}>
+                              {occupancyRate.toFixed(0)}%
+                            </Badge>
+                          </div>
+                          <div className="text-xs text-gray-600 mb-1">
+                            {ghat.currentOccupancy}/{ghat.capacity} people
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1 mb-1">
+                            <div 
+                              className={`h-1 rounded-full ${
+                                occupancyRate > 80 ? 'bg-red-500' : 
+                                occupancyRate > 60 ? 'bg-orange-500' : 'bg-green-500'
+                              }`}
+                              style={{ width: `${occupancyRate}%` }}
+                            />
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            Type: {ghat.type} • {ghat.facilities.slice(0, 2).join(', ')}
+                          </div>
+                        </div>
                       );
                     })}
-                  </div>
-                  
-                  <div className="mt-6 pt-6 border-t border-gray-200">
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Emergency Contacts */}
+              <Card className="rounded-2xl border-0 shadow-lg bg-white">
+                <CardHeader className="pb-3 px-4 pt-4">
+                  <CardTitle className="text-lg font-bold flex items-center text-gray-900">
+                    <Phone className="h-5 w-5 mr-2 text-red-600" />
+                    Emergency Contacts
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">24/7 immediate assistance available</p>
+                </CardHeader>
+                <CardContent className="px-4 pb-4">
+                  <div className="grid grid-cols-2 gap-2">
                     <Button 
                       variant="outline" 
-                      className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 text-base font-semibold rounded-xl" 
-                      onClick={() => {
-                        toast({
-                          title: "🗺️ Showing All Facilities",
-                          description: "Check the interactive map above to see all available facilities with real-time status.",
-                        });
-                      }}
-                      data-testid="view-all-facilities"
+                      className="h-auto flex flex-col items-center p-3 border-blue-200 hover:bg-blue-50 hover:border-blue-300 rounded-xl"
+                      onClick={() => makeEmergencyCall("Police", "100")}
+                      data-testid="emergency-police"
+                      disabled={isCallingEmergency === "Police"}
                     >
-                      <MapPin className="h-5 w-5 mr-3" />
-                      View All on Map
+                      <div className="font-semibold text-blue-600 mb-1 text-sm">Police</div>
+                      <div className="text-xl font-bold text-gray-900">100</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {isCallingEmergency === "Police" ? "Calling..." : "Tap to call"}
+                      </div>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="h-auto flex flex-col items-center p-3 border-green-200 hover:bg-green-50 hover:border-green-300 rounded-xl"
+                      onClick={() => makeEmergencyCall("Medical", "108")}
+                      data-testid="emergency-medical"
+                      disabled={isCallingEmergency === "Medical"}
+                    >
+                      <div className="font-semibold text-green-600 mb-1 text-sm">Medical Emergency</div>
+                      <div className="text-xl font-bold text-gray-900">108</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {isCallingEmergency === "Medical" ? "Calling..." : "Tap to call"}
+                      </div>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="h-auto flex flex-col items-center p-3 border-orange-200 hover:bg-orange-50 hover:border-orange-300 rounded-xl"
+                      onClick={() => makeEmergencyCall("Fire Service", "101")}
+                      data-testid="emergency-fire"
+                      disabled={isCallingEmergency === "Fire Service"}
+                    >
+                      <div className="font-semibold text-orange-600 mb-1 text-sm">Fire Service</div>
+                      <div className="text-xl font-bold text-gray-900">101</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {isCallingEmergency === "Fire Service" ? "Calling..." : "Tap to call"}
+                      </div>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="h-auto flex flex-col items-center p-3 border-purple-200 hover:bg-purple-50 hover:border-purple-300 rounded-xl"
+                      onClick={() => makeEmergencyCall("Tourist Helpline", "1363")}
+                      data-testid="emergency-tourist"
+                      disabled={isCallingEmergency === "Tourist Helpline"}
+                    >
+                      <div className="font-semibold text-purple-600 mb-1 text-sm">Tourist Helpline</div>
+                      <div className="text-xl font-bold text-gray-900">1363</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {isCallingEmergency === "Tourist Helpline" ? "Calling..." : "Tap to call"}
+                      </div>
                     </Button>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Bottom Row - Nearby Facilities and Quick Actions Side by Side */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                {/* Nearby Facilities */}
+                <Card className="rounded-2xl border-0 shadow-lg bg-white">
+                  <CardHeader className="pb-3 px-4 pt-4">
+                    <CardTitle className="text-lg font-bold flex items-center text-gray-900">
+                      <MapPin className="h-5 w-5 mr-2 text-blue-600" />
+                      Nearby Facilities
+                    </CardTitle>
+                    <p className="text-sm text-gray-600 mt-1">Essential services within walking distance</p>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4">
+                    <div className="space-y-2">
+                      {facilityData.slice(0, 5).map((facility, index) => {
+                        const facilityColors = {
+                          toilet: { icon: 'text-blue-600', button: 'border-blue-200 hover:bg-blue-50' },
+                          medical: { icon: 'text-red-600', button: 'border-red-200 hover:bg-red-50' },
+                          shop: { icon: 'text-green-600', button: 'border-green-200 hover:bg-green-50' },
+                          food: { icon: 'text-orange-600', button: 'border-orange-200 hover:bg-orange-50' },
+                          security: { icon: 'text-purple-600', button: 'border-purple-200 hover:bg-purple-50' },
+                          emergency: { icon: 'text-red-600', button: 'border-red-200 hover:bg-red-50' },
+                          arrival: { icon: 'text-gray-600', button: 'border-gray-200 hover:bg-gray-50' },
+                          parking: { icon: 'text-yellow-600', button: 'border-yellow-200 hover:bg-yellow-50' }
+                        };
+                        const colors = facilityColors[facility.type as keyof typeof facilityColors] || facilityColors.shop;
+                        
+                        return (
+                          <div key={index} className={`flex items-center justify-between p-2 ${colors.button} border rounded-xl transition-colors`}>
+                            <div className="flex items-center space-x-3">
+                              <div className={`text-lg ${colors.icon}`}>{getFacilityIcon(facility.type)}</div>
+                              <div>
+                                <div className="font-medium text-sm text-gray-900">{facility.name}</div>
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                  <span className="text-xs text-gray-600">{facility.status}</span>
+                                  {facility.capacity && (
+                                    <span className="text-xs text-gray-500">• {facility.capacity}</span>
+                                  )}
+                                  {facility.services && (
+                                    <span className="text-xs text-gray-500">• {facility.services}</span>
+                                  )}
+                                  {facility.items && (
+                                    <span className="text-xs text-gray-500">• {facility.items}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 w-8 p-0"
+                              onClick={() => getDirections(
+                                parseFloat(facility.latitude), 
+                                parseFloat(facility.longitude), 
+                                facility.name
+                              )}
+                              data-testid={`facility-navigate-${index}`}
+                            >
+                              <Navigation className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    <div className="mt-3 pt-3 border-t border-gray-200">
+                      <Button 
+                        variant="outline" 
+                        className="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 py-2 text-sm font-medium rounded-xl" 
+                        onClick={() => {
+                          toast({
+                            title: "🗺️ Showing All Facilities",
+                            description: "Check the interactive map above to see all available facilities with real-time status.",
+                          });
+                        }}
+                        data-testid="view-all-facilities"
+                      >
+                        <MapPin className="h-4 w-4 mr-2" />
+                        View All on Map
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
 
               {/* Quick Actions */}
               <Card>
