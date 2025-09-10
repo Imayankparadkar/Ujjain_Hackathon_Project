@@ -751,7 +751,7 @@ export default function MapPage() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Arrival Method</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Select how you're arriving to get personalized route guidance and real-time navigation assistance</p>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Select how you're arriving to get personalized route guidance and real-time navigation assistance</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden cursor-pointer" onClick={() => generateCustomRoute("railway")}>
@@ -924,18 +924,18 @@ export default function MapPage() {
       )}
 
       {/* Shipra Ghat Bathing Areas */}
-      <section className="py-6 bg-card border-b">
-        <div className="container mx-auto px-4">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <MapPin className="h-5 w-5 mr-2" />
-            {t.bathingAreas}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Sacred Bathing Ghats</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Real-time crowd monitoring and facility information for all major bathing areas</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {shipraBathingZones.map((zone) => {
               const occupancyRate = (zone.currentOccupancy / zone.capacity) * 100;
               return (
-                <Card key={zone.id} className="overflow-hidden">
-                  <CardContent className="p-4">
+                <Card key={zone.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                  <CardContent className="p-8">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-semibold">{zone.name}</h3>
                       <Badge variant={occupancyRate > 80 ? 'destructive' : occupancyRate > 60 ? 'secondary' : 'default'}>
@@ -991,10 +991,13 @@ export default function MapPage() {
       </section>
 
       {/* Route Selection */}
-      <section className="py-6 bg-card border-b">
-        <div className="container mx-auto px-4">
-          <h2 className="text-xl font-semibold mb-4">{t.selectRoute}</h2>
-          <div className="flex flex-wrap gap-3">
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Sacred Route</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Select the most suitable spiritual path based on your needs and preferences</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6 mb-12">
             {routes.map((route) => (
               <Button
                 key={route.id}
@@ -1012,40 +1015,42 @@ export default function MapPage() {
             ))}
           </div>
           {selectedRoute && (
-            <div className="mt-4 p-4 bg-muted rounded-lg">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span className="text-sm">
-                    Est. Time: {routes.find(r => r.id === selectedRoute)?.estimatedTime}
-                  </span>
+            <Card className="max-w-4xl mx-auto rounded-3xl border-0 shadow-2xl">
+              <CardContent className="p-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-4 w-4 text-primary" />
+                    <span className="text-sm">
+                      Est. Time: {routes.find(r => r.id === selectedRoute)?.estimatedTime}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-4 w-4 text-accent" />
+                    <span className="text-sm">
+                      Crowd: {routes.find(r => r.id === selectedRoute)?.crowdLevel}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Navigation className="h-4 w-4 text-green-600" />
+                    <span className="text-sm">Optimized Route</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4 text-accent" />
-                  <span className="text-sm">
-                    Crowd: {routes.find(r => r.id === selectedRoute)?.crowdLevel}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Navigation className="h-4 w-4 text-green-600" />
-                  <span className="text-sm">Optimized Route</span>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground mt-2">
-                {routes.find(r => r.id === selectedRoute)?.description}
-              </p>
-            </div>
+                <p className="text-lg text-gray-600 mt-6 text-center">
+                  {routes.find(r => r.id === selectedRoute)?.description}
+                </p>
+              </CardContent>
+            </Card>
           )}
         </div>
       </section>
 
       {/* Safety and Emergency Information */}
-      <section className="py-6 bg-destructive/10 border-b">
-        <div className="container mx-auto px-4">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Shield className="h-5 w-5 mr-2" />
-            {t.safety} & {t.emergency}
-          </h2>
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Safety & Emergency Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">24/7 emergency assistance and safety support for your pilgrimage</p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Emergency Services */}
