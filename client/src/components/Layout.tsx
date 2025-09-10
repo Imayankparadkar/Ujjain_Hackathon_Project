@@ -51,6 +51,19 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
               <Link href="/attractions" className={location === "/attractions" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-attractions">Attractions</Link>
               <Link href="/contact" className={location === "/contact" ? "text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" : "text-gray-700 hover:text-orange-600 transition-colors font-medium"} data-testid="nav-contact">Contact</Link>
               
+              {/* Notification Bell Icon beside Contact */}
+              {user && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative hover:bg-orange-50 p-2 rounded-full border border-gray-200"
+                  data-testid="notification-button"
+                >
+                  <Bell className="h-5 w-5 text-orange-600" />
+                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-semibold">3</span>
+                </Button>
+              )}
+              
               {user && (
                 <>
                   <div className="h-6 w-px bg-gray-300 mx-4"></div>
@@ -82,19 +95,6 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                 />
                 <span className="text-sm text-gray-600 hidden sm:inline font-medium">Elder</span>
               </div>
-
-              {/* Notification icon */}
-              {user && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="relative hover:bg-gray-100 p-3 rounded-full"
-                  data-testid="notification-button"
-                >
-                  <Bell className="h-5 w-5 text-gray-700" />
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-semibold">3</span>
-                </Button>
-              )}
 
               {/* User Controls */}
               {user ? (
