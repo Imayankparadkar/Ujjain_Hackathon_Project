@@ -529,7 +529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // If Gemini API key is available, use Gemini API
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
       
       const systemPrompt = `You are KumbhBot, the official AI assistant for SmartKumbh - a comprehensive AI-powered pilgrim navigation and safety platform for Kumbh Mela at Ujjain Mahakal Lok. You have complete knowledge about the entire website and can answer any question about its features, services, and information.
 
