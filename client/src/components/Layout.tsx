@@ -125,7 +125,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
                   </Button>
                 </Link>
               )}
-              <div className="fixed top-20 right-1 z-50">
+              <div className="fixed top-20 right-4 z-50">
                 <NotificationSystem />
               </div>
             </div>
