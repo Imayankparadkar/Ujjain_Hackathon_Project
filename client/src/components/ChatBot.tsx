@@ -161,7 +161,7 @@ export function ChatBot() {
 
         {/* Chat Popup */}
         {isOpen && (
-          <Card className="absolute bottom-16 right-0 w-80 shadow-xl" data-testid="chatbot-popup">
+          <Card className="absolute bottom-16 right-0 w-80 shadow-xl z-[60]" data-testid="chatbot-popup">
             <CardHeader className="bg-primary text-primary-foreground rounded-t-lg p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -171,12 +171,12 @@ export function ChatBot() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                    <SelectTrigger className="w-20 h-8 bg-primary-foreground text-primary text-xs">
+                    <SelectTrigger className="w-20 h-8 bg-primary-foreground text-primary text-xs z-[70]">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[70] bg-white border border-gray-200 shadow-lg">
                       {languages.map((lang) => (
-                        <SelectItem key={lang.code} value={lang.code}>
+                        <SelectItem key={lang.code} value={lang.code} className="hover:bg-gray-100 cursor-pointer">
                           {lang.name}
                         </SelectItem>
                       ))}
