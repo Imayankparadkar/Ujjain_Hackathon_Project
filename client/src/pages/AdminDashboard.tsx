@@ -557,6 +557,36 @@ export default function AdminDashboard() {
     });
   };
 
+  // Export Users function
+  const handleExportUsers = () => {
+    const csvData = [
+      ['SmartKumbh Users Export'],
+      ['Generated on:', new Date().toLocaleString()],
+      [''],
+      ['Email', 'Name', 'Phone', 'Status', 'Registration Date', 'Location'],
+      ...users.map(user => [
+        user.email || 'N/A',
+        user.name || 'N/A', 
+        user.phone || 'N/A',
+        user.isBlocked ? 'Blocked' : (user.isVerified ? 'Verified' : 'Pending'),
+        user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A',
+        user.location || 'N/A'
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `smartkumbh-users-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+
+    toast({
+      title: "Users Exported",
+      description: "User data has been exported successfully.",
+    });
+  };
+
   const activateEvacuationRoute = async () => {
     try {
       await api.activateEvacuationRoute();
@@ -608,7 +638,7 @@ export default function AdminDashboard() {
               <SelectItem value="blocked">Blocked</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" data-testid="export-users-button">
+          <Button variant="outline" onClick={handleExportUsers} data-testid="export-users-button">
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
@@ -900,10 +930,36 @@ export default function AdminDashboard() {
             <CardTitle>Cleanliness Heatmap</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 bg-gradient-to-r from-red-200 via-yellow-200 to-green-200 rounded-lg relative">
-              <div className="absolute inset-0 heatmap-overlay" />
-              <div className="absolute top-4 left-4 bg-card p-3 rounded border border-border">
-                <div className="text-sm font-bold mb-2">Cleanliness Ratings</div>
+            <div className="h-64 bg-gradient-to-r from-red-200 via-yellow-200 to-green-200 rounded-lg relative cursor-pointer group" onClick={() => toast({ title: "Interactive Heatmap", description: "Click on zones to view detailed cleanliness reports." })}>
+              <div className="absolute inset-0 heatmap-overlay opacity-60 group-hover:opacity-40 transition-opacity" />
+              
+              {/* Interactive hotspots */}
+              <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-red-500 rounded-full opacity-70 hover:opacity-100 cursor-pointer transform hover:scale-125 transition-all duration-200" 
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     toast({ title: "Har Ki Pauri Toilets", description: "Rating: 2.1/5 - Needs immediate attention. Staff assigned." });
+                   }} />
+              
+              <div className="absolute top-1/2 left-1/2 w-6 h-6 bg-yellow-500 rounded-full opacity-70 hover:opacity-100 cursor-pointer transform hover:scale-125 transition-all duration-200"
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     toast({ title: "Main Bathing Area", description: "Rating: 3.8/5 - Good condition. Regular monitoring." });
+                   }} />
+              
+              <div className="absolute top-1/3 right-1/4 w-5 h-5 bg-green-500 rounded-full opacity-70 hover:opacity-100 cursor-pointer transform hover:scale-125 transition-all duration-200"
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     toast({ title: "Help Center Area", description: "Rating: 4.7/5 - Excellent condition. Well maintained." });
+                   }} />
+              
+              <div className="absolute bottom-1/4 left-1/3 w-7 h-7 bg-red-400 rounded-full opacity-70 hover:opacity-100 cursor-pointer transform hover:scale-125 transition-all duration-200"
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     toast({ title: "Food Court Area", description: "Rating: 2.8/5 - Needs cleaning. Team notified." });
+                   }} />
+              
+              <div className="absolute top-4 left-4 bg-card p-3 rounded border border-border shadow-lg">
+                <div className="text-sm font-bold mb-2">Interactive Cleanliness Map</div>
                 <div className="space-y-1 text-xs">
                   <div className="flex items-center">
                     <div className="w-3 h-3 bg-green-500 rounded-full mr-2" />
@@ -917,6 +973,16 @@ export default function AdminDashboard() {
                     <div className="w-3 h-3 bg-red-500 rounded-full mr-2" />
                     Needs Attention (&lt;70%)
                   </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    Click zones for details
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute bottom-4 right-4 bg-card p-2 rounded border border-border shadow-lg">
+                <div className="text-xs font-medium">Live Updates</div>
+                <div className="text-xs text-muted-foreground">
+                  Last updated: {new Date().toLocaleTimeString()}
                 </div>
               </div>
             </div>
