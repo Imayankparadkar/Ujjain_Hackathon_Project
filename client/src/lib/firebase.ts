@@ -246,8 +246,11 @@ export const getDocuments = async (collectionName: string, conditions?: any) => 
     
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  } catch (error) {
-    console.error('Firebase getDocuments error:', error);
+  } catch (error: any) {
+    if (error?.code === 'resource-exhausted' || error?.message?.includes('Quota exceeded')) {
+      console.log('🏠 Firebase quota exceeded - switching to local storage for better performance');
+      useFirebase = false;
+    }
     return localDB.get(collectionName);
   }
 };
@@ -260,8 +263,11 @@ export const updateDocument = async (collectionName: string, docId: string, data
   try {
     const docRef = doc(db, collectionName, docId);
     return await updateDoc(docRef, data);
-  } catch (error) {
-    console.error('Firebase updateDocument error:', error);
+  } catch (error: any) {
+    if (error?.code === 'resource-exhausted' || error?.message?.includes('Quota exceeded')) {
+      console.log('🏠 Firebase quota exceeded - switching to local storage for better performance');
+      useFirebase = false;
+    }
     return localDB.update(collectionName, docId, data);
   }
 };
@@ -274,8 +280,11 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
   try {
     const docRef = doc(db, collectionName, docId);
     return await deleteDoc(docRef);
-  } catch (error) {
-    console.error('Firebase deleteDocument error:', error);
+  } catch (error: any) {
+    if (error?.code === 'resource-exhausted' || error?.message?.includes('Quota exceeded')) {
+      console.log('🏠 Firebase quota exceeded - switching to local storage for better performance');
+      useFirebase = false;
+    }
     return localDB.delete(collectionName, docId);
   }
 };
