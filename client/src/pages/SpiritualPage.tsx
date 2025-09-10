@@ -326,21 +326,24 @@ export default function SpiritualPage() {
       </section>
 
       {/* Live Streams Section */}
-      <section className="py-8 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold flex items-center">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-3"></div>
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+              <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse mr-4"></div>
               Live Streams
             </h2>
-            <Badge className="bg-red-500 text-white">
-              {liveStreams.reduce((total, stream) => total + stream.viewers, 0).toLocaleString()} watching
-            </Badge>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Experience sacred ceremonies in real-time from the comfort of your location</p>
+            <div className="mt-6">
+              <Badge className="bg-red-500 text-white px-6 py-3 text-lg font-semibold rounded-2xl">
+                🔴 {liveStreams.reduce((total, stream) => total + stream.viewers, 0).toLocaleString()} people watching live
+              </Badge>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {liveStreams.map((stream) => (
-              <Card key={stream.id} className="group hover:shadow-lg transition-all overflow-hidden">
+              <Card key={stream.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
                 <div className="relative">
                   <div
                     className="aspect-video bg-cover bg-center"
@@ -349,16 +352,14 @@ export default function SpiritualPage() {
                     <div className="absolute inset-0 bg-black/30" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Button 
-                        className="bg-white/20 backdrop-blur-md p-6 rounded-full hover:bg-white/30 group-hover:scale-110 transition-all"
+                        className="bg-white/20 backdrop-blur-md w-20 h-20 rounded-full hover:bg-white/30 group-hover:scale-110 transition-all duration-300 shadow-2xl"
                         data-testid={`play-stream-${stream.id}`}
                         onClick={() => {
-                          // Open live stream in new window
                           const streamUrl = stream.streamUrl || `https://www.youtube.com/watch?v=${stream.id}`;
                           const streamWindow = window.open(streamUrl, '_blank', 'width=1200,height=700,scrollbars=yes,resizable=yes');
                           if (streamWindow) {
                             streamWindow.focus();
                           } else {
-                            // Fallback if popup blocked
                             window.location.href = streamUrl;
                           }
                           toast({
@@ -367,25 +368,27 @@ export default function SpiritualPage() {
                           });
                         }}
                       >
-                        <Play className="text-white text-2xl" />
+                        <Play className="text-white h-8 w-8" />
                       </Button>
                     </div>
-                    <div className="absolute top-4 left-4 flex items-center space-x-2">
-                      <div className="bg-red-500 text-white px-2 py-1 rounded text-sm font-medium flex items-center">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-1"></div>
+                    <div className="absolute top-6 left-6 flex items-center space-x-2">
+                      <div className="bg-red-500 text-white px-4 py-2 rounded-2xl text-base font-bold flex items-center shadow-lg">
+                        <div className="w-3 h-3 bg-white rounded-full animate-pulse mr-2"></div>
                         LIVE
                       </div>
                     </div>
-                    <div className="absolute bottom-4 left-4 bg-black/60 text-white px-3 py-1 rounded">
-                      {stream.viewers.toLocaleString()} viewers
+                    <div className="absolute bottom-6 left-6 bg-black/70 text-white px-4 py-2 rounded-2xl font-semibold">
+                      👥 {stream.viewers.toLocaleString()} viewers
                     </div>
                   </div>
                 </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-1">{stream.title}</h3>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {stream.location}
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">{stream.title}</h3>
+                  <div className="flex items-center text-base text-gray-600">
+                    <div className="bg-orange-100 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                      <MapPin className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <span className="font-medium">{stream.location}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -396,48 +399,73 @@ export default function SpiritualPage() {
 
       {/* Live Events */}
       {liveEvents.length > 0 && (
-        <section className="py-8 bg-muted">
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-3"></div>
-              Happening Now
-            </h2>
+        <section className="py-24 bg-white">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+                <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse mr-4"></div>
+                Happening Now
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">Join spiritual ceremonies and rituals currently taking place</p>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
               {liveEvents.map((event) => (
-                <Card key={event.id} className="group hover:shadow-lg transition-all border-l-4 border-l-green-500">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getCategoryIcon(event.category || 'puja')}
-                        <CardTitle className="text-lg">{event.name}</CardTitle>
+                <Card key={event.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                  <CardHeader className="p-8">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center">
+                          {getCategoryIcon(event.category || 'puja')}
+                        </div>
+                        <div>
+                          <CardTitle className="text-2xl text-gray-800 mb-1">{event.name}</CardTitle>
+                          <Badge className="bg-green-100 text-green-800 border-green-200 px-3 py-1 rounded-2xl text-sm font-semibold">
+                            🔴 LIVE NOW
+                          </Badge>
+                        </div>
                       </div>
-                      <Badge className="bg-green-100 text-green-800 border-green-200">
-                        LIVE
-                      </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4 text-primary" />
-                        <span>{event.location}</span>
+                  
+                  <CardContent className="p-8 pt-0 space-y-6">
+                    <p className="text-base text-gray-600 leading-relaxed">{event.description}</p>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-orange-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <MapPin className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Location</div>
+                          <div className="text-base text-gray-800 font-semibold">{event.location}</div>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-4 w-4 text-accent" />
-                        <span>{(event.attendees || 0).toLocaleString()} attending</span>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <Users className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Attending</div>
+                          <div className="text-base text-gray-800 font-semibold">{(event.attendees || 0).toLocaleString()} people</div>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span>{formatDuration(event.duration)}</span>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-purple-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <Clock className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Duration</div>
+                          <div className="text-base text-gray-800 font-semibold">{formatDuration(event.duration)}</div>
+                        </div>
                       </div>
                     </div>
 
-                    <p className="text-sm text-muted-foreground">{event.description}</p>
-
-                    <div className="space-y-2 pt-2">
+                    <div className="pt-6">
                       <Button 
-                        className="w-full bg-green-600 text-white hover:bg-green-700" 
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
                         data-testid={`watch-live-${event.id}`}
                         onClick={() => {
                           const streamUrl = event.liveStreamUrl || `https://www.youtube.com/watch?v=${event.id}`;
@@ -453,8 +481,8 @@ export default function SpiritualPage() {
                           });
                         }}
                       >
-                        <Play className="h-4 w-4 mr-2" />
-                        Watch Live
+                        <Play className="h-5 w-5 mr-3" />
+                        Watch Live Event
                       </Button>
                     </div>
                   </CardContent>
@@ -466,31 +494,43 @@ export default function SpiritualPage() {
       )}
 
       {/* Upcoming Events */}
-      <section className="py-8 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Upcoming Events & Rituals</h2>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="flex items-center space-x-1"
-                data-testid="list-view-toggle"
-              >
-                <List className="h-4 w-4" />
-                <span>List</span>
-              </Button>
-              <Button
-                variant={viewMode === 'calendar' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('calendar')}
-                className="flex items-center space-x-1"
-                data-testid="calendar-view-toggle"
-              >
-                <CalendarIcon className="h-4 w-4" />
-                <span>Calendar</span>
-              </Button>
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Upcoming Events & Rituals</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Discover sacred ceremonies and spiritual gatherings planned for your journey</p>
+          </div>
+          
+          <div className="flex justify-center mb-12">
+            <div className="bg-white rounded-3xl p-3 shadow-lg">
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  onClick={() => setViewMode('list')}
+                  className={`px-6 py-3 rounded-2xl font-semibold transition-all ${
+                    viewMode === 'list' 
+                      ? 'bg-orange-600 text-white shadow-lg' 
+                      : 'bg-transparent text-gray-600 hover:bg-orange-50'
+                  }`}
+                  data-testid="list-view-toggle"
+                >
+                  <List className="h-5 w-5 mr-2" />
+                  List View
+                </Button>
+                <Button
+                  variant={viewMode === 'calendar' ? 'default' : 'outline'}
+                  onClick={() => setViewMode('calendar')}
+                  className={`px-6 py-3 rounded-2xl font-semibold transition-all ${
+                    viewMode === 'calendar' 
+                      ? 'bg-orange-600 text-white shadow-lg' 
+                      : 'bg-transparent text-gray-600 hover:bg-orange-50'
+                  }`}
+                  data-testid="calendar-view-toggle"
+                >
+                  <CalendarIcon className="h-5 w-5 mr-2" />
+                  Calendar View
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -656,87 +696,118 @@ export default function SpiritualPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
               {upcomingEvents.map((event) => (
-              <Card key={event.id} className="group hover:shadow-lg transition-all">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg mb-2">{event.name}</CardTitle>
-                      <Badge className={getCategoryColor(event.category || 'puja')}>
-                        <div className="flex items-center space-x-1">
+                <Card key={event.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                  <CardHeader className="p-8">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          event.category === 'aarti' ? 'bg-orange-100' :
+                          event.category === 'puja' ? 'bg-red-100' :
+                          event.category === 'snan' ? 'bg-blue-100' :
+                          event.category === 'procession' ? 'bg-purple-100' :
+                          'bg-green-100'
+                        }`}>
                           {getCategoryIcon(event.category || 'puja')}
-                          <span className="capitalize">{event.category || 'puja'}</span>
                         </div>
-                      </Badge>
+                        <div>
+                          <CardTitle className="text-2xl text-gray-800 mb-2">{event.name}</CardTitle>
+                          <Badge className={`${getCategoryColor(event.category || 'puja')} px-3 py-1 rounded-2xl text-sm font-semibold`}>
+                            <div className="flex items-center space-x-2">
+                              {getCategoryIcon(event.category || 'puja')}
+                              <span className="capitalize">{event.category || 'puja'}</span>
+                            </div>
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-primary" />
-                      <span>{formatDateTime(event.dateTime)}</span>
+                  </CardHeader>
+                  
+                  <CardContent className="p-8 pt-0 space-y-6">
+                    <p className="text-base text-gray-600 leading-relaxed">{event.description}</p>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <CalendarIcon className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Date & Time</div>
+                          <div className="text-base text-gray-800 font-semibold">{formatDateTime(event.dateTime)}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <Clock className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Time until event</div>
+                          <div className="text-base text-gray-800 font-semibold">{getTimeUntilEvent(event.dateTime)}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-orange-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <MapPin className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Location</div>
+                          <div className="text-base text-gray-800 font-semibold">{event.location}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="bg-purple-100 w-10 h-10 rounded-full flex items-center justify-center">
+                          <Users className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500 font-medium">Expected attendees</div>
+                          <div className="text-base text-gray-800 font-semibold">{(event.attendees || 0).toLocaleString()} people</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Clock className="h-4 w-4 text-accent" />
-                      <span>{getTimeUntilEvent(event.dateTime)}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span>{event.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Users className="h-4 w-4 text-green-600" />
-                      <span>{(event.attendees || 0).toLocaleString()} expected</span>
-                    </div>
-                  </div>
 
-                  <p className="text-sm text-muted-foreground">{event.description}</p>
-
-                  <div className="space-y-2 pt-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button 
-                            variant={reminderEvents.has(event.id) ? "default" : "outline"}
-                            className={`flex-1 transition-colors ${
-                              reminderEvents.has(event.id) 
-                                ? "bg-orange-500 text-white hover:bg-orange-600" 
-                                : "hover:bg-orange-500 hover:text-white border-orange-300"
-                            }`}
-                            data-testid={`set-reminder-${event.id}`}
-                            onClick={() => setEventReminder(event)}
-                          >
-                            <Bell className={`h-4 w-4 mr-1 ${reminderEvents.has(event.id) ? 'animate-pulse' : ''}`} />
-                            {reminderEvents.has(event.id) ? 'Reminder Set' : 'Set Reminder'}
-                          </Button>
-                        </DialogTrigger>
-                      </Dialog>
+                    <div className="pt-6 space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button 
+                          variant={reminderEvents.has(event.id) ? "default" : "outline"}
+                          className={`py-3 rounded-2xl font-semibold transition-all ${
+                            reminderEvents.has(event.id) 
+                              ? "bg-orange-600 text-white hover:bg-orange-700 shadow-lg" 
+                              : "border-2 border-orange-600 text-orange-600 hover:bg-orange-50"
+                          }`}
+                          data-testid={`set-reminder-${event.id}`}
+                          onClick={() => setEventReminder(event)}
+                        >
+                          <Bell className={`h-5 w-5 mr-2 ${reminderEvents.has(event.id) ? 'animate-pulse' : ''}`} />
+                          {reminderEvents.has(event.id) ? 'Reminder Set' : 'Set Reminder'}
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 rounded-2xl font-semibold"
+                          onClick={() => {
+                            const coords = event.location.includes('Mahakaleshwar') ? '23.1828,75.7681' : '23.1765,75.7661';
+                            window.open(`https://www.openstreetmap.org/directions?from=&to=${coords}`, '_blank');
+                          }}
+                        >
+                          <MapPin className="h-5 w-5 mr-2" />
+                          Directions
+                        </Button>
+                      </div>
                       <Button 
-                        variant="outline" 
-                        className="flex-1 hover:bg-orange-100 hover:text-orange-800 border-orange-300 transition-colors"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-semibold rounded-2xl shadow-lg"
                         onClick={() => {
-                          const coords = event.location.includes('Mahakaleshwar') ? '23.1828,75.7681' : '23.1765,75.7661';
-                          window.open(`https://www.openstreetmap.org/directions?from=&to=${coords}`, '_blank');
+                          toast({
+                            title: "🎉 Event Joined!",
+                            description: `You've successfully joined ${event.name}. You'll receive updates about this event.`,
+                          });
                         }}
                       >
-                        <MapPin className="h-4 w-4 mr-1" />
-                        Directions
+                        <Users className="h-5 w-5 mr-3" />
+                        Join Event ({(event.attendees || 0).toLocaleString()}+ attending)
                       </Button>
-                    </div>
-                    <Button 
-                      className="w-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
-                      onClick={() => {
-                        toast({
-                          title: "🎉 Event Joined!",
-                          description: `You've successfully joined ${event.name}. You'll receive updates about this event.`,
-                        });
-                      }}
-                    >
-                      <Users className="h-4 w-4 mr-2" />
-                      Join Event ({(event.attendees || 0).toLocaleString()}+)
-                    </Button>
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button 
