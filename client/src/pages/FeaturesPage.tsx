@@ -8,108 +8,108 @@ export default function FeaturesPage() {
   const features = [
     {
       id: "navigation",
-      icon: <Route className="h-12 w-12 text-primary" />,
+      icon: <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center"><Route className="h-8 w-8 text-blue-600" /></div>,
       title: "Smart Navigation",
-      description: "AI-powered route optimization with real-time crowd density analysis",
+      description: "AI-powered route optimization with real-time crowd density analysis for optimal pilgrimage experience",
       details: [
-        "Real-time crowd density heatmaps",
+        "Real-time crowd density heatmaps with 3D visualization",
         "Optimal route suggestions based on current conditions",
-        "Emergency evacuation routes",
+        "Emergency evacuation routes with GPS integration",
         "Multi-path options for different demographics",
         "Landmark-based navigation for elderly pilgrims"
       ]
     },
     {
       id: "safety",
-      icon: <Shield className="h-12 w-12 text-destructive" />,
+      icon: <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center"><Shield className="h-8 w-8 text-red-600" /></div>,
       title: "Advanced Safety System",
-      description: "24/7 monitoring and emergency response infrastructure",
+      description: "24/7 monitoring and emergency response infrastructure with intelligent threat detection",
       details: [
-        "Real-time safety alerts and notifications",
+        "Real-time safety alerts and push notifications",
         "Emergency contact system with one-touch calling",
-        "Lost & found digital registry",
+        "Lost & found digital registry with AI matching",
         "Medical emergency response coordination",
-        "Police and security integration"
+        "Police and security integration platform"
       ]
     },
     {
       id: "sanitation",
-      icon: <Leaf className="h-12 w-12 text-green-600" />,
+      icon: <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center"><Leaf className="h-8 w-8 text-green-600" /></div>,
       title: "Community Cleanliness",
-      description: "Crowd-sourced sanitation monitoring and feedback system",
+      description: "Crowd-sourced sanitation monitoring and feedback system for maintaining hygiene standards",
       details: [
-        "Real-time cleanliness heatmaps",
-        "Community-driven feedback system",
-        "Toilet and facility locator",
-        "Sanitation staff task management",
-        "Water quality monitoring"
+        "Real-time cleanliness heatmaps and reports",
+        "Community-driven feedback system with ratings",
+        "Toilet and facility locator with availability",
+        "Sanitation staff task management system",
+        "Water quality monitoring and alerts"
       ]
     },
     {
       id: "digital",
-      icon: <Microchip className="h-12 w-12 text-accent" />,
+      icon: <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center"><Microchip className="h-8 w-8 text-purple-600" /></div>,
       title: "Digital Ecosystem",
-      description: "Integrated digital services for seamless pilgrim experience",
+      description: "Integrated digital services for seamless pilgrim experience with modern technology",
       details: [
-        "QR-based digital identity system",
-        "Multilingual AI chatbot support",
+        "QR-based digital identity system with security",
+        "Multilingual AI chatbot support (12 languages)",
         "Spiritual event scheduling and reminders",
-        "Government service integration",
-        "Offline SMS-based assistance"
+        "Government service integration portal",
+        "Offline SMS-based assistance for rural areas"
       ]
     },
     {
       id: "qr",
-      icon: <QrCode className="h-12 w-12 text-primary" />,
+      icon: <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center"><QrCode className="h-8 w-8 text-orange-600" /></div>,
       title: "Digital Identity",
-      description: "QR-based identification for enhanced safety and services",
+      description: "QR-based identification for enhanced safety and personalized services throughout your journey",
       details: [
-        "Unique QR ID for each pilgrim",
+        "Unique QR ID for each pilgrim with encryption",
         "Emergency contact information storage",
-        "Medical information and allergies",
-        "Preferred language settings",
-        "Quick identification in emergencies"
+        "Medical information and allergy alerts",
+        "Preferred language settings and accessibility",
+        "Quick identification in emergencies with photo"
       ]
     },
     {
       id: "communication",
-      icon: <MessageSquare className="h-12 w-12 text-accent" />,
+      icon: <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center"><MessageSquare className="h-8 w-8 text-indigo-600" /></div>,
       title: "Multi-Channel Communication",
-      description: "Comprehensive communication system for all pilgrims",
+      description: "Comprehensive communication system for all pilgrims with advanced AI assistance",
       details: [
-        "AI-powered multilingual chatbot (KumbhBot)",
-        "Voice-based query support",
-        "SMS-based offline assistance",
-        "Emergency broadcast system",
-        "Real-time updates and notifications"
+        "AI-powered multilingual chatbot (KumbhBot) with 12 languages",
+        "Voice-based query support with speech recognition",
+        "SMS-based offline assistance for rural connectivity",
+        "Emergency broadcast system with geo-targeting",
+        "Real-time updates and push notifications"
       ]
     }
   ];
 
   const stats = [
-    { icon: <Users className="h-8 w-8 text-primary" />, value: "2.5M+", label: "Pilgrims Served" },
-    { icon: <Globe className="h-8 w-8 text-accent" />, value: "12", label: "Languages Supported" },
-    { icon: <AlertTriangle className="h-8 w-8 text-destructive" />, value: "99.9%", label: "Safety Response Rate" },
-    { icon: <Zap className="h-8 w-8 text-green-600" />, value: "24/7", label: "Real-time Monitoring" }
+    { icon: <div className="bg-blue-100 p-4 rounded-full"><Users className="h-8 w-8 text-blue-600" /></div>, value: "2.5M+", label: "Pilgrims Served" },
+    { icon: <div className="bg-green-100 p-4 rounded-full"><Globe className="h-8 w-8 text-green-600" /></div>, value: "12", label: "Languages Supported" },
+    { icon: <div className="bg-red-100 p-4 rounded-full"><AlertTriangle className="h-8 w-8 text-red-600" /></div>, value: "99.9%", label: "Safety Response Rate" },
+    { icon: <div className="bg-purple-100 p-4 rounded-full"><Zap className="h-8 w-8 text-purple-600" /></div>, value: "24/7", label: "Real-time Monitoring" }
   ];
 
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
             SmartKumbh Features
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
             Revolutionary AI-powered solutions for the world's largest spiritual gathering
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto mt-16">
             {stats.map((stat, index) => (
-              <div key={index} className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-                <div className="flex items-center justify-center mb-2">{stat.icon}</div>
-                <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                <div className="text-sm text-primary-foreground/80">{stat.label}</div>
+              <div key={index} className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+                <div className="flex items-center justify-center mb-4">{stat.icon}</div>
+                <div className="text-3xl font-bold mb-2">{stat.value}</div>
+                <div className="text-lg text-white/80 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -117,28 +117,32 @@ export default function FeaturesPage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Comprehensive Features</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Discover the advanced technology and intelligent systems that make SmartKumbh the ultimate pilgrimage companion</p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {features.map((feature) => (
-              <Card key={feature.id} className="group hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-muted p-4 rounded-full group-hover:scale-110 transition-transform">
+              <Card key={feature.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="p-10">
+                  <div className="flex items-start space-x-6">
+                    <div className="group-hover:scale-110 transition-transform duration-300">
                       {feature.icon}
                     </div>
-                    <div>
-                      <CardTitle className="text-2xl">{feature.title}</CardTitle>
-                      <p className="text-muted-foreground mt-2">{feature.description}</p>
+                    <div className="flex-1">
+                      <CardTitle className="text-3xl text-gray-800 mb-4">{feature.title}</CardTitle>
+                      <p className="text-lg text-gray-600 leading-relaxed">{feature.description}</p>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
+                <CardContent className="p-10 pt-0">
+                  <ul className="space-y-4">
                     {feature.details.map((detail, index) => (
-                      <li key={index} className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                        <span className="text-sm text-muted-foreground">{detail}</span>
+                      <li key={index} className="flex items-start space-x-4">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full flex-shrink-0 mt-2"></div>
+                        <span className="text-base text-gray-700 leading-relaxed">{detail}</span>
                       </li>
                     ))}
                   </ul>
@@ -150,22 +154,22 @@ export default function FeaturesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-muted">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Experience SmartKumbh?</h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join millions of pilgrims who trust SmartKumbh for a safe, spiritual, and seamless journey
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-6 text-gray-900">Ready to Experience SmartKumbh?</h2>
+          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Join millions of pilgrims who trust SmartKumbh for a safe, spiritual, and seamless journey to enlightenment
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/login">
-              <Button className="bg-primary text-primary-foreground hover:bg-secondary" data-testid="get-started-button">
-                <Navigation className="mr-2 h-5 w-5" />
+              <Button className="bg-orange-600 text-white hover:bg-orange-700 px-8 py-4 text-xl font-semibold rounded-2xl shadow-lg" data-testid="get-started-button">
+                <Navigation className="mr-3 h-6 w-6" />
                 Get Started
               </Button>
             </Link>
             <Link href="/map">
-              <Button variant="outline" data-testid="explore-map-button">
-                <MapPin className="mr-2 h-5 w-5" />
+              <Button variant="outline" className="border-2 border-orange-600 text-orange-600 hover:bg-orange-50 px-8 py-4 text-xl font-semibold rounded-2xl" data-testid="explore-map-button">
+                <MapPin className="mr-3 h-6 w-6" />
                 Explore Interactive Map
               </Button>
             </Link>
