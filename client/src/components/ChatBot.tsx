@@ -170,18 +170,20 @@ export function ChatBot() {
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                    <SelectTrigger className="w-20 h-8 bg-primary-foreground text-primary text-xs z-[70]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="z-[70] bg-white border border-gray-200 shadow-lg">
-                      {languages.map((lang) => (
-                        <SelectItem key={lang.code} value={lang.code} className="hover:bg-gray-100 cursor-pointer">
-                          {lang.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="chatbot-language-select">
+                    <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                      <SelectTrigger className="w-20 h-8 bg-primary-foreground text-primary text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-gray-200 shadow-lg min-w-[120px]">
+                        {languages.map((lang) => (
+                          <SelectItem key={lang.code} value={lang.code} className="hover:bg-gray-100 cursor-pointer px-3 py-2">
+                            {lang.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
