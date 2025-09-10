@@ -271,11 +271,57 @@ export default function SpiritualPage() {
 
   return (
     <Layout>
-      {/* Header */}
-      <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Spiritual Engagement</h1>
-          <p className="text-orange-50">Live streams, events, and spiritual experiences</p>
+      {/* Hero Section */}
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">Spiritual Events & Live Streams</h1>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
+            Experience divine ceremonies and spiritual gatherings in real-time during your sacred journey
+          </p>
+          
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto mt-16">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{events?.length || 0}</div>
+              <div className="text-lg text-white/80 font-medium">Live Events</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{liveStreams.filter(s => s.isLive).length}</div>
+              <div className="text-lg text-white/80 font-medium">Live Streams</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{reminderEvents.size}</div>
+              <div className="text-lg text-white/80 font-medium">Your Reminders</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">24/7</div>
+              <div className="text-lg text-white/80 font-medium">Live Coverage</div>
+            </div>
+          </div>
+          
+          {/* Quick Actions */}
+          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              onClick={() => setViewMode('list')}
+              variant={viewMode === 'list' ? 'secondary' : 'outline'}
+              size="lg"
+              className={viewMode === 'list' ? "bg-white text-orange-600" : "border-white text-white hover:bg-white hover:text-orange-600"}
+              data-testid="view-list"
+            >
+              <List className="h-5 w-5 mr-2" />
+              List View
+            </Button>
+            <Button 
+              onClick={() => setViewMode('calendar')}
+              variant={viewMode === 'calendar' ? 'secondary' : 'outline'}
+              size="lg"
+              className={viewMode === 'calendar' ? "bg-white text-orange-600" : "border-white text-white hover:bg-white hover:text-orange-600"}
+              data-testid="view-calendar"
+            >
+              <Grid className="h-5 w-5 mr-2" />
+              Calendar View
+            </Button>
+          </div>
         </div>
       </section>
 

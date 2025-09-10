@@ -691,30 +691,52 @@ export default function MapPage() {
 
   return (
     <Layout>
-      {/* Header */}
-      <section className="py-8 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Interactive Map - Ujjain Mahakal Lok</h1>
-          <p className="text-primary-foreground/90">Real-time crowd monitoring and navigation assistance</p>
+      {/* Hero Section */}
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">Interactive Smart Map</h1>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
+            AI-powered real-time crowd monitoring and navigation assistance for your sacred journey
+          </p>
+          
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto mt-16">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{crowdData.length}</div>
+              <div className="text-lg text-white/80 font-medium">Live Areas</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{facilityData.length}</div>
+              <div className="text-lg text-white/80 font-medium">Facilities</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{ghatData.length}</div>
+              <div className="text-lg text-white/80 font-medium">Bathing Ghats</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">24/7</div>
+              <div className="text-lg text-white/80 font-medium">Monitoring</div>
+            </div>
+          </div>
           
           {/* Language Selector */}
-          <div className="mt-4 flex items-center space-x-4">
-            <Languages className="h-5 w-5" />
-            <div className="flex space-x-2">
+          <div className="mt-12 flex items-center justify-center space-x-4">
+            <Languages className="h-6 w-6" />
+            <div className="flex space-x-4">
               <Button
                 variant={selectedLanguage === "en" ? "secondary" : "outline"}
-                size="sm"
+                size="lg"
                 onClick={() => setSelectedLanguage("en")}
-                className="text-primary-foreground border-primary-foreground/20"
+                className={selectedLanguage === "en" ? "bg-white text-orange-600" : "border-white text-white hover:bg-white hover:text-orange-600"}
                 data-testid="lang-en"
               >
                 English
               </Button>
               <Button
                 variant={selectedLanguage === "hi" ? "secondary" : "outline"}
-                size="sm"
+                size="lg"
                 onClick={() => setSelectedLanguage("hi")}
-                className="text-primary-foreground border-primary-foreground/20"
+                className={selectedLanguage === "hi" ? "bg-white text-orange-600" : "border-white text-white hover:bg-white hover:text-orange-600"}
                 data-testid="lang-hi"
               >
                 हिंदी
@@ -725,49 +747,81 @@ export default function MapPage() {
       </section>
 
       {/* Arrival Method Selection */}
-      <section className="py-6 bg-card border-b">
-        <div className="container mx-auto px-4">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Target className="h-5 w-5 mr-2" />
-            {t.selectArrival}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Button
-              variant={arrivalMethod === "railway" ? "default" : "outline"}
-              onClick={() => generateCustomRoute("railway")}
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              data-testid="arrival-railway"
-            >
-              <Train className="h-8 w-8" />
-              <div className="text-center">
-                <div className="font-semibold">{t.railway}</div>
-                <div className="text-sm opacity-75">25 min walk</div>
-              </div>
-            </Button>
-            <Button
-              variant={arrivalMethod === "bus" ? "default" : "outline"}
-              onClick={() => generateCustomRoute("bus")}
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              data-testid="arrival-bus"
-            >
-              <Bus className="h-8 w-8" />
-              <div className="text-center">
-                <div className="font-semibold">{t.bus}</div>
-                <div className="text-sm opacity-75">30 min walk</div>
-              </div>
-            </Button>
-            <Button
-              variant={arrivalMethod === "car" ? "default" : "outline"}
-              onClick={() => generateCustomRoute("car")}
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              data-testid="arrival-car"
-            >
-              <Car className="h-8 w-8" />
-              <div className="text-center">
-                <div className="font-semibold">{t.car}</div>
-                <div className="text-sm opacity-75">15 min from parking</div>
-              </div>
-            </Button>
+      <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Arrival Method</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Select how you're arriving to get personalized route guidance and real-time navigation assistance</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden cursor-pointer" onClick={() => generateCustomRoute("railway")}>
+              <CardContent className="p-10 text-center">
+                <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center">
+                    <Train className="h-8 w-8 text-blue-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">Railway Station</h3>
+                <p className="text-base text-gray-600 mb-6 leading-relaxed">Direct arrival from Ujjain Junction</p>
+                <div className="text-lg font-semibold text-orange-600">25 min walk</div>
+                <Button 
+                  className={`w-full mt-6 py-3 text-lg font-semibold rounded-2xl shadow-lg transition-all duration-300 ${
+                    arrivalMethod === "railway" 
+                      ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                      : "bg-gray-100 hover:bg-orange-600 hover:text-white text-gray-700"
+                  }`}
+                  data-testid="arrival-railway"
+                >
+                  Select Route
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden cursor-pointer" onClick={() => generateCustomRoute("bus")}>
+              <CardContent className="p-10 text-center">
+                <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center">
+                    <Bus className="h-8 w-8 text-green-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">Bus Terminal</h3>
+                <p className="text-base text-gray-600 mb-6 leading-relaxed">Arrive via state or private bus</p>
+                <div className="text-lg font-semibold text-orange-600">30 min walk</div>
+                <Button 
+                  className={`w-full mt-6 py-3 text-lg font-semibold rounded-2xl shadow-lg transition-all duration-300 ${
+                    arrivalMethod === "bus" 
+                      ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                      : "bg-gray-100 hover:bg-orange-600 hover:text-white text-gray-700"
+                  }`}
+                  data-testid="arrival-bus"
+                >
+                  Select Route
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden cursor-pointer" onClick={() => generateCustomRoute("car")}>
+              <CardContent className="p-10 text-center">
+                <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center">
+                    <Car className="h-8 w-8 text-purple-600" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">Private Vehicle</h3>
+                <p className="text-base text-gray-600 mb-6 leading-relaxed">Car, taxi, or private transport</p>
+                <div className="text-lg font-semibold text-orange-600">15 min from parking</div>
+                <Button 
+                  className={`w-full mt-6 py-3 text-lg font-semibold rounded-2xl shadow-lg transition-all duration-300 ${
+                    arrivalMethod === "car" 
+                      ? "bg-orange-600 hover:bg-orange-700 text-white" 
+                      : "bg-gray-100 hover:bg-orange-600 hover:text-white text-gray-700"
+                  }`}
+                  data-testid="arrival-car"
+                >
+                  Select Route
+                </Button>
+              </CardContent>
+            </Card>
           </div>
 
           {arrivalMethod && (

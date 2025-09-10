@@ -687,18 +687,30 @@ export default function AttractionsPage() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="py-12 bg-gradient-to-r from-orange-500 to-red-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-4">Ujjain Maha Kumbh Attractions</h1>
-          <p className="text-xl mb-6">Discover the sacred and cultural treasures of Ujjain</p>
-          <div className="flex justify-center items-center space-x-4 text-sm">
-            <div className="flex items-center space-x-1">
-              <MapPin className="h-4 w-4" />
-              <span>{attractions.length} Attractions</span>
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">Sacred Attractions of Ujjain</h1>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
+            Discover ancient temples, holy ghats, and spiritual sites that have witnessed thousands of years of devotion
+          </p>
+          
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto mt-16">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{attractions.length}</div>
+              <div className="text-lg text-white/80 font-medium">Total Attractions</div>
             </div>
-            <div className="flex items-center space-x-1">
-              <Star className="h-4 w-4" />
-              <span>4.3 Average Rating</span>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{attractions.filter(a => a.category === 'temple').length}</div>
+              <div className="text-lg text-white/80 font-medium">Sacred Temples</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{attractions.filter(a => a.category === 'ghat').length}</div>
+              <div className="text-lg text-white/80 font-medium">Holy Ghats</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">4.3★</div>
+              <div className="text-lg text-white/80 font-medium">Average Rating</div>
             </div>
           </div>
         </div>

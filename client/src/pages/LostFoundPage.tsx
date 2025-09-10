@@ -381,11 +381,33 @@ export default function LostFoundPage() {
 
   return (
     <Layout>
-      {/* Header */}
-      <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Lost & Found Service</h1>
-          <p className="text-orange-100">Report and search for missing persons and items</p>
+      {/* Hero Section */}
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">Lost & Found Service</h1>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
+            Reuniting families and finding lost belongings through advanced AI-powered search and community support
+          </p>
+          
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto mt-16">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{cases.filter(c => c.status === 'active').length}</div>
+              <div className="text-lg text-white/80 font-medium">Active Cases</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{cases.filter(c => c.status === 'resolved').length}</div>
+              <div className="text-lg text-white/80 font-medium">Resolved Cases</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">{cases.filter(c => c.type === 'person').length}</div>
+              <div className="text-lg text-white/80 font-medium">Missing Persons</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
+              <div className="text-3xl font-bold mb-2">24/7</div>
+              <div className="text-lg text-white/80 font-medium">Support Available</div>
+            </div>
+          </div>
         </div>
       </section>
 
