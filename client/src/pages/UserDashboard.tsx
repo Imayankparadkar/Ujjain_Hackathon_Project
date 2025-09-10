@@ -28,6 +28,7 @@ export default function UserDashboard() {
     activeAlerts: 3,
     upcomingEvents: 5,
     crowdLevel: "High",
+    lostFoundCases: 2,
   });
 
   useEffect(() => {
@@ -130,7 +131,8 @@ export default function UserDashboard() {
   };
 
   const getCrowdStatusColor = (level: string) => {
-    switch (level) {
+    const normalizedLevel = level.toLowerCase();
+    switch (normalizedLevel) {
       case 'critical': return 'text-red-600 bg-red-50';
       case 'high': return 'text-orange-600 bg-orange-50';
       case 'medium': return 'text-yellow-600 bg-yellow-50';
@@ -149,175 +151,196 @@ export default function UserDashboard() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            🕉️ Namaste, {userProfile?.name || user?.email}!
+      {/* Header */}
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+            🕉️ Namaste, {userProfile?.name || user?.email?.split('@')[0]}!
           </h1>
-          <p className="text-gray-600">Welcome to your SmartKumbh pilgrim dashboard - Your spiritual journey companion</p>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">Your personalized SmartKumbh dashboard - Experience your spiritual journey with live insights</p>
         </div>
+      </section>
 
-        {/* Real-time Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-blue-600 font-medium">Live Visitors</p>
-                  <p className="text-2xl font-bold text-blue-700">{realTimeStats.totalVisitors.toLocaleString()}</p>
-                  <div className="flex items-center mt-1">
-                    <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
-                    <span className="text-xs text-green-600">+2.4% today</span>
-                  </div>
-                </div>
-                <Users className="h-8 w-8 text-blue-500" />
+      {/* Real-time Stats */}
+      <section className="py-16 bg-gray-50 -mt-12 relative z-10">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Live Dashboard Statistics</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real-time updates from your SmartKumbh experience and the sacred grounds</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+          <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
+            <CardContent className="p-0">
+              <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="h-10 w-10 text-blue-600" />
+              </div>
+              <div className="text-4xl font-bold text-blue-600 mb-4">{realTimeStats.totalVisitors.toLocaleString()}</div>
+              <div className="text-lg text-gray-700 font-semibold mb-2">Live Visitors</div>
+              <div className="flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-green-500 mr-2" />
+                <span className="text-sm text-green-600 font-medium">+2.4% today</span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-red-200 bg-gradient-to-br from-red-50 to-pink-50">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-red-600 font-medium">Active Alerts</p>
-                  <p className="text-2xl font-bold text-red-700">{realTimeStats.activeAlerts}</p>
-                  <div className="flex items-center mt-1">
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-1" />
-                    <span className="text-xs text-red-600">Live</span>
-                  </div>
-                </div>
-                <AlertTriangle className="h-8 w-8 text-red-500" />
+          <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
+            <CardContent className="p-0">
+              <div className="bg-red-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <AlertTriangle className="h-10 w-10 text-red-600" />
+              </div>
+              <div className="text-4xl font-bold text-red-600 mb-4">{realTimeStats.activeAlerts}</div>
+              <div className="text-lg text-gray-700 font-semibold mb-2">Active Alerts</div>
+              <div className="flex items-center justify-center">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2" />
+                <span className="text-sm text-red-600 font-medium">Live Updates</span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-indigo-50">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-purple-600 font-medium">Upcoming Events</p>
-                  <p className="text-2xl font-bold text-purple-700">{realTimeStats.upcomingEvents}</p>
-                  <div className="flex items-center mt-1">
-                    <Clock className="h-3 w-3 text-purple-500 mr-1" />
-                    <span className="text-xs text-purple-600">Next in 1h</span>
-                  </div>
-                </div>
-                <Calendar className="h-8 w-8 text-purple-500" />
+          <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
+            <CardContent className="p-0">
+              <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Calendar className="h-10 w-10 text-purple-600" />
+              </div>
+              <div className="text-4xl font-bold text-purple-600 mb-4">{realTimeStats.upcomingEvents}</div>
+              <div className="text-lg text-gray-700 font-semibold mb-2">Upcoming Events</div>
+              <div className="flex items-center justify-center">
+                <Clock className="h-4 w-4 text-purple-500 mr-2" />
+                <span className="text-sm text-purple-600 font-medium">Next in 1h</span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-green-600 font-medium">My QR Status</p>
-                  <p className="text-2xl font-bold text-green-700">{userProfile?.qrId ? 'Active' : 'Pending'}</p>
-                  <div className="flex items-center mt-1">
-                    <div className={`w-2 h-2 rounded-full mr-1 ${userProfile?.qrId ? 'bg-green-500' : 'bg-orange-500'}`} />
-                    <span className={`text-xs ${userProfile?.qrId ? 'text-green-600' : 'text-orange-600'}`}>
-                      {userProfile?.qrId ? 'Generated' : 'Generate Now'}
-                    </span>
-                  </div>
-                </div>
-                <QrCode className="h-8 w-8 text-green-500" />
+          <Card className="text-center p-10 hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl">
+            <CardContent className="p-0">
+              <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <QrCode className="h-10 w-10 text-green-600" />
+              </div>
+              <div className="text-4xl font-bold text-green-600 mb-4">{userProfile?.qrId ? 'Active' : 'Pending'}</div>
+              <div className="text-lg text-gray-700 font-semibold mb-2">My QR Status</div>
+              <div className="flex items-center justify-center">
+                <div className={`w-3 h-3 rounded-full mr-2 ${userProfile?.qrId ? 'bg-green-500' : 'bg-orange-500'}`} />
+                <span className={`text-sm font-medium ${userProfile?.qrId ? 'text-green-600' : 'text-orange-600'}`}>
+                  {userProfile?.qrId ? 'Generated' : 'Generate Now'}
+                </span>
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
+      </section>
 
-        {/* QR Code Management */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-orange-700">
-                <QrCode className="h-6 w-6" />
-                My SmartKumbh QR Code
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-white p-4 rounded-lg border border-orange-100">
-                <p className="text-sm text-gray-600 mb-2">Your unique pilgrim identification</p>
-                <p className="font-mono text-lg font-bold text-orange-600">
-                  {userProfile?.qrId || 'Not Generated'}
-                </p>
-              </div>
-              <p className="text-gray-600 text-sm">
-                Generate your emergency QR code containing contact information, medical details, and pilgrim ID for quick identification during the Kumbh Mela.
-              </p>
-              <Dialog open={showQRGenerator} onOpenChange={setShowQRGenerator}>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                    {userProfile?.qrId ? 'View My QR Code' : 'Generate QR Code'}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-lg">
-                  <DialogHeader>
-                    <DialogTitle>Your SmartKumbh QR Code</DialogTitle>
-                  </DialogHeader>
-                  <QRGenerator userProfile={getQRProfile()} />
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
+      {/* QR Code Management */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">QR Code Management</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Generate and scan QR codes for enhanced safety and quick identification during your pilgrimage</p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="p-10">
+                  <CardTitle className="text-3xl flex items-center gap-3 text-gray-800">
+                    <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center">
+                      <QrCode className="h-8 w-8 text-orange-600" />
+                    </div>
+                    My SmartKumbh QR Code
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-10 pt-0 space-y-6">
+                  <div className="bg-orange-50 p-6 rounded-2xl border-2 border-orange-100">
+                    <p className="text-base text-gray-600 mb-3 font-medium">Your unique pilgrim identification</p>
+                    <p className="font-mono text-2xl font-bold text-orange-600">
+                      {userProfile?.qrId || 'Not Generated'}
+                    </p>
+                  </div>
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    Generate your emergency QR code containing contact information, medical details, and pilgrim ID for quick identification during the Kumbh Mela.
+                  </p>
+                  <Dialog open={showQRGenerator} onOpenChange={setShowQRGenerator}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 text-xl font-semibold rounded-2xl shadow-lg">
+                        {userProfile?.qrId ? 'View My QR Code' : 'Generate QR Code'}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-lg">
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl">Your SmartKumbh QR Code</DialogTitle>
+                      </DialogHeader>
+                      <QRGenerator userProfile={getQRProfile()} />
+                    </DialogContent>
+                  </Dialog>
+                </CardContent>
+              </Card>
 
-          <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-700">
-                <Scan className="h-6 w-6" />
-                QR Code Scanner
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-600 text-sm">
-                Scan other pilgrims' QR codes to view their emergency contact information. Helpful for assisting lost persons or medical emergencies.
-              </p>
-              <Dialog open={showQRScanner} onOpenChange={setShowQRScanner}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50">
-                    <Scan className="h-4 w-4 mr-2" />
-                    Scan QR Code
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-lg">
-                  <QRScanner 
-                    onScanResult={handleScanResult} 
-                    onClose={() => setShowQRScanner(false)} 
-                  />
-                </DialogContent>
-              </Dialog>
-              
-              {scannedProfile && (
-                <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                  <p className="text-sm font-medium text-blue-800">Recently Scanned:</p>
-                  <p className="text-sm text-blue-700">{scannedProfile.name}</p>
-                  <p className="text-xs text-blue-600">ID: {scannedProfile.qrId}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+              <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="p-10">
+                  <CardTitle className="text-3xl flex items-center gap-3 text-gray-800">
+                    <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center">
+                      <Scan className="h-8 w-8 text-blue-600" />
+                    </div>
+                    QR Code Scanner
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-10 pt-0 space-y-6">
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    Scan other pilgrims' QR codes to view their emergency contact information. Helpful for assisting lost persons or medical emergencies.
+                  </p>
+                  <Dialog open={showQRScanner} onOpenChange={setShowQRScanner}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 text-xl font-semibold rounded-2xl shadow-lg">
+                        <Scan className="h-6 w-6 mr-3" />
+                        Scan QR Code
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-lg">
+                      <QRScanner 
+                        onScanResult={handleScanResult} 
+                        onClose={() => setShowQRScanner(false)} 
+                      />
+                    </DialogContent>
+                  </Dialog>
+                  
+                  {scannedProfile && (
+                    <div className="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100">
+                      <p className="text-base font-semibold text-blue-800 mb-2">Recently Scanned:</p>
+                      <p className="text-base text-blue-700 font-medium">{scannedProfile.name}</p>
+                      <p className="text-sm text-blue-600 mt-1">ID: {scannedProfile.qrId}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+          </div>
         </div>
+      </section>
 
-        {/* Live Safety Alerts */}
-        <Card className="mb-8 border-red-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-700">
-              <AlertTriangle className="h-6 w-6" />
+      {/* Live Safety Alerts */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Live Safety Alerts</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real-time safety updates and important notifications for your pilgrimage journey</p>
+          </div>
+          <Card className="bg-white border-0 rounded-3xl shadow-2xl">
+          <CardHeader className="p-10">
+            <CardTitle className="text-3xl flex items-center gap-3 text-gray-800">
+              <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center">
+                <AlertTriangle className="h-8 w-8 text-red-600" />
+              </div>
               Live Safety Alerts
-              <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">LIVE</span>
+              <span className="text-base bg-red-100 text-red-600 px-4 py-2 rounded-full font-semibold">LIVE</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-10 pt-0">
             {alerts.length > 0 ? (
               <div className="space-y-3">
                 {alerts.map((alert, index) => (
-                  <div key={index} className={`p-4 rounded-lg border-l-4 ${getAlertPriorityColor(alert.priority)}`} data-testid={`alert-${index}`}>
+                  <div key={index} className={`p-6 rounded-2xl border-l-4 ${getAlertPriorityColor(alert.priority)} hover:shadow-lg transition-shadow`} data-testid={`alert-${index}`}>
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="font-semibold text-gray-800">{alert.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{alert.message}</p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                        <h4 className="font-bold text-lg text-gray-800 mb-2">{alert.title}</h4>
+                        <p className="text-base text-gray-600 leading-relaxed">{alert.message}</p>
+                        <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
                           <span>📍 {alert.location}</span>
                           <span>⏰ {new Date(alert.createdAt).toLocaleTimeString()}</span>
                           <span className={`px-2 py-1 rounded-full text-xs ${getAlertPriorityColor(alert.priority)}`}>
@@ -330,24 +353,40 @@ export default function UserDashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-4">No active alerts at the moment</p>
+              <div className="text-center py-12">
+                <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Shield className="h-10 w-10 text-green-600" />
+                </div>
+                <p className="text-xl text-gray-500 font-medium">All Clear! No active alerts at the moment</p>
+                <p className="text-base text-gray-400 mt-2">Your pilgrimage path is safe and secure</p>
+              </div>
             )}
           </CardContent>
-        </Card>
+          </Card>
+        </div>
+      </section>
 
-        {/* Real-time Crowd Data */}
-        <Card className="mb-8 border-purple-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-purple-700">
-              <Users className="h-6 w-6" />
+      {/* Real-time Crowd Data */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Live Crowd Monitoring</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real-time crowd density and wait time information across all sacred locations</p>
+          </div>
+          <Card className="bg-white border-0 rounded-3xl shadow-2xl">
+          <CardHeader className="p-10">
+            <CardTitle className="text-3xl flex items-center gap-3 text-gray-800">
+              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center">
+                <Users className="h-8 w-8 text-purple-600" />
+              </div>
               Live Crowd Monitoring
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <CardContent className="p-10 pt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {crowdData.slice(0, 6).map((location, index) => (
-                <div key={index} className={`p-4 rounded-lg border ${getCrowdStatusColor(location.densityLevel)}`} data-testid={`crowd-location-${index}`}>
-                  <h4 className="font-semibold text-gray-800 text-sm">{location.location}</h4>
+                <div key={index} className={`p-6 rounded-2xl border-2 ${getCrowdStatusColor(location.densityLevel)} hover:shadow-xl transition-all duration-300 hover:scale-105`} data-testid={`crowd-location-${index}`}>
+                  <h4 className="font-bold text-gray-800 text-lg mb-4">{location.location}</h4>
                   <div className="mt-2 space-y-1">
                     <div className="flex justify-between text-xs">
                       <span>Current Count:</span>
@@ -372,10 +411,18 @@ export default function UserDashboard() {
               ))}
             </div>
           </CardContent>
-        </Card>
+          </Card>
+        </div>
+      </section>
 
-        {/* Quick Access Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Quick Access Cards */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Quick Access</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Navigate to key features and services with a single click</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card className="border-purple-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/map'}>
             <CardContent className="p-6 text-center">
               <MapPin className="h-12 w-12 text-purple-600 mx-auto mb-4" />
@@ -408,8 +455,9 @@ export default function UserDashboard() {
               </Button>
             </CardContent>
           </Card>
+          </div>
         </div>
-      </div>
+      </section>
     </Layout>
   );
 }

@@ -436,15 +436,43 @@ export default function HomePage() {
 
       {/* Demo Modal */}
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-5xl">
           <DialogHeader>
-            <DialogTitle>SmartKumbh Platform Demo</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-gray-800 mb-4">
+              🎥 SmartKumbh Platform Demo
+            </DialogTitle>
           </DialogHeader>
-          <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🎥</div>
-              <p className="text-gray-600">Demo video would be embedded here</p>
-              <p className="text-sm text-gray-500 mt-2">Showcasing AI navigation, safety features, and spiritual engagement</p>
+          <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/vCKuy5HtweY?autoplay=0&controls=1&modestbranding=1&rel=0"
+              title="SmartKumbh Platform Demo"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full"
+              data-testid="demo-video"
+            />
+          </div>
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 text-lg leading-relaxed">
+              Experience the future of pilgrimage with AI-powered navigation, real-time safety monitoring, 
+              and comprehensive spiritual engagement features designed for the modern devotee.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-sm text-gray-500">
+              <div className="flex items-center justify-center gap-2">
+                <Route className="h-4 w-4 text-orange-600" />
+                <span>Smart Navigation</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Shield className="h-4 w-4 text-red-600" />
+                <span>Safety Monitoring</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Bell className="h-4 w-4 text-blue-600" />
+                <span>Live Updates</span>
+              </div>
             </div>
           </div>
         </DialogContent>
