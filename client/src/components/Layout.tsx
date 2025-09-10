@@ -131,7 +131,7 @@ export function Layout({ children, showNavigation = true }: LayoutProps) {
       )}
 
       {/* Main Content */}
-      <main className={showNavigation ? "pt-20" : ""}>
+      <main className={showNavigation ? "pt-24" : ""}>
         <div className="bg-white min-h-screen">
           {children}
         </div>
