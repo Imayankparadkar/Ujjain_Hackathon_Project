@@ -177,11 +177,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         email: user.email,
         phone: user.phone || '',
         emergencyContact: user.emergencyContact || '',
-        age: (user as any).age || undefined,
-        bloodGroup: (user as any).bloodGroup || '',
-        guardianContact: (user as any).guardianContact || '',
-        homeAddress: (user as any).homeAddress || '',
-        medicalConditions: (user as any).medicalConditions || '',
         generated: user.createdAt?.toISOString() || new Date().toISOString(),
         platform: 'SmartKumbh'
       };

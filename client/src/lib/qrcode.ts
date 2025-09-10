@@ -37,30 +37,8 @@ export const generateQRCode = async (userProfile: UserProfile): Promise<string> 
   }
 };
 
-export const parseQRData = (qrString: string): UserProfile | null => {
-  try {
-    const data = JSON.parse(qrString);
-    if (data.platform === 'SmartKumbh' && data.id) {
-      return {
-        uid: data.id,
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        qrId: data.id,
-        emergencyContact: data.emergency,
-        age: data.age,
-        bloodGroup: data.bloodGroup,
-        medicalConditions: data.medical,
-        guardianContact: data.guardian,
-        homeAddress: data.address
-      };
-    }
-    return null;
-  } catch (error) {
-    console.error('Error parsing QR data:', error);
-    return null;
-  }
-};
+// QR codes now use URLs instead of JSON data
+// Users can scan QR codes to navigate to /qr/:qrId pages
 
 export const generateUniqueQRId = (): string => {
   const prefix = 'KMB';

@@ -8,14 +8,10 @@ import {
   User, 
   Phone, 
   Mail, 
-  Calendar, 
-  Heart, 
   Shield, 
-  MapPin, 
   Clock,
   QrCode,
-  Share2,
-  Download
+  Share2
 } from "lucide-react";
 
 interface QRUserProfile {
@@ -24,11 +20,6 @@ interface QRUserProfile {
   email: string;
   phone: string;
   emergencyContact: string;
-  age?: number;
-  bloodGroup: string;
-  guardianContact?: string;
-  homeAddress?: string;
-  medicalConditions?: string;
   generated: string;
   platform: string;
 }
@@ -213,69 +204,9 @@ export default function QRViewPage() {
                 </div>
                 <span className="text-red-600 font-semibold">{userProfile.emergencyContact}</span>
               </div>
-              {userProfile.guardianContact && (
-                <div className="flex items-center justify-between" data-testid="guardian-info">
-                  <div className="flex items-center gap-3">
-                    <User className="h-4 w-4 text-gray-500" />
-                    <span className="font-medium">Guardian</span>
-                  </div>
-                  <span className="text-gray-700">{userProfile.guardianContact}</span>
-                </div>
-              )}
             </CardContent>
           </Card>
 
-          {/* Personal Details */}
-          <Card className="mb-6 border-0 shadow-xl rounded-3xl bg-white/90 backdrop-blur-sm">
-            <CardHeader className="border-b border-gray-100 pb-4">
-              <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3">
-                <User className="h-5 w-5 text-purple-600" />
-                Personal Details
-              </h3>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
-              {userProfile.age && (
-                <div className="flex items-center justify-between" data-testid="age-info">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-4 w-4 text-gray-500" />
-                    <span className="font-medium">Age</span>
-                  </div>
-                  <span className="text-gray-700">{userProfile.age} years</span>
-                </div>
-              )}
-              {userProfile.bloodGroup && (
-                <div className="flex items-center justify-between" data-testid="blood-group-info">
-                  <div className="flex items-center gap-3">
-                    <Heart className="h-4 w-4 text-red-500" />
-                    <span className="font-medium">Blood Group</span>
-                  </div>
-                  <Badge variant="secondary" className="bg-red-100 text-red-700 font-bold">
-                    {userProfile.bloodGroup}
-                  </Badge>
-                </div>
-              )}
-              {userProfile.homeAddress && (
-                <div className="space-y-2" data-testid="address-info">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-4 w-4 text-gray-500" />
-                    <span className="font-medium">Home Address</span>
-                  </div>
-                  <p className="text-gray-700 ml-7 text-sm">{userProfile.homeAddress}</p>
-                </div>
-              )}
-              {userProfile.medicalConditions && (
-                <div className="space-y-2" data-testid="medical-info">
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-4 w-4 text-orange-500" />
-                    <span className="font-medium">Medical Conditions</span>
-                  </div>
-                  <p className="text-gray-700 ml-7 text-sm bg-orange-50 p-3 rounded-lg border border-orange-200">
-                    {userProfile.medicalConditions}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
 
           {/* QR Code Info */}
           <Card className="border-0 shadow-xl rounded-3xl bg-white/90 backdrop-blur-sm">

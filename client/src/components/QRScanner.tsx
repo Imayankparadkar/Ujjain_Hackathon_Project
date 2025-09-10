@@ -2,17 +2,16 @@ import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { parseQRData, UserProfile } from "@/lib/qrcode";
 import { QrCode, X, User, Phone, AlertTriangle } from "lucide-react";
 
 interface QRScannerProps {
-  onScanResult: (profile: UserProfile) => void;
+  onScanResult: (qrUrl: string) => void;
   onClose: () => void;
 }
 
 export default function QRScanner({ onScanResult, onClose }: QRScannerProps) {
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
-  const [scannedProfile, setScannedProfile] = useState<UserProfile | null>(null);
+  const [scannedUrl, setScannedUrl] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
@@ -28,11 +27,13 @@ export default function QRScanner({ onScanResult, onClose }: QRScannerProps) {
 
     qrScanner.render(
       (decodedText) => {
-        const profile = parseQRData(decodedText);
-        if (profile) {
-          setScannedProfile(profile);
-          onScanResult(profile);
+        // Check if it's a valid SmartKumbh QR URL
+        if (decodedText.includes('/qr/') || decodedText.startsWith('http')) {
+          setScannedUrl(decodedText);
+          onScanResult(decodedText);
           qrScanner.clear();
+          // Navigate to the QR URL
+          window.location.href = decodedText;
         } else {
           setError("Invalid QR code format. Please scan a valid SmartKumbh QR code.");
         }
@@ -58,7 +59,7 @@ export default function QRScanner({ onScanResult, onClose }: QRScannerProps) {
     onClose();
   };
 
-  if (scannedProfile) {
+  if (scannedUrl) {
     return (
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="text-center">
@@ -66,46 +67,11 @@ export default function QRScanner({ onScanResult, onClose }: QRScannerProps) {
           <CardTitle className="text-green-600">QR Code Scanned Successfully!</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-              <User className="h-5 w-5 text-blue-600" />
-              <div>
-                <div className="font-semibold">{scannedProfile.name}</div>
-                <div className="text-sm text-gray-600">ID: {scannedProfile.qrId}</div>
-              </div>
+          <div className="text-center">
+            <p className="text-gray-600 mb-4">Redirecting to pilgrim profile...</p>
+            <div className="text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+              {scannedUrl}
             </div>
-            
-            {scannedProfile.phone && (
-              <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                <Phone className="h-5 w-5 text-green-600" />
-                <div>
-                  <div className="font-medium">Phone</div>
-                  <div className="text-sm text-gray-600">{scannedProfile.phone}</div>
-                </div>
-              </div>
-            )}
-            
-            {scannedProfile.emergencyContact && (
-              <div className="flex items-center space-x-3 p-3 bg-red-50 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
-                <div>
-                  <div className="font-medium">Emergency Contact</div>
-                  <div className="text-sm text-gray-600">{scannedProfile.emergencyContact}</div>
-                </div>
-              </div>
-            )}
-
-            {scannedProfile.age && (
-              <div className="text-sm text-gray-600">
-                <strong>Age:</strong> {scannedProfile.age}
-              </div>
-            )}
-            
-            {scannedProfile.bloodGroup && (
-              <div className="text-sm text-gray-600">
-                <strong>Blood Group:</strong> {scannedProfile.bloodGroup}
-              </div>
-            )}
           </div>
           
           <Button onClick={handleClose} className="w-full">

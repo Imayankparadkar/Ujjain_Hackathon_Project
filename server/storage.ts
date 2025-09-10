@@ -510,7 +510,7 @@ export class MemStorage implements IStorage {
     const user: User = {
       ...insertUser,
       id,
-      qrId: `KMB-2024-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      qrId: `KMB-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}-${Date.now().toString().slice(-4)}`,
       isVerified: false,
       isBlocked: false,
       role: insertUser.role || "user",
