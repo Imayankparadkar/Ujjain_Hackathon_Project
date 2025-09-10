@@ -89,15 +89,22 @@ export default function AdminLoginPage() {
     setIsLoading(true);
     try {
       if (data.otp === generatedOTP) {
-        // Store admin session
-        localStorage.setItem('adminSession', JSON.stringify({
+        // Store admin session with proper structure
+        const adminSessionData = {
+          uid: 'admin-uid',
           email: ADMIN_CREDENTIALS.email,
+          name: 'Admin User',
           role: 'admin',
           loginTime: Date.now(),
-          sessionId: Math.random().toString(36).substring(7)
-        }));
-
-        setLocation("/admin");
+          sessionId: Math.random().toString(36).substring(7),
+          isVerified: true,
+          isBlocked: false
+        };
+        
+        localStorage.setItem('adminSession', JSON.stringify(adminSessionData));
+        
+        // Force page reload to trigger auth context update
+        window.location.href = "/admin";
         
         toast({
           title: "Admin Login Successful",
