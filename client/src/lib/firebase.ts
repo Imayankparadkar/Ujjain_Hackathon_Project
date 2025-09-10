@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
@@ -11,30 +11,28 @@ const hasFirebaseCredentials = import.meta.env.VITE_FIREBASE_API_KEY &&
                                 import.meta.env.VITE_FIREBASE_PROJECT_ID &&
                                 import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
 
-// Temporarily force local storage to avoid quota issues
-console.log('🏠 Using advanced local storage database for optimal performance');
-firebaseConfig = {
-  apiKey: "demo-api-key",
-  authDomain: "smartkumbh-demo.firebaseapp.com",
-  projectId: "smartkumbh-demo",
-  storageBucket: "smartkumbh-demo.firebasestorage.app",
-  appId: "demo-app-id",
-};
-useFirebase = false;
-
-// Alternative Firebase setup (commented out to avoid quota issues)
-// if (hasFirebaseCredentials) {
-//   console.log('🔥 Using Firebase for authentication and database');
-//   firebaseConfig = {
-//     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-//     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-//     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-//     storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-//     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-//     appId: import.meta.env.VITE_FIREBASE_APP_ID,
-//   };
-//   useFirebase = true;
-// }
+if (hasFirebaseCredentials) {
+  console.log('🔥 Using Firebase for authentication and database');
+  firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  };
+  useFirebase = true;
+} else {
+  console.log('🏠 Using advanced local storage database for full functionality');
+  firebaseConfig = {
+    apiKey: "demo-api-key",
+    authDomain: "smartkumbh-demo.firebaseapp.com",
+    projectId: "smartkumbh-demo",
+    storageBucket: "smartkumbh-demo.firebasestorage.app",
+    appId: "demo-app-id",
+  };
+  useFirebase = false;
+}
 
 // Initialize comprehensive local database
 class LocalDatabase {
@@ -87,7 +85,18 @@ class LocalDatabase {
 
 const localDB = LocalDatabase.getInstance();
 
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase app with proper error handling for duplicate app
+let app;
+try {
+  app = initializeApp(firebaseConfig, 'smartkumbh-app');
+} catch (error: any) {
+  if (error.code === 'app/duplicate-app') {
+    app = getApps().find((a: any) => a.name === 'smartkumbh-app') || initializeApp(firebaseConfig, 'smartkumbh-app-' + Date.now());
+  } else {
+    throw error;
+  }
+}
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
