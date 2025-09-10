@@ -226,7 +226,7 @@ export default function MapPage() {
     // Open Google Maps with directions
     const directionsUrl = `https://www.google.com/maps/dir/${userLocation.lat},${userLocation.lng}/${destinationLat},${destinationLng}`;
     window.open(directionsUrl, '_blank');
-    
+
     toast({
       title: "🗺️ Directions Opened",
       description: `Navigation to ${destinationName} opened in Google Maps.`,
@@ -236,22 +236,22 @@ export default function MapPage() {
   // Emergency calling functions
   const makeEmergencyCall = async (service: string, number: string) => {
     setIsCallingEmergency(service);
-    
+
     try {
       // In a real app, this would integrate with phone system
       // For demo, we'll simulate the call and show confirmation
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Create a clickable link for phone call
       const phoneLink = document.createElement('a');
       phoneLink.href = `tel:${number}`;
       phoneLink.click();
-      
+
       toast({
         title: `📞 Calling ${service}`,
         description: `Dialing ${number}... Tap to call if needed.`,
       });
-      
+
       // Log the emergency call for admin tracking
       try {
         const response = await fetch('/api/emergency/log-call', {
@@ -270,7 +270,7 @@ export default function MapPage() {
       } catch (logError) {
         console.log('Call logging failed:', logError);
       }
-      
+
     } catch (error) {
       toast({
         title: "📞 Call Failed",
@@ -342,7 +342,7 @@ export default function MapPage() {
   // Handle quick actions
   const handleReportCrowd = () => {
     console.log('Report crowd button clicked', { userLocation });
-    
+
     if (!userLocation) {
       toast({
         title: "📍 Location Required",
@@ -363,14 +363,14 @@ export default function MapPage() {
       timestamp: new Date().toISOString(),
       reportedBy: 'mobile_user'
     };
-    
+
     console.log('Submitting crowd report:', reportData);
     reportCrowdMutation.mutate(reportData);
   };
 
   const handleRequestAssistance = () => {
     console.log('Request assistance button clicked', { userLocation });
-    
+
     if (!userLocation) {
       toast({
         title: "📍 Location Required", 
@@ -391,7 +391,7 @@ export default function MapPage() {
       timestamp: new Date().toISOString(),
       requestedBy: 'mobile_user'
     };
-    
+
     console.log('Submitting assistance request:', assistanceData);
     requestAssistanceMutation.mutate(assistanceData);
   };
@@ -614,10 +614,10 @@ export default function MapPage() {
   const generateCustomRoute = (method: string) => {
     setArrivalMethod(method);
     setCurrentJourneyStep(0);
-    
+
     let customRoute = "custom-" + method;
     setSelectedRoute(customRoute);
-    
+
     toast({
       title: `🚂 ${method.charAt(0).toUpperCase() + method.slice(1)} Route Selected`,
       description: `Customized journey plan generated for ${method} arrival. Follow the step-by-step guidance.`,
@@ -698,7 +698,7 @@ export default function MapPage() {
           <p className="text-2xl md:text-3xl mb-12 text-white/90 max-w-4xl mx-auto leading-relaxed">
             AI-powered real-time crowd monitoring and navigation assistance for your sacred journey
           </p>
-          
+
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto mt-16">
             <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 hover:bg-white/20 transition-all duration-300">
@@ -718,7 +718,7 @@ export default function MapPage() {
               <div className="text-lg text-white/80 font-medium">Monitoring</div>
             </div>
           </div>
-          
+
           {/* Language Selector */}
           <div className="mt-12 flex items-center justify-center space-x-4">
             <Languages className="h-6 w-6" />
@@ -776,7 +776,7 @@ export default function MapPage() {
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden cursor-pointer" onClick={() => generateCustomRoute("bus")}>
               <CardContent className="p-10 text-center">
                 <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
@@ -799,7 +799,7 @@ export default function MapPage() {
                 </Button>
               </CardContent>
             </Card>
-            
+
             <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden cursor-pointer" onClick={() => generateCustomRoute("car")}>
               <CardContent className="p-10 text-center">
                 <div className="mb-6 flex justify-center group-hover:scale-110 transition-transform duration-300">
@@ -1051,7 +1051,7 @@ export default function MapPage() {
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Safety & Emergency Services</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">24/7 emergency assistance and safety support for your pilgrimage</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             {/* Emergency Services */}
             <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
@@ -1156,7 +1156,7 @@ export default function MapPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Map */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-4">
               <Card>
                 <CardContent className="p-0 relative">
                   <Map
@@ -1177,7 +1177,7 @@ export default function MapPage() {
                       }
                     }}
                   />
-                  
+
                   {/* Location Status Indicator */}
                   <div className="absolute top-4 left-4 z-10">
                     <div className={`px-3 py-2 rounded-lg shadow-lg flex items-center space-x-2 ${
@@ -1319,190 +1319,8 @@ export default function MapPage() {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-4">
-              {/* Top Row - Live Stats and Ghat Status Side by Side */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                {/* Live Stats */}
-                <Card className="rounded-2xl border-0 shadow-lg bg-white">
-                  <CardHeader className="pb-3 px-4 pt-4">
-                    <CardTitle className="text-lg font-bold flex items-center text-gray-900">
-                      <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
-                      Live Status
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="px-4 pb-4 space-y-3">
-                    {crowdData.slice(0, 3).map((point, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-xl">
-                        <div>
-                          <div className="font-medium text-sm text-gray-900">{point.location}</div>
-                          <div className="text-gray-600 text-xs">Wait: {point.waitTime}</div>
-                        </div>
-                        <Badge className={`${getCrowdColor(point.densityLevel)} text-white text-xs`}>
-                          {point.crowdCount}
-                        </Badge>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-
-                {/* Ghat Status */}
-                <Card className="rounded-2xl border-0 shadow-lg bg-white">
-                  <CardHeader className="pb-3 px-4 pt-4">
-                    <CardTitle className="text-lg font-bold flex items-center text-gray-900">
-                      🛁 Bathing Ghats Status
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="px-4 pb-4 space-y-3">
-                    {ghatData.map((ghat, index) => {
-                      const occupancyRate = (ghat.currentOccupancy / ghat.capacity) * 100;
-                      let statusColor = "text-green-600";
-                      if (occupancyRate > 80) statusColor = "text-red-600";
-                      else if (occupancyRate > 60) statusColor = "text-orange-600";
-                      
-                      return (
-                        <div key={index} className="p-2 bg-gray-50 rounded-xl">
-                          <div className="flex items-center justify-between mb-1">
-                            <div className="font-medium text-xs text-gray-900">{ghat.name}</div>
-                            <Badge variant="outline" className={`${statusColor} text-xs`}>
-                              {occupancyRate.toFixed(0)}%
-                            </Badge>
-                          </div>
-                          <div className="text-xs text-gray-600 mb-1">
-                            {ghat.currentOccupancy}/{ghat.capacity} people
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1 mb-1">
-                            <div 
-                              className={`h-1 rounded-full ${
-                                occupancyRate > 80 ? 'bg-red-500' : 
-                                occupancyRate > 60 ? 'bg-orange-500' : 'bg-green-500'
-                              }`}
-                              style={{ width: `${occupancyRate}%` }}
-                            />
-                          </div>
-                          <div className="text-xs text-gray-600">
-                            Type: {ghat.type} • {ghat.facilities.slice(0, 2).join(', ')}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Emergency Contacts */}
-              <Card className="rounded-2xl border-0 shadow-lg bg-white">
-                <CardHeader className="pb-3 px-4 pt-4">
-                  <CardTitle className="text-lg font-bold flex items-center text-gray-900">
-                    <Phone className="h-5 w-5 mr-2 text-red-600" />
-                    Emergency Contacts
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">24/7 immediate assistance available</p>
-                </CardHeader>
-                <CardContent className="px-4 pb-4">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button 
-                      variant="outline" 
-                      className="h-auto flex flex-col items-center p-3 border-blue-200 hover:bg-blue-50 hover:border-blue-300 rounded-xl"
-                      onClick={() => makeEmergencyCall("Police", "100")}
-                      data-testid="emergency-police"
-                      disabled={isCallingEmergency === "Police"}
-                    >
-                      <div className="font-semibold text-blue-600 mb-1 text-sm">Police</div>
-                      <div className="text-xl font-bold text-gray-900">100</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {isCallingEmergency === "Police" ? "Calling..." : "Tap to call"}
-                      </div>
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="h-auto flex flex-col items-center p-3 border-green-200 hover:bg-green-50 hover:border-green-300 rounded-xl"
-                      onClick={() => makeEmergencyCall("Medical", "108")}
-                      data-testid="emergency-medical"
-                      disabled={isCallingEmergency === "Medical"}
-                    >
-                      <div className="font-semibold text-green-600 mb-1 text-sm">Medical Emergency</div>
-                      <div className="text-xl font-bold text-gray-900">108</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {isCallingEmergency === "Medical" ? "Calling..." : "Tap to call"}
-                      </div>
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="h-auto flex flex-col items-center p-3 border-orange-200 hover:bg-orange-50 hover:border-orange-300 rounded-xl"
-                      onClick={() => makeEmergencyCall("Fire Service", "101")}
-                      data-testid="emergency-fire"
-                      disabled={isCallingEmergency === "Fire Service"}
-                    >
-                      <div className="font-semibold text-orange-600 mb-1 text-sm">Fire Service</div>
-                      <div className="text-xl font-bold text-gray-900">101</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {isCallingEmergency === "Fire Service" ? "Calling..." : "Tap to call"}
-                      </div>
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="h-auto flex flex-col items-center p-3 border-purple-200 hover:bg-purple-50 hover:border-purple-300 rounded-xl"
-                      onClick={() => makeEmergencyCall("Tourist Helpline", "1363")}
-                      data-testid="emergency-tourist"
-                      disabled={isCallingEmergency === "Tourist Helpline"}
-                    >
-                      <div className="font-semibold text-purple-600 mb-1 text-sm">Tourist Helpline</div>
-                      <div className="text-xl font-bold text-gray-900">1363</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {isCallingEmergency === "Tourist Helpline" ? "Calling..." : "Tap to call"}
-                      </div>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-                {/* Quick Actions */}
-                <Card className="rounded-2xl border-0 shadow-lg bg-white">
-                  <CardHeader className="pb-3 px-4 pt-4">
-                    <CardTitle className="text-lg font-bold flex items-center text-gray-900">
-                      <AlertTriangle className="h-5 w-5 mr-2 text-orange-600" />
-                      Quick Actions
-                    </CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">Report issues and request assistance</p>
-                  </CardHeader>
-                  <CardContent className="px-4 pb-4 space-y-3">
-                    <Button 
-                      className="w-full bg-orange-600 text-white hover:bg-orange-700 py-3 text-sm font-semibold rounded-xl shadow-lg" 
-                      data-testid="report-crowd"
-                      onClick={handleReportCrowd}
-                      disabled={reportCrowdMutation.isPending}
-                    >
-                      {reportCrowdMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <AlertTriangle className="h-4 w-4 mr-2" />
-                      )}
-                      {reportCrowdMutation.isPending ? "Reporting..." : "Report Overcrowding"}
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full border-2 border-orange-600 text-orange-600 hover:bg-orange-50 py-3 text-sm font-semibold rounded-xl" 
-                      data-testid="request-help"
-                      onClick={handleRequestAssistance}
-                      disabled={requestAssistanceMutation.isPending}
-                    >
-                      {requestAssistanceMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <MapPin className="h-4 w-4 mr-2" />
-                      )}
-                      {requestAssistanceMutation.isPending ? "Requesting..." : "Request Assistance"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
           </div>
+        </div>
       </section>
 
       {/* Real-time Information Grid Below Map */}
@@ -1512,10 +1330,10 @@ export default function MapPage() {
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Live Information & Services</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real-time updates, emergency contacts, and essential facilities at your fingertips</p>
           </div>
-          
+
           {/* Grid Layout - All Information in Rows and Columns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            
+
             {/* Live Status */}
             <Card className="rounded-2xl border-0 shadow-lg bg-white">
               <CardHeader className="pb-4 px-6 pt-6">
@@ -1552,7 +1370,7 @@ export default function MapPage() {
                   let statusColor = "text-green-600";
                   if (occupancyRate > 80) statusColor = "text-red-600";
                   else if (occupancyRate > 60) statusColor = "text-orange-600";
-                  
+
                   return (
                     <div key={index} className="p-3 bg-gray-50 rounded-xl">
                       <div className="flex items-center justify-between mb-2">
@@ -1606,7 +1424,7 @@ export default function MapPage() {
                       {isCallingEmergency === "Police" ? "Calling..." : "Tap to call"}
                     </div>
                   </Button>
-                  
+
                   <Button 
                     variant="outline" 
                     className="h-auto flex flex-col items-center p-3 border-green-200 hover:bg-green-50 hover:border-green-300 rounded-xl"
@@ -1620,7 +1438,7 @@ export default function MapPage() {
                       {isCallingEmergency === "Medical" ? "Calling..." : "Tap to call"}
                     </div>
                   </Button>
-                  
+
                   <Button 
                     variant="outline" 
                     className="h-auto flex flex-col items-center p-3 border-orange-200 hover:bg-orange-50 hover:border-orange-300 rounded-xl"
@@ -1634,7 +1452,7 @@ export default function MapPage() {
                       {isCallingEmergency === "Fire Service" ? "Calling..." : "Tap to call"}
                     </div>
                   </Button>
-                  
+
                   <Button 
                     variant="outline" 
                     className="h-auto flex flex-col items-center p-3 border-purple-200 hover:bg-purple-50 hover:border-purple-300 rounded-xl"
@@ -1675,7 +1493,7 @@ export default function MapPage() {
                       parking: { icon: 'text-yellow-600', button: 'border-yellow-200 hover:bg-yellow-50' }
                     };
                     const colors = facilityColors[facility.type as keyof typeof facilityColors] || facilityColors.shop;
-                    
+
                     return (
                       <div key={index} className={`flex items-center justify-between p-2 ${colors.button} border rounded-xl transition-colors`}>
                         <div className="flex items-center space-x-3">
@@ -1714,7 +1532,7 @@ export default function MapPage() {
                     );
                   })}
                 </div>
-                
+
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <Button 
                     variant="outline" 
