@@ -408,54 +408,6 @@ export default function AdminDashboard() {
     });
   };
 
-  // Enhanced functionality for full admin operations
-  const assignStaffToReport = async (reportId: string, staffName: string) => {
-    try {
-      await apiRequest(`/api/cleanliness-reports/${reportId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          assignedStaff: staffName,
-          isResolved: false
-        })
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/cleanliness-reports'] });
-      toast({
-        title: "Staff Assigned",
-        description: `${staffName} has been assigned to this cleanliness report.`
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to assign staff to report.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const assignOfficerToCase = async (caseId: string, officerName: string) => {
-    try {
-      await apiRequest(`/api/lost-found/${caseId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          assignedOfficer: officerName,
-          isApproved: true
-        })
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/lost-found'] });
-      toast({
-        title: "Officer Assigned",
-        description: `${officerName} has been assigned to this case.`
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to assign officer to case.",
-        variant: "destructive"
-      });
-    }
-  };
 
   const renderUserManagement = () => (
     <div className="space-y-6">
