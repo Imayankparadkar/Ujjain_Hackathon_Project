@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon, Grid, List, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, MapPin, Bell, Play, Users, Heart, Sun, Moon, Grid, List, Loader2, X } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import type { SpiritualEvent } from "@shared/schema";
@@ -36,6 +36,7 @@ export default function SpiritualPage() {
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
+  const [playingStream, setPlayingStream] = useState<string | null>(null);
 
   // Debug log to check viewMode state - can be removed after testing
   console.log('🔄 Current viewMode:', viewMode);
@@ -104,7 +105,7 @@ export default function SpiritualPage() {
         viewers: 45000,
         location: "Main Sanctum",
         thumbnail: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450",
-        streamUrl: "https://www.youtube.com/live/_RoV-sueMWs?si=I9EJgUTYzO0_Ox4l"
+        streamUrl: "_RoV-sueMWs"
       },
       {
         id: "LS002", 
@@ -113,7 +114,7 @@ export default function SpiritualPage() {
         viewers: 12000,
         location: "Shipra River",
         thumbnail: "https://images.unsplash.com/photo-1544913580-877b069acc7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450",
-        streamUrl: "https://www.youtube.com/live/y90qP3MTG3c?si=m4uGmUhozUUAbL_M"
+        streamUrl: "y90qP3MTG3c"
       }
     ]);
   }, []);
@@ -345,42 +346,66 @@ export default function SpiritualPage() {
             {liveStreams.map((stream) => (
               <Card key={stream.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
                 <div className="relative">
-                  <div
-                    className="aspect-video bg-cover bg-center"
-                    style={{ backgroundImage: `url('${stream.thumbnail}')` }}
-                  >
-                    <div className="absolute inset-0 bg-black/30" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Button 
-                        className="bg-white/20 backdrop-blur-md w-20 h-20 rounded-full hover:bg-white/30 group-hover:scale-110 transition-all duration-300 shadow-2xl"
-                        data-testid={`play-stream-${stream.id}`}
-                        onClick={() => {
-                          const streamUrl = stream.streamUrl || `https://www.youtube.com/watch?v=${stream.id}`;
-                          const streamWindow = window.open(streamUrl, '_blank', 'width=1200,height=700,scrollbars=yes,resizable=yes');
-                          if (streamWindow) {
-                            streamWindow.focus();
-                          } else {
-                            window.location.href = streamUrl;
-                          }
-                          toast({
-                            title: "🔴 Live Stream Opening",
-                            description: `Now watching: ${stream.title} • ${stream.viewers.toLocaleString()} viewers`,
-                          });
-                        }}
+                  {playingStream === stream.id ? (
+                    <div className="aspect-video relative">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${stream.streamUrl}?autoplay=1&rel=0&modestbranding=1`}
+                        title={stream.title}
+                        className="w-full h-full rounded-t-3xl"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        data-testid={`video-player-${stream.id}`}
+                      />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                        onClick={() => setPlayingStream(null)}
+                        data-testid={`close-video-${stream.id}`}
                       >
-                        <Play className="text-white h-8 w-8" />
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="absolute top-6 left-6 flex items-center space-x-2">
-                      <div className="bg-red-500 text-white px-4 py-2 rounded-2xl text-base font-bold flex items-center shadow-lg">
-                        <div className="w-3 h-3 bg-white rounded-full animate-pulse mr-2"></div>
-                        LIVE
+                  ) : (
+                    <div
+                      className="aspect-video bg-cover bg-center cursor-pointer"
+                      style={{ backgroundImage: `url('${stream.thumbnail}')` }}
+                      onClick={() => {
+                        setPlayingStream(stream.id);
+                        toast({
+                          title: "🔴 Live Stream Started",
+                          description: `Now watching: ${stream.title} • ${stream.viewers.toLocaleString()} viewers`,
+                        });
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-black/30" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Button 
+                          className="bg-white/20 backdrop-blur-md w-20 h-20 rounded-full hover:bg-white/30 group-hover:scale-110 transition-all duration-300 shadow-2xl"
+                          data-testid={`play-stream-${stream.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPlayingStream(stream.id);
+                            toast({
+                              title: "🔴 Live Stream Started",
+                              description: `Now watching: ${stream.title} • ${stream.viewers.toLocaleString()} viewers`,
+                            });
+                          }}
+                        >
+                          <Play className="text-white h-8 w-8" />
+                        </Button>
+                      </div>
+                      <div className="absolute top-6 left-6 flex items-center space-x-2">
+                        <div className="bg-red-500 text-white px-4 py-2 rounded-2xl text-base font-bold flex items-center shadow-lg">
+                          <div className="w-3 h-3 bg-white rounded-full animate-pulse mr-2"></div>
+                          LIVE
+                        </div>
+                      </div>
+                      <div className="absolute bottom-6 left-6 bg-black/70 text-white px-4 py-2 rounded-2xl font-semibold">
+                        👥 {stream.viewers.toLocaleString()} viewers
                       </div>
                     </div>
-                    <div className="absolute bottom-6 left-6 bg-black/70 text-white px-4 py-2 rounded-2xl font-semibold">
-                      👥 {stream.viewers.toLocaleString()} viewers
-                    </div>
-                  </div>
+                  )}
                 </div>
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">{stream.title}</h3>
