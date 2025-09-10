@@ -1389,82 +1389,205 @@ export default function MapPage() {
               </Card>
 
               {/* Emergency Contacts */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center text-destructive">
-                    <Phone className="h-5 w-5 mr-2" />
-                    Emergency
+              <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="p-8 pb-6">
+                  <CardTitle className="text-2xl font-bold flex items-center text-gray-900">
+                    <div className="bg-red-100 w-12 h-12 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                      <Phone className="h-6 w-6 text-red-600" />
+                    </div>
+                    Emergency Contacts
                   </CardTitle>
+                  <p className="text-base text-gray-600 mt-3">24/7 immediate assistance available</p>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <Button 
-                    variant="destructive" 
-                    className="w-full justify-start" 
-                    data-testid="emergency-police"
-                    onClick={() => makeEmergencyCall("Police", "100")}
-                    disabled={isCallingEmergency === "Police"}
-                  >
-                    {isCallingEmergency === "Police" ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Shield className="h-4 w-4 mr-2" />
-                    )}
-                    {isCallingEmergency === "Police" ? "Calling..." : "Police: 100"}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start border-red-200 hover:bg-red-50 text-red-700" 
-                    data-testid="emergency-medical"
-                    onClick={() => makeEmergencyCall("Medical", "108")}
-                    disabled={isCallingEmergency === "Medical"}
-                  >
-                    {isCallingEmergency === "Medical" ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Heart className="h-4 w-4 mr-2" />
-                    )}
-                    {isCallingEmergency === "Medical" ? "Calling..." : "Medical: 108"}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start border-orange-200 hover:bg-orange-50 text-orange-700" 
-                    data-testid="emergency-control-room"
-                    onClick={() => makeEmergencyCall("Control Room", "1950")}
-                    disabled={isCallingEmergency === "Control Room"}
-                  >
-                    {isCallingEmergency === "Control Room" ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Home className="h-4 w-4 mr-2" />
-                    )}
-                    {isCallingEmergency === "Control Room" ? "Calling..." : "Control Room: 1950"}
-                  </Button>
+                <CardContent className="p-8 pt-0 space-y-4">
+                  <Card className="hover:shadow-lg transition-all duration-300 bg-red-50 border-red-200 rounded-2xl overflow-hidden">
+                    <CardContent className="p-6 text-center">
+                      <div className="bg-red-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Shield className="h-6 w-6 text-red-600" />
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-800 mb-2">Police Emergency</h3>
+                      <div className="text-3xl font-bold mb-3 text-red-600">100</div>
+                      <p className="text-sm text-gray-600 mb-4">Immediate police assistance</p>
+                      <Button 
+                        className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-base font-semibold rounded-xl shadow-lg" 
+                        data-testid="emergency-police"
+                        onClick={() => makeEmergencyCall("Police", "100")}
+                        disabled={isCallingEmergency === "Police"}
+                      >
+                        {isCallingEmergency === "Police" ? (
+                          <>
+                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                            Calling...
+                          </>
+                        ) : (
+                          <>
+                            <Phone className="h-5 w-5 mr-3" />
+                            Call Now
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-lg transition-all duration-300 bg-pink-50 border-pink-200 rounded-2xl overflow-hidden">
+                    <CardContent className="p-6 text-center">
+                      <div className="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Heart className="h-6 w-6 text-pink-600" />
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-800 mb-2">Medical Emergency</h3>
+                      <div className="text-3xl font-bold mb-3 text-pink-600">108</div>
+                      <p className="text-sm text-gray-600 mb-4">Ambulance & medical help</p>
+                      <Button 
+                        className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 text-base font-semibold rounded-xl shadow-lg" 
+                        data-testid="emergency-medical"
+                        onClick={() => makeEmergencyCall("Medical", "108")}
+                        disabled={isCallingEmergency === "Medical"}
+                      >
+                        {isCallingEmergency === "Medical" ? (
+                          <>
+                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                            Calling...
+                          </>
+                        ) : (
+                          <>
+                            <Phone className="h-5 w-5 mr-3" />
+                            Call Now
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-lg transition-all duration-300 bg-orange-50 border-orange-200 rounded-2xl overflow-hidden">
+                    <CardContent className="p-6 text-center">
+                      <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Home className="h-6 w-6 text-orange-600" />
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-800 mb-2">Kumbh Control Room</h3>
+                      <div className="text-3xl font-bold mb-3 text-orange-600">1950</div>
+                      <p className="text-sm text-gray-600 mb-4">24/7 coordination center</p>
+                      <Button 
+                        className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 text-base font-semibold rounded-xl shadow-lg" 
+                        data-testid="emergency-control-room"
+                        onClick={() => makeEmergencyCall("Control Room", "1950")}
+                        disabled={isCallingEmergency === "Control Room"}
+                      >
+                        {isCallingEmergency === "Control Room" ? (
+                          <>
+                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                            Calling...
+                          </>
+                        ) : (
+                          <>
+                            <Phone className="h-5 w-5 mr-3" />
+                            Call Now
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
                 </CardContent>
               </Card>
 
               {/* Nearby Facilities */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Nearby Facilities</CardTitle>
+              <Card className="group hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-white border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="p-8 pb-6">
+                  <CardTitle className="text-2xl font-bold flex items-center text-gray-900">
+                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                      <MapPin className="h-6 w-6 text-blue-600" />
+                    </div>
+                    Nearby Facilities
+                  </CardTitle>
+                  <p className="text-base text-gray-600 mt-3">Essential services within walking distance</p>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {facilityData.slice(0, 5).map((facility, index) => (
-                      <div key={index} className="flex items-start space-x-3 p-2 bg-muted rounded-lg">
-                        <div className="text-lg">{getFacilityIcon(facility.type)}</div>
-                        <div className="flex-1">
-                          <div className="text-sm font-medium">{facility.name}</div>
-                          <div className="text-xs text-muted-foreground">
-                            Status: <span className="text-green-600">{facility.status}</span>
-                          </div>
-                          {facility.cleanlinessScore && (
-                            <div className="text-xs text-muted-foreground">
-                              Cleanliness: {facility.cleanlinessScore}%
+                <CardContent className="p-8 pt-0">
+                  <div className="space-y-4">
+                    {facilityData.slice(0, 5).map((facility, index) => {
+                      const facilityColors = {
+                        toilet: { bg: 'bg-blue-50', border: 'border-blue-200', icon: 'text-blue-600', button: 'bg-blue-600 hover:bg-blue-700' },
+                        medical: { bg: 'bg-red-50', border: 'border-red-200', icon: 'text-red-600', button: 'bg-red-600 hover:bg-red-700' },
+                        shop: { bg: 'bg-green-50', border: 'border-green-200', icon: 'text-green-600', button: 'bg-green-600 hover:bg-green-700' },
+                        food: { bg: 'bg-orange-50', border: 'border-orange-200', icon: 'text-orange-600', button: 'bg-orange-600 hover:bg-orange-700' },
+                        security: { bg: 'bg-purple-50', border: 'border-purple-200', icon: 'text-purple-600', button: 'bg-purple-600 hover:bg-purple-700' },
+                        emergency: { bg: 'bg-red-50', border: 'border-red-200', icon: 'text-red-600', button: 'bg-red-600 hover:bg-red-700' },
+                        arrival: { bg: 'bg-gray-50', border: 'border-gray-200', icon: 'text-gray-600', button: 'bg-gray-600 hover:bg-gray-700' },
+                        parking: { bg: 'bg-yellow-50', border: 'border-yellow-200', icon: 'text-yellow-600', button: 'bg-yellow-600 hover:bg-yellow-700' }
+                      };
+                      const colors = facilityColors[facility.type as keyof typeof facilityColors] || facilityColors.shop;
+                      
+                      return (
+                        <Card key={index} className={`hover:shadow-lg transition-all duration-300 ${colors.bg} ${colors.border} rounded-2xl overflow-hidden group`}>
+                          <CardContent className="p-6">
+                            <div className="flex items-start space-x-4">
+                              <div className={`bg-white w-12 h-12 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+                                <div className={`text-2xl ${colors.icon}`}>{getFacilityIcon(facility.type)}</div>
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-lg font-bold text-gray-800 mb-2">{facility.name}</h3>
+                                <div className="flex items-center space-x-3 mb-3">
+                                  <div className="flex items-center space-x-2">
+                                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    <span className="text-sm text-gray-700 font-medium">{facility.status}</span>
+                                  </div>
+                                  {facility.cleanlinessScore && (
+                                    <div className="flex items-center space-x-2">
+                                      <div className="text-sm text-gray-600">Rating:</div>
+                                      <div className="text-sm font-bold text-green-600">{facility.cleanlinessScore}%</div>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                {facility.items && (
+                                  <p className="text-sm text-gray-600 mb-3">{facility.items}</p>
+                                )}
+                                {facility.services && (
+                                  <p className="text-sm text-gray-600 mb-3">{facility.services}</p>
+                                )}
+                                {facility.staff && (
+                                  <p className="text-sm text-gray-600 mb-3">{facility.staff}</p>
+                                )}
+                                {facility.capacity && (
+                                  <p className="text-sm text-gray-600 mb-3">Capacity: {facility.capacity}</p>
+                                )}
+                                {facility.contact && (
+                                  <p className="text-sm text-blue-600 mb-3 font-medium">{facility.contact}</p>
+                                )}
+                                
+                                <Button
+                                  className={`w-full ${colors.button} text-white py-2 text-sm font-semibold rounded-xl shadow-lg`}
+                                  onClick={() => getDirections(
+                                    parseFloat(facility.latitude), 
+                                    parseFloat(facility.longitude), 
+                                    facility.name
+                                  )}
+                                  data-testid={`facility-navigate-${index}`}
+                                >
+                                  <Navigation className="h-4 w-4 mr-2" />
+                                  Get Directions
+                                </Button>
+                              </div>
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 text-base font-semibold rounded-xl" 
+                      onClick={() => {
+                        toast({
+                          title: "🗺️ Showing All Facilities",
+                          description: "Check the interactive map above to see all available facilities with real-time status.",
+                        });
+                      }}
+                      data-testid="view-all-facilities"
+                    >
+                      <MapPin className="h-5 w-5 mr-3" />
+                      View All on Map
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
