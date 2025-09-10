@@ -216,7 +216,32 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const logoutUser = async () => {
-  return await signOut(auth);
+  try {
+    // Clear all localStorage data for demo/mock users
+    localStorage.removeItem('mockUser');
+    localStorage.removeItem('adminSession');
+    localStorage.removeItem('SmartKumbhDB_users');
+    localStorage.removeItem('SmartKumbhDB_safetyAlerts');
+    localStorage.removeItem('SmartKumbhDB_spiritualEvents');
+    localStorage.removeItem('SmartKumbhDB_crowdData');
+    localStorage.removeItem('SmartKumbhDB_lostAndFound');
+    localStorage.removeItem('SmartKumbhDB_cleanlinessReports');
+    localStorage.removeItem('SmartKumbhDB_helpBooths');
+    localStorage.removeItem('SmartKumbhDB_chatMessages');
+    
+    // Sign out from Firebase if available
+    if (useFirebase) {
+      await signOut(auth);
+    }
+    
+    // Force page reload to clear all state
+    window.location.href = '/login';
+  } catch (error) {
+    console.error('Logout error:', error);
+    // Even if Firebase logout fails, clear localStorage and redirect
+    localStorage.clear();
+    window.location.href = '/login';
+  }
 };
 
 // Firestore utility functions

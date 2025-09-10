@@ -8,6 +8,7 @@ interface AuthContextType {
   userProfile: any | null;
   loading: boolean;
   isAdmin: boolean;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   userProfile: null,
   loading: true,
   isAdmin: false,
+  logout: async () => {},
 });
 
 export const useAuth = () => {
@@ -57,6 +59,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             checkLocalStorage();
           }
         } else {
+          // User logged out - clear everything
+          setUser(null);
+          setUserProfile(null);
+          setIsAdmin(false);
           checkLocalStorage();
         }
         
@@ -118,8 +124,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      // Clear all localStorage data
+      localStorage.removeItem('mockUser');
+      localStorage.removeItem('adminSession');
+      
+      // Clear all database collections from localStorage
+      const dbCollections = [
+        'SmartKumbhDB_users', 'SmartKumbhDB_safetyAlerts', 'SmartKumbhDB_spiritualEvents',
+        'SmartKumbhDB_crowdData', 'SmartKumbhDB_lostAndFound', 'SmartKumbhDB_cleanlinessReports',
+        'SmartKumbhDB_helpBooths', 'SmartKumbhDB_chatMessages'
+      ];
+      
+      dbCollections.forEach(collection => {
+        localStorage.removeItem(collection);
+      });
+      
+      // Reset state immediately
+      setUser(null);
+      setUserProfile(null);
+      setIsAdmin(false);
+      setLoading(false);
+      
+      // Try to sign out from Firebase if available
+      try {
+        const { logoutUser } = await import('@/lib/firebase');
+        await logoutUser();
+      } catch (error) {
+        console.log('Firebase logout handled by firebase module');
+      }
+    } catch (error) {
+      console.error('Logout error in context:', error);
+      // Force clear everything
+      localStorage.clear();
+      setUser(null);
+      setUserProfile(null);
+      setIsAdmin(false);
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, userProfile, loading, isAdmin }}>
+    <AuthContext.Provider value={{ user, userProfile, loading, isAdmin, logout }}>
       {children}
     </AuthContext.Provider>
   );

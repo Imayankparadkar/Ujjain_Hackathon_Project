@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useElderlyMode } from "@/contexts/ElderlyModeContext";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { logoutUser } from "@/lib/firebase";
 import { Link, useLocation } from "wouter";
 import { User, Eye, LogOut, Bell, ArrowLeft } from "lucide-react";
 
@@ -14,15 +13,17 @@ interface LayoutProps {
 }
 
 export function Layout({ children, showNavigation = true }: LayoutProps) {
-  const { user, userProfile, isAdmin } = useAuth();
+  const { user, userProfile, isAdmin, logout } = useAuth();
   const { elderlyMode, toggleElderlyMode } = useElderlyMode();
   const [location] = useLocation();
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await logout();
     } catch (error) {
       console.error("Logout error:", error);
+      // Force redirect on any error
+      window.location.href = '/login';
     }
   };
 
