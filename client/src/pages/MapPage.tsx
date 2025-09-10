@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Map } from "@/components/ui/map";
-import { MapPin, Navigation, Users, AlertTriangle, Clock, Phone, Shield, Heart, Home, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { MapPin, Navigation, Users, AlertTriangle, Clock, Phone, Shield, Heart, Home, Loader2, CheckCircle, XCircle, Train, Bus, Car, Languages, Target, Route, Compass } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { locationService } from "@/lib/locationService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +12,9 @@ import { apiRequest } from "@/lib/queryClient";
 
 export default function MapPage() {
   const [selectedRoute, setSelectedRoute] = useState<string>("all");
+  const [arrivalMethod, setArrivalMethod] = useState<string>("");
+  const [currentJourneyStep, setCurrentJourneyStep] = useState<number>(0);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [crowdData, setCrowdData] = useState<any[]>([]);
   const [facilityData, setFacilityData] = useState<any[]>([]);
   const [ghatData, setGhatData] = useState<any[]>([]);
@@ -165,6 +168,9 @@ export default function MapPage() {
         facilities: ["Family Rooms", "Child Safety", "Lockers", "Fresh Water", "Food Counter"]
       }
     ]);
+
+    // Initialize arrival points and route data
+    initializeArrivalPointsAndJourney();
 
     // Get user's current location
     getUserLocation();
@@ -390,6 +396,234 @@ export default function MapPage() {
     requestAssistanceMutation.mutate(assistanceData);
   };
 
+  // Multi-language content
+  const translations = {
+    en: {
+      selectArrival: "How are you arriving?",
+      railway: "Railway Station",
+      bus: "Bus Stand", 
+      car: "Private Vehicle",
+      selectRoute: "Select Your Route",
+      spiritualJourney: "Spiritual Journey Steps",
+      bathingAreas: "Bathing Areas at Shipra Ghat",
+      getDirections: "Get Directions",
+      emergency: "Emergency",
+      safety: "Safety Info"
+    },
+    hi: {
+      selectArrival: "आप कैसे आ रहे हैं?",
+      railway: "रेलवे स्टेशन",
+      bus: "बस स्टैंड",
+      car: "निजी वाहन",
+      selectRoute: "अपना मार्ग चुनें",
+      spiritualJourney: "आध्यात्मिक यात्रा के चरण",
+      bathingAreas: "शिप्रा घाट पर स्नान क्षेत्र",
+      getDirections: "दिशा प्राप्त करें",
+      emergency: "आपातकाल",
+      safety: "सुरक्षा जानकारी"
+    }
+  };
+
+  const t = translations[selectedLanguage as keyof typeof translations] || translations.en;
+
+  // Arrival points and parking zones
+  const arrivalPoints = {
+    railway: {
+      name: "Ujjain Junction Railway Station",
+      coordinates: [23.1794, 75.7849] as [number, number],
+      routes: [
+        { coords: [[23.1794, 75.7849], [23.1810, 75.7820], [23.1815, 75.7682]], type: "walking", time: "25 min" }
+      ]
+    },
+    bus: {
+      name: "Ujjain Bus Stand",
+      coordinates: [23.1765, 75.7880] as [number, number],
+      routes: [
+        { coords: [[23.1765, 75.7880], [23.1785, 75.7790], [23.1815, 75.7682]], type: "walking", time: "30 min" }
+      ]
+    },
+    car: {
+      name: "Designated Parking Zones",
+      coordinates: [23.1850, 75.7650] as [number, number],
+      parkingZones: [
+        { name: "Parking Zone A", coords: [23.1850, 75.7650], capacity: 500, available: 120 },
+        { name: "Parking Zone B", coords: [23.1860, 75.7660], capacity: 300, available: 85 },
+        { name: "VIP Parking", coords: [23.1840, 75.7640], capacity: 100, available: 45 }
+      ],
+      routes: [
+        { coords: [[23.1850, 75.7650], [23.1825, 75.7670], [23.1815, 75.7682]], type: "walking", time: "15 min" }
+      ]
+    }
+  };
+
+  // Spiritual journey sequence
+  const spiritualJourneySteps = [
+    { 
+      id: 1, 
+      name: selectedLanguage === "hi" ? "आगमन और शुद्धीकरण" : "Arrival & Purification", 
+      location: "Entrance Gates", 
+      description: selectedLanguage === "hi" ? "सुरक्षा जाँच, हाथ साफ करना और प्रवेश प्रक्रिया" : "Security check, hand sanitization, and entry procedures",
+      coords: [23.1820, 75.7685],
+      estimatedTime: "10 min",
+      priority: "high"
+    },
+    {
+      id: 2,
+      name: selectedLanguage === "hi" ? "कतार प्रबंधन" : "Queue Management",
+      location: "Organized Queue Area",
+      description: selectedLanguage === "hi" ? "मार्ग चयन के आधार पर निर्धारित कतार में शामिल हों" : "Join designated queue based on route selection",
+      coords: [23.1818, 75.7688],
+      estimatedTime: "20-45 min",
+      priority: "high"
+    },
+    {
+      id: 3,
+      name: selectedLanguage === "hi" ? "मंदिर दर्शन" : "Temple Darshan",
+      location: "Mahakaleshwar Sanctum",
+      description: selectedLanguage === "hi" ? "भगवान महाकालेश्वर के पवित्र दर्शन" : "Sacred darshan of Lord Mahakaleshwar",
+      coords: [23.1815, 75.7678],
+      estimatedTime: "15 min",
+      priority: "critical"
+    },
+    {
+      id: 4,
+      name: selectedLanguage === "hi" ? "प्रसाद और भेंट" : "Prasad & Offerings",
+      location: "Prasad Counter",
+      description: selectedLanguage === "hi" ? "प्रसाद लें और भेंट चढ़ाएं" : "Collect prasad and make offerings",
+      coords: [23.1812, 75.7680],
+      estimatedTime: "10 min",
+      priority: "medium"
+    },
+    {
+      id: 5,
+      name: selectedLanguage === "hi" ? "पवित्र स्नान" : "Sacred Bath",
+      location: "Shipra Ghat",
+      description: selectedLanguage === "hi" ? "निर्धारित घाट पर शिप्रा नदी में पवित्र स्नान" : "Holy dip in river Shipra at designated ghat",
+      coords: [23.1800, 75.7670],
+      estimatedTime: "30 min",
+      priority: "critical"
+    },
+    {
+      id: 6,
+      name: selectedLanguage === "hi" ? "आरती में भागीदारी" : "Aarti Participation",
+      location: "Ghat Aarti Area",
+      description: selectedLanguage === "hi" ? "सायंकालीन आरती समारोह में भाग लें" : "Participate in evening aarti ceremony",
+      coords: [23.1795, 75.7675],
+      estimatedTime: "20 min",
+      priority: "medium"
+    }
+  ];
+
+  // Enhanced bathing zones at Shipra Ghat
+  const shipraBathingZones = [
+    {
+      id: "male-bathing",
+      name: selectedLanguage === "hi" ? "पुरुष स्नान क्षेत्र" : "Men's Bathing Area",
+      coords: [23.1800, 75.7670],
+      capacity: 500,
+      currentOccupancy: 320,
+      facilities: ["Changing Rooms", "Lockers", "Fresh Water", "Security", "Medical Aid"],
+      specialFeatures: ["Deep Water Section", "Shallow Area for Non-Swimmers", "Steps with Railings"],
+      timings: "4:00 AM - 10:00 PM",
+      crowdLevel: "high"
+    },
+    {
+      id: "female-bathing", 
+      name: selectedLanguage === "hi" ? "महिला स्नान क्षेत्र" : "Women's Bathing Area",
+      coords: [23.1795, 75.7675],
+      capacity: 300,
+      currentOccupancy: 180,
+      facilities: ["Private Changing", "Female Security", "Fresh Water", "Child Care", "First Aid"],
+      specialFeatures: ["Privacy Screens", "Separate Entry/Exit", "Female Volunteers", "Baby Care Station"],
+      timings: "5:00 AM - 9:00 PM",
+      crowdLevel: "medium"
+    },
+    {
+      id: "family-bathing",
+      name: selectedLanguage === "hi" ? "पारिवारिक स्नान क्षेत्र" : "Family Bathing Area",
+      coords: [23.1798, 75.7672],
+      capacity: 400,
+      currentOccupancy: 220,
+      facilities: ["Family Rooms", "Child Safety", "Lockers", "Fresh Water", "Food Counter"],
+      specialFeatures: ["Supervised Children's Area", "Life Guards", "Family Counselors"],
+      timings: "6:00 AM - 8:00 PM",
+      crowdLevel: "medium"
+    },
+    {
+      id: "senior-bathing",
+      name: selectedLanguage === "hi" ? "वरिष्ठ नागरिक क्षेत्र" : "Senior Citizens Area",
+      coords: [23.1805, 75.7665],
+      capacity: 200,
+      currentOccupancy: 85,
+      facilities: ["Wheelchair Access", "Assisted Bathing", "Medical Support", "Rest Areas"],
+      specialFeatures: ["Priority Access", "Volunteer Assistance", "Medical Station", "Comfortable Seating"],
+      timings: "6:00 AM - 7:00 PM",
+      crowdLevel: "low"
+    }
+  ];
+
+  // Safety and emergency information
+  const emergencyServices = [
+    { name: "Police", number: "100", coords: [23.1815, 75.7695] },
+    { name: "Medical Emergency", number: "108", coords: [23.1822, 75.7675] },
+    { name: "Fire Service", number: "101", coords: [23.1810, 75.7690] },
+    { name: "Tourist Helpline", number: "1363", coords: [23.1825, 75.7685] }
+  ];
+
+  const safetyPoints = [
+    { name: "Lost & Found Center", coords: [23.1820, 75.7690], contact: "+91-734-2550088" },
+    { name: "Medical Station 1", coords: [23.1822, 75.7675], services: ["First Aid", "Emergency Care"] },
+    { name: "Medical Station 2", coords: [23.1808, 75.7685], services: ["First Aid", "Child Care"] },
+    { name: "Police Help Booth", coords: [23.1815, 75.7695], services: ["Security", "Information"] }
+  ];
+
+  // Initialize arrival points and journey
+  const initializeArrivalPointsAndJourney = () => {
+    // Set up enhanced facility data including arrival points
+    const enhancedFacilityData = [
+      ...facilityData,
+      {
+        type: "arrival",
+        name: "Railway Station",
+        latitude: "23.1794",
+        longitude: "75.7849",
+        status: "open",
+        services: "Arrival Point for Train Passengers"
+      },
+      {
+        type: "arrival",
+        name: "Bus Stand", 
+        latitude: "23.1765",
+        longitude: "75.7880",
+        status: "open",
+        services: "Arrival Point for Bus Passengers"
+      },
+      {
+        type: "parking",
+        name: "Parking Zone A",
+        latitude: "23.1850",
+        longitude: "75.7650",
+        status: "available",
+        capacity: "500 vehicles"
+      }
+    ];
+    setFacilityData(enhancedFacilityData);
+  };
+
+  // Generate customized route based on arrival method
+  const generateCustomRoute = (method: string) => {
+    setArrivalMethod(method);
+    setCurrentJourneyStep(0);
+    
+    let customRoute = "custom-" + method;
+    setSelectedRoute(customRoute);
+    
+    toast({
+      title: `🚂 ${method.charAt(0).toUpperCase() + method.slice(1)} Route Selected`,
+      description: `Customized journey plan generated for ${method} arrival. Follow the step-by-step guidance.`,
+    });
+  };
+
   const routes = [
     { 
       id: "all", 
@@ -462,13 +696,240 @@ export default function MapPage() {
         <div className="container mx-auto px-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Interactive Map - Ujjain Mahakal Lok</h1>
           <p className="text-primary-foreground/90">Real-time crowd monitoring and navigation assistance</p>
+          
+          {/* Language Selector */}
+          <div className="mt-4 flex items-center space-x-4">
+            <Languages className="h-5 w-5" />
+            <div className="flex space-x-2">
+              <Button
+                variant={selectedLanguage === "en" ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setSelectedLanguage("en")}
+                className="text-primary-foreground border-primary-foreground/20"
+                data-testid="lang-en"
+              >
+                English
+              </Button>
+              <Button
+                variant={selectedLanguage === "hi" ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setSelectedLanguage("hi")}
+                className="text-primary-foreground border-primary-foreground/20"
+                data-testid="lang-hi"
+              >
+                हिंदी
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Arrival Method Selection */}
+      <section className="py-6 bg-card border-b">
+        <div className="container mx-auto px-4">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <Target className="h-5 w-5 mr-2" />
+            {t.selectArrival}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Button
+              variant={arrivalMethod === "railway" ? "default" : "outline"}
+              onClick={() => generateCustomRoute("railway")}
+              className="h-20 flex flex-col items-center justify-center space-y-2"
+              data-testid="arrival-railway"
+            >
+              <Train className="h-8 w-8" />
+              <div className="text-center">
+                <div className="font-semibold">{t.railway}</div>
+                <div className="text-sm opacity-75">25 min walk</div>
+              </div>
+            </Button>
+            <Button
+              variant={arrivalMethod === "bus" ? "default" : "outline"}
+              onClick={() => generateCustomRoute("bus")}
+              className="h-20 flex flex-col items-center justify-center space-y-2"
+              data-testid="arrival-bus"
+            >
+              <Bus className="h-8 w-8" />
+              <div className="text-center">
+                <div className="font-semibold">{t.bus}</div>
+                <div className="text-sm opacity-75">30 min walk</div>
+              </div>
+            </Button>
+            <Button
+              variant={arrivalMethod === "car" ? "default" : "outline"}
+              onClick={() => generateCustomRoute("car")}
+              className="h-20 flex flex-col items-center justify-center space-y-2"
+              data-testid="arrival-car"
+            >
+              <Car className="h-8 w-8" />
+              <div className="text-center">
+                <div className="font-semibold">{t.car}</div>
+                <div className="text-sm opacity-75">15 min from parking</div>
+              </div>
+            </Button>
+          </div>
+
+          {arrivalMethod && (
+            <div className="bg-muted rounded-lg p-4">
+              <h3 className="font-semibold mb-2 flex items-center">
+                <Route className="h-4 w-4 mr-2" />
+                {arrivalMethod === "railway" ? "Railway Station Route Plan" : 
+                 arrivalMethod === "bus" ? "Bus Stand Route Plan" : 
+                 "Private Vehicle Route Plan"}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Starting Point:</strong> {arrivalPoints[arrivalMethod as keyof typeof arrivalPoints].name}
+                </div>
+                <div>
+                  <strong>Estimated Time:</strong> {arrivalPoints[arrivalMethod as keyof typeof arrivalPoints].routes[0].time}
+                </div>
+                {arrivalMethod === "car" && (
+                  <div className="md:col-span-2">
+                    <strong>Available Parking:</strong>
+                    <div className="grid grid-cols-3 gap-2 mt-2">
+                      {arrivalPoints.car.parkingZones?.map((zone, idx) => (
+                        <div key={idx} className="bg-background rounded p-2 text-xs">
+                          <div className="font-medium">{zone.name}</div>
+                          <div className="text-green-600">{zone.available}/{zone.capacity} spots</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Spiritual Journey Steps */}
+      {arrivalMethod && (
+        <section className="py-6 bg-secondary/10 border-b">
+          <div className="container mx-auto px-4">
+            <h2 className="text-xl font-semibold mb-4 flex items-center">
+              <Compass className="h-5 w-5 mr-2" />
+              {t.spiritualJourney}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {spiritualJourneySteps.map((step, index) => (
+                <Card key={step.id} className={`transition-all duration-200 ${
+                  currentJourneyStep === index ? 'ring-2 ring-primary' : ''
+                } ${
+                  step.priority === 'critical' ? 'border-red-200' :
+                  step.priority === 'high' ? 'border-orange-200' : 'border-blue-200'
+                }`}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className={`rounded-full w-8 h-8 flex items-center justify-center text-white font-bold ${
+                        currentJourneyStep === index ? 'bg-primary' :
+                        currentJourneyStep > index ? 'bg-green-500' : 'bg-gray-400'
+                      }`}>
+                        {step.id}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold">{step.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-2">{step.location}</p>
+                        <p className="text-xs mb-2">{step.description}</p>
+                        <div className="flex items-center justify-between">
+                          <Badge variant={step.priority === 'critical' ? 'destructive' : 'secondary'}>
+                            {step.estimatedTime}
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setCurrentJourneyStep(index);
+                              getDirections(step.coords[0], step.coords[1], step.name);
+                            }}
+                            data-testid={`journey-step-${step.id}`}
+                          >
+                            <Navigation className="h-3 w-3 mr-1" />
+                            Navigate
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Shipra Ghat Bathing Areas */}
+      <section className="py-6 bg-card border-b">
+        <div className="container mx-auto px-4">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <MapPin className="h-5 w-5 mr-2" />
+            {t.bathingAreas}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {shipraBathingZones.map((zone) => {
+              const occupancyRate = (zone.currentOccupancy / zone.capacity) * 100;
+              return (
+                <Card key={zone.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold">{zone.name}</h3>
+                      <Badge variant={occupancyRate > 80 ? 'destructive' : occupancyRate > 60 ? 'secondary' : 'default'}>
+                        {zone.crowdLevel}
+                      </Badge>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Capacity:</span>
+                        <span>{zone.currentOccupancy}/{zone.capacity}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${
+                            occupancyRate > 80 ? 'bg-red-500' : 
+                            occupancyRate > 60 ? 'bg-yellow-500' : 'bg-green-500'
+                          }`}
+                          style={{ width: `${occupancyRate}%` }}
+                        ></div>
+                      </div>
+                      <div><strong>Timings:</strong> {zone.timings}</div>
+                      <div className="border-t pt-2">
+                        <strong>Facilities:</strong>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {zone.facilities.slice(0, 3).map((facility, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">
+                              {facility}
+                            </Badge>
+                          ))}
+                          {zone.facilities.length > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{zone.facilities.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        className="w-full mt-2"
+                        onClick={() => getDirections(zone.coords[0], zone.coords[1], zone.name)}
+                        data-testid={`ghat-navigate-${zone.id}`}
+                      >
+                        <Navigation className="h-3 w-3 mr-1" />
+                        {t.getDirections}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* Route Selection */}
       <section className="py-6 bg-card border-b">
         <div className="container mx-auto px-4">
-          <h2 className="text-xl font-semibold mb-4">Select Your Route</h2>
+          <h2 className="text-xl font-semibold mb-4">{t.selectRoute}</h2>
           <div className="flex flex-wrap gap-3">
             {routes.map((route) => (
               <Button
@@ -511,6 +972,113 @@ export default function MapPage() {
               </p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Safety and Emergency Information */}
+      <section className="py-6 bg-destructive/10 border-b">
+        <div className="container mx-auto px-4">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <Shield className="h-5 w-5 mr-2" />
+            {t.safety} & {t.emergency}
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Emergency Services */}
+            <Card className="border-red-200">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <Phone className="h-5 w-5 mr-2 text-red-600" />
+                  Emergency Contacts
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-3">
+                  {emergencyServices.map((service, idx) => (
+                    <Button
+                      key={idx}
+                      variant="outline"
+                      size="sm"
+                      className="h-auto flex flex-col items-center p-4 border-red-200 hover:bg-red-50"
+                      onClick={() => makeEmergencyCall(service.name, service.number)}
+                      data-testid={`emergency-${service.name.toLowerCase().replace(' ', '-')}`}
+                    >
+                      <div className="font-semibold text-red-600">{service.name}</div>
+                      <div className="text-2xl font-bold">{service.number}</div>
+                      <div className="text-xs text-muted-foreground">Tap to call</div>
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Safety Points */}
+            <Card className="border-blue-200">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <Heart className="h-5 w-5 mr-2 text-blue-600" />
+                  Safety Points
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {safetyPoints.map((point, idx) => (
+                    <div key={idx} className="flex items-start justify-between p-3 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="font-medium">{point.name}</div>
+                        {point.contact && (
+                          <div className="text-sm text-blue-600">{point.contact}</div>
+                        )}
+                        {point.services && (
+                          <div className="text-xs text-muted-foreground">
+                            {point.services.join(', ')}
+                          </div>
+                        )}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => getDirections(point.coords[0], point.coords[1], point.name)}
+                        data-testid={`safety-navigate-${idx}`}
+                      >
+                        <Navigation className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Safety Guidelines */}
+          <Card className="border-yellow-200 bg-yellow-50">
+            <CardContent className="p-4">
+              <h3 className="font-semibold mb-3 flex items-center">
+                <AlertTriangle className="h-4 w-4 mr-2 text-yellow-600" />
+                Important Safety Guidelines
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>During Your Visit:</strong>
+                  <ul className="list-disc list-inside mt-1 space-y-1">
+                    <li>Stay hydrated and carry water</li>
+                    <li>Follow crowd management instructions</li>
+                    <li>Keep emergency contacts handy</li>
+                    <li>Stay with your group</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>In Case of Emergency:</strong>
+                  <ul className="list-disc list-inside mt-1 space-y-1">
+                    <li>Contact nearest security personnel</li>
+                    <li>Use emergency exit routes</li>
+                    <li>Call emergency services immediately</li>
+                    <li>Follow evacuation procedures</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

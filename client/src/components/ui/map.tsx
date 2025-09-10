@@ -201,7 +201,6 @@ export function Map({
           color: '#000000',
           weight: 12,
           opacity: 0.3,
-          offset: 2,
           className: 'route-shadow'
         }).addTo(map);
         
