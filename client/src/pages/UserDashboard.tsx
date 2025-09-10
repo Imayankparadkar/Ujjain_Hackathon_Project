@@ -422,39 +422,39 @@ export default function UserDashboard() {
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Quick Access</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">Navigate to key features and services with a single click</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="border-purple-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/map'}>
-            <CardContent className="p-6 text-center">
-              <MapPin className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-800 mb-2">Interactive Map</h3>
-              <p className="text-sm text-gray-600 mb-4">Navigate with AI-powered route optimization and real-time crowd density</p>
-              <Button variant="outline" className="w-full border-purple-600 text-purple-600 hover:bg-purple-50" data-testid="open-map-button">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group cursor-pointer" onClick={() => window.location.href = '/map'}>
+              <div className="bg-purple-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-purple-200 transition-colors">
+                <MapPin className="h-12 w-12 text-purple-600" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">Interactive Map</h3>
+              <p className="text-gray-600 text-lg leading-relaxed mb-8">Navigate with AI-powered route optimization and real-time crowd density</p>
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 text-xl font-semibold rounded-2xl shadow-lg" data-testid="open-map-button">
                 Open Live Map
               </Button>
-            </CardContent>
-          </Card>
+            </Card>
 
-          <Card className="border-red-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/lost-found'}>
-            <CardContent className="p-6 text-center">
-              <AlertTriangle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-800 mb-2">Lost & Found</h3>
-              <p className="text-sm text-gray-600 mb-4">Report missing persons/items or search our database with AI matching</p>
-              <Button variant="outline" className="w-full border-red-600 text-red-600 hover:bg-red-50" data-testid="access-lost-found-button">
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group cursor-pointer" onClick={() => window.location.href = '/lost-found'}>
+              <div className="bg-red-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-red-200 transition-colors">
+                <AlertTriangle className="h-12 w-12 text-red-600" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">Lost & Found</h3>
+              <p className="text-gray-600 text-lg leading-relaxed mb-8">Report missing persons/items or search our database with AI matching</p>
+              <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-xl font-semibold rounded-2xl shadow-lg" data-testid="access-lost-found-button">
                 Access Service
               </Button>
-            </CardContent>
-          </Card>
+            </Card>
 
-          <Card className="border-indigo-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105" onClick={() => window.location.href = '/spiritual'}>
-            <CardContent className="p-6 text-center">
-              <Calendar className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-800 mb-2">Spiritual Events</h3>
-              <p className="text-sm text-gray-600 mb-4">Live streaming, event reminders, and sacred ceremony schedules</p>
-              <Button variant="outline" className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-50" data-testid="view-events-button">
+            <Card className="p-12 text-center hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-3xl group cursor-pointer" onClick={() => window.location.href = '/spiritual'}>
+              <div className="bg-indigo-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-indigo-200 transition-colors">
+                <Calendar className="h-12 w-12 text-indigo-600" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">Spiritual Events</h3>
+              <p className="text-gray-600 text-lg leading-relaxed mb-8">Live streaming, event reminders, and sacred ceremony schedules</p>
+              <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 text-xl font-semibold rounded-2xl shadow-lg" data-testid="view-events-button">
                 View Live Events
               </Button>
-            </CardContent>
-          </Card>
+            </Card>
           </div>
         </div>
       </section>

@@ -251,7 +251,7 @@ export default function LoginPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="register-blood">Blood Group</Label>
+                    <Label htmlFor="register-blood" className="text-amber-700 font-semibold">Select Blood Group</Label>
                     <select
                       id="register-blood"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -297,6 +297,11 @@ export default function LoginPage() {
                 <div className="text-xs text-gray-600 bg-orange-50 p-3 rounded-lg">
                   <p className="font-semibold mb-1">🆔 QR Code Generation:</p>
                   <p>After registration, you'll receive a unique QR code containing your contact information for emergency identification during the Kumbh Mela.</p>
+                </div>
+
+                <div className="text-sm text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <p className="font-semibold mb-1">⚠️ Important Note:</p>
+                  <p>Please <strong>reload this website</strong> once you click the "Create SmartKumbh Account" button to ensure proper registration completion.</p>
                 </div>
 
                 <Button
